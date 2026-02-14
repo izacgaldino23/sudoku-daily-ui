@@ -1,0 +1,45 @@
+@use "@/styles/_variables.scss" as v;
+
+.sidebar {
+	width: 20rem;
+	margin-top: 5rem;
+
+	nav {
+		display: flex;
+		flex-direction: column;
+		a {
+			font-size: 1.5rem;
+			text-decoration: none;
+			color: v.$primary-color;
+			padding: .5rem;
+			padding-right: 2rem;
+			margin-bottom: .3rem;
+			width: fit-content;
+			position: relative;
+			z-index: 1;
+			transition: 0.3s ease;
+
+			&:before {
+				content: "";
+				position: absolute;
+				left: -1rem;
+				top: 0;
+				width: 0;
+				height: 100%;
+				background-color: v.$quaternary-color;
+				z-index: -1;
+				transition: width 0.3s ease;
+				border-top-right-radius: .5rem;
+				border-bottom-right-radius: .5rem;
+			}
+
+			&:hover {
+				color: v.$lighter-color;
+
+				&:before {
+					width: calc(100% + 1rem);
+				}
+			}
+		}
+	}
+}

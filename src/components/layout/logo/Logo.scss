@@ -1,0 +1,9 @@
+@use "@/styles/_variables.scss" as v;
+
+.logo {
+	cursor: default;
+	position: absolute;
+
+	padding: 1rem;
+	color: v.$primary-color;
+}

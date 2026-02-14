@@ -1,11 +1,9 @@
 import { NavLink } from "react-router-dom";
-import Logo from "./Logo";
+import "./Sidebar.scss"
 
 export default function Sidebar() {
 	return (
-		<aside>
-			<Logo />
-			
+		<aside className="sidebar">
 			<nav>
 				<NavLink to="/">Play</NavLink>
 				<NavLink to="/leaderboard">Leaderboard</NavLink>

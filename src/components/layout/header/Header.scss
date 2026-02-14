@@ -1,0 +1,41 @@
+@use "@/styles/_variables.scss" as v;
+
+.header {
+	nav {
+		display: flex;
+		gap: 2rem;
+		justify-content: center;
+
+		a {
+			padding: 1.5rem;
+			text-decoration: none;
+			color: v.$primary-color;
+			position: relative;
+			z-index: 1;
+			transition: 0.3s ease;
+			position: relative;
+			opacity: .75;
+
+			&.active {
+				opacity: 1;
+				background-color: v.$quaternary-color;
+				color: v.$lighter-color;
+				border-radius: 0 0 .5rem .5rem;
+				// box-shadow: .2rem .2rem .3rem rgba(.5, .5, .5, .2);
+
+				&:before {
+					content: "";
+					width: 40%;
+					height: 10%;
+					position: absolute;
+					background: v.$lighter-color;
+					bottom: 0;
+					border-radius: 1rem;
+					inset: 0;
+					margin: auto;
+					margin-bottom: .5rem;
+				}
+			}
+		}
+	}
+}
