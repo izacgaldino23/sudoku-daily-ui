@@ -2,6 +2,7 @@ import Header from "@/components/layout/header/Header";
 import Sidebar from "@/components/layout/sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 import "./AppLayout.scss"
+import AdSlot from "@/components/ads/AdSlot";
 
 export default function AppLayout() {
 	return (
@@ -13,6 +14,8 @@ export default function AppLayout() {
 
 				<main className="content">
 					<Outlet />
+
+					<AdSlot />
 				</main>
 			</div>
 		</div>

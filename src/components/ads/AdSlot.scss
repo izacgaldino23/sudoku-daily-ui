@@ -1,0 +1,16 @@
+@use "@/styles/_variables.scss" as v;
+
+.adslot {
+	width: 160px;
+    height: 600px;
+    background-color: v.$primary-color;
+    color: v.$lighter-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: .3;
+    border-radius: .3rem;
+	text-align: center;
+	font-weight: normal;
+	font-size: .8rem;
+}
