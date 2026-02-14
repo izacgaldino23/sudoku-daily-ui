@@ -6,4 +6,38 @@
 
 	padding: 1rem;
 	color: v.$primary-color;
+
+	display: flex;
+	align-items: center;
+
+	.sector {
+		display: inline-grid;
+		grid-template-columns: repeat(2, 1.5rem);
+		grid-template-rows: repeat(2, 1.5rem);
+		margin-right: 1rem;
+		gap: .2rem;
+		
+		.square {
+			background-color: v.$lighter-color;
+			border-radius: .1rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: v.$lighter-color;
+			background-color: v.$tertiary-color;
+
+			&.filled {
+				background-color: v.$quaternary-color;
+			}
+		}
+	}
+
+	.title {
+		text-wrap: auto;
+    	width: 50%;
+	}
+
+	::selection {
+		background-color: transparent;
+	}
 }
