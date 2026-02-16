@@ -9,8 +9,8 @@ export default function Header() {
 
 			<nav>
 				<NavLink to="/">4x4</NavLink>
-				<NavLink to="/six">6x6</NavLink>
-				<NavLink to="/nine">9x9</NavLink>
+				<NavLink to="/play/medium">6x6</NavLink>
+				<NavLink to="/play/hard">9x9</NavLink>
 			</nav>
 		</header>
 	)
