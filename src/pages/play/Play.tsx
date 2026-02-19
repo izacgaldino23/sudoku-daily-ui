@@ -24,7 +24,7 @@ export default function Play({ size }: PlayAttributes) {
 				<Timer />
 			</div>
 
-			<Board size={size} />
+			<Board key={size} size={size} />
 		</section>
 	)
 }

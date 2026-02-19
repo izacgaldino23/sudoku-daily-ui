@@ -1,27 +1,29 @@
 @use "@/styles/_variables.scss" as v;
 
-$tile-size: 2.5rem;
-$inner-border-color: rgba(black, .05);
+$tile-size: 2.75rem;
+$inner-border-color: rgba(v.$primary-color, .15);
+$outer-border-color: rgba(v.$primary-color, .4);
+$dark-border-color: rgba(black, .3);
 
 @mixin sudoku-board($size, $block-x, $block-y) {
 	grid-template-columns: repeat($size, $tile-size);
 	grid-template-rows: repeat($size, $tile-size);
 
-	// Linhas verticais dos blocos
 	.tile {
+		// section Vertical lines
 		@for $i from 1 through $size {
 			@if ($i % $block-x == 0) and ($i != $size) {
-				&[data-x="#{$i}"] {
-					border-right: 1px solid rgba(black, .2);
+				&[data-x="#{$i - 1}"] {
+					border-right: 1px solid $outer-border-color;
 				}
 			}
 		}
 
-		// Linhas horizontais dos blocos
+		// section horizontal lines
 		@for $j from 1 through $size {
 			@if ($j % $block-y == 0) and ($j != $size) {
-				&[data-y="#{$j}"] {
-					border-bottom: 1px solid rgba(black, .2);
+				&[data-y="#{$j - 1}"] {
+					border-bottom: 1px solid $outer-border-color;
 				}
 			}
 		}
@@ -29,29 +31,74 @@ $inner-border-color: rgba(black, .05);
 }
 
 .board {
-	display: inline-grid;
-	background-color: rgba(black, .05);
-	overflow: hidden;
-	border-radius: .5rem;
-	border: 1px solid $inner-border-color;
-	cursor: default;
-
-	.tile {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	.grid {
+		display: inline-grid;
+		overflow: hidden;
+		border-radius: .5rem;
 		border: 1px solid $inner-border-color;
+		cursor: default;
+
+		.tile {
+			background-color: #f5f5f5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: 1px solid $inner-border-color;
+			font-size: 1.15rem;
+			color: v.$quaternary-color;
+
+			&.filled {
+				background-color: rgba(black, .05);
+				color: inherit;
+			}
+
+			&.selected {
+				background-color: v.$tertiary-color;
+				border-color: rgba(black, .2) !important;
+			}
+		}
+
+		&.four {
+			@include sudoku-board(4, 2, 2);
+		}
+
+		&.six {
+			@include sudoku-board(6, 3, 2);
+		}
+
+		&.nine {
+			@include sudoku-board(9, 3, 3);
+		}
 	}
 
-	&.four {
-		@include sudoku-board(4, 2, 2);
-	}
+	.buttons {
+		margin-top: 1rem;
+		display: flex;
+		justify-content: space-between;
 
-	&.six {
-		@include sudoku-board(6, 3, 2);
-	}
+		.button {
+			border: 1px solid $dark-border-color;
+			width: 2rem;
+			height: 2rem;
+			background: v.$quaternary-color;
+			border-radius: .2rem .2rem .1rem .1rem;
+			font-size: 1rem;
+			border-bottom-width: 3px;
+			color: v.$lighter-color;
+			cursor: pointer;
+			transition: 0.3s ease;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 
-	&.nine {
-		@include sudoku-board(9, 3, 3);
+			&:hover {
+				background: v.$tertiary-color;
+				color: v.$quaternary-color;
+			}
+
+			svg {
+				width: 70%;
+			}
+		}
 	}
 }
