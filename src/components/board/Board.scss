@@ -46,15 +46,23 @@ $dark-border-color: rgba(black, .3);
 			border: 1px solid $inner-border-color;
 			font-size: 1.15rem;
 			color: v.$quaternary-color;
+			font-weight: bold;
 
 			&.filled {
 				background-color: rgba(black, .05);
 				color: inherit;
+				font-weight: normal;
 			}
 
 			&.selected {
-				background-color: v.$tertiary-color;
+				background-color: v.$tertiary-color !important;
 				border-color: rgba(black, .2) !important;
+			}
+
+			&.conflict {
+				background-color: v.$red1-color;
+				color: rgba(black, .5);
+				border-color: rgba(black, .2);
 			}
 		}
 

@@ -2,25 +2,7 @@ import { useMemo, useState } from "react"
 import "./Board.scss"
 import Button from "./button/Button"
 import { Eraser } from "lucide-react"
-
-const boards: { [key: number]: { [key: string]: number } } = {
-	4: randomGenerate(4),
-	6: randomGenerate(6),
-	9: randomGenerate(9),
-}
-
-interface BoardAttributes {
-	size: number
-}
-
-interface TileAttributes {
-	value?: number
-	filled?: boolean
-	x?: number
-	y?: number
-	onClick?: () => void
-	selected?: boolean
-}
+import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
 
 function randomGenerate(size: number): { [key: string]: number } {
 	const temp: { [key: string]: number } = {};
@@ -43,10 +25,11 @@ function randomGenerate(size: number): { [key: string]: number } {
 	return temp
 }
 
-function Tile({ value, x, y, filled, onClick, selected }: TileAttributes) {
+function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
 	if (selected) classes.push('selected');
 	if (filled) classes.push('filled');
+	if (conflict) classes.push('conflict');
 
 	return (
 		<div 
@@ -72,9 +55,16 @@ function numberToName(num: number) {
 	}
 }
 
+const boards: { [key: number]: { [key: string]: number } } = {
+	4: randomGenerate(4),
+	6: randomGenerate(6),
+	9: randomGenerate(9),
+}
+
 function generateTiles(size: number) {
 	const values: number[][] = [];
 	const fixed: boolean[][] = [];
+
 
 	for (let row = 0; row < size; row++) {
 		values[row] = [];
@@ -99,12 +89,110 @@ function generateTiles(size: number) {
 	}
 }
 
+function getConflicts(board: number[][]): Set<string> {
+	const size = board.length;
+	const conflicts = new Set<string>();
+
+	// verify rows
+	for (let row = 0; row < size; row++) {
+		const seen = new Map<number, number[]>();
+
+		for (let col = 0; col < size; col++) {
+			const n = board[row][col];
+			if (n === 0) continue;
+
+			if (!seen.has(n)) {
+				seen.set(n, [col]);
+			} else {
+				seen.get(n)?.push(col);
+			}
+		}
+
+		seen.forEach((value) => {
+			if (value.length === 1) return;
+			value.forEach((col) => {
+				conflicts.add(`${col}.${row}`);
+			})
+		})
+	}
+
+	// Verify cols
+	for (let col = 0; col < size; col++) {
+		const seen = new Map<number, number[]>();
+
+		for (let row = 0; row < size; row++) {
+			const n = board[row][col];
+			if (n === 0) continue;
+
+			if (!seen.has(n)) {
+				seen.set(n, [row]);
+			} else {
+				seen.get(n)?.push(row);
+			}
+		}
+
+		seen.forEach((value) => {
+			if (value.length === 1) return;
+			value.forEach((row) => {
+				conflicts.add(`${col}.${row}`);
+			})
+		})
+	}
+
+	// Verify blocks
+	const blockSizes: { [key: number]: number[] } = {
+		4: [2, 2],
+		6: [3, 2],
+		9: [3, 3],
+	};
+
+	const bs = blockSizes[size];
+	let currentRow = 0;
+	let currentCol = 0;
+
+	for (let block = 0; block < size; block++) {
+		const seen = new Map<number, number[][]>();
+
+		for (let row = currentRow; row < currentRow + bs[0]; row++) {
+			for (let col = currentCol; col < currentCol + bs[1]; col++) {
+				const n = board[row][col];
+				if (n === 0) continue;
+
+				if (!seen.has(n)) {
+					seen.set(n, [[row, col]]);
+				} else {
+					seen.get(n)?.push([row, col]);
+				}
+			}
+		}
+
+		seen.forEach((value) => {
+			if (value.length === 1) return;
+			value.forEach((pos) => {
+				conflicts.add(`${pos[1]}.${pos[0]}`);
+			})
+		})
+
+		currentCol += bs[1];
+		if (currentCol >= size) {
+			currentCol = 0;
+			currentRow += bs[0];
+		}
+	}
+
+
+
+	return conflicts;
+}
+
 export default function Board({ size }: BoardAttributes) {
 	const { values, fixed } = useMemo(() => generateTiles(size), [size])
 
 	const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
 	const [ boardState, setBoardState ] = useState<number[][]>(values);
 	const [ fixedCells ] = useState<boolean[][]>(fixed);
+
+	const conflicts = useMemo(() => getConflicts(boardState), [boardState]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
@@ -140,6 +228,7 @@ export default function Board({ size }: BoardAttributes) {
 							value={value} 
 							key={`${rowIndex}-${colIndex}`} 
 							filled={fixedCells[rowIndex][colIndex]} 
+							conflict={conflicts.has(`${colIndex}.${rowIndex}`)}
 							selected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
 							onClick={() => {
 								if (!fixedCells[rowIndex][colIndex]) {

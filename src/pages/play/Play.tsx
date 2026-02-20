@@ -1,10 +1,8 @@
 import { Timer } from 'lucide-react'
 import './Play.scss'
 import Board from '@/components/board/Board'
+import type { PlayAttributes } from '@/types/PlayTypes'
 
-interface PlayAttributes {
-	size: number
-}
 
 export default function Play({ size }: PlayAttributes) {
 	return (
