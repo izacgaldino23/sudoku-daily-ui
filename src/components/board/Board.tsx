@@ -180,9 +180,11 @@ function getConflicts(board: number[][]): Set<string> {
 		}
 	}
 
-
-
 	return conflicts;
+}
+
+function isBoardComplete(board: number[][]) {
+	return board.every((row) => row.every((n) => n !== 0));
 }
 
 export default function Board({ size }: BoardAttributes) {
@@ -193,6 +195,10 @@ export default function Board({ size }: BoardAttributes) {
 	const [ fixedCells ] = useState<boolean[][]>(fixed);
 
 	const conflicts = useMemo(() => getConflicts(boardState), [boardState]);
+
+	const isComplete = isBoardComplete(boardState);
+	const hasConflicts = conflicts.size > 0;
+	const isVictory = isComplete && !hasConflicts;
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
@@ -242,14 +248,16 @@ export default function Board({ size }: BoardAttributes) {
 				)}
 			</div>
 
-			<div className="buttons">
+			{isVictory && <div className="victory">Você finalizou!</div>}
+
+			{!isVictory && <div className="buttons">
 				{buttonsLabels.map((label) => (
 					<Button key={label} text={label} onClick={handleNumberButtonClick}/>
 				))}
 				<Button className="eraser" onClick={handleNumberButtonClick} text="">
 					<Eraser />
 				</Button>
-			</div>
+			</div>}
 		</div>
 	)
 }
