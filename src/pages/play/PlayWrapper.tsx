@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import Play from "./Play";
+import { GameProvider } from "@/context/GameContext";
 
 const defaultSize = 4;
 
@@ -22,5 +23,9 @@ function nameToNumber(name: string|undefined) {
 
 export default function PlayWrapper() {
     const { size } = useParams();
-    return <Play size={nameToNumber(size)} />;
+    return (
+		<GameProvider>
+			<Play size={nameToNumber(size)} /> 
+		</GameProvider>
+	)
 }

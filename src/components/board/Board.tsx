@@ -1,29 +1,9 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import "./Board.scss"
 import Button from "./button/Button"
 import { Eraser } from "lucide-react"
-import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
-
-function randomGenerate(size: number): { [key: string]: number } {
-	const temp: { [key: string]: number } = {};
-
-	const total = size * size;
-	const percentage = 0.3;
-	let count = Math.floor(total * percentage);
-
-	while (count > 0) {
-		const x = Math.floor(Math.random() * size) + 1;
-		const y = Math.floor(Math.random() * size) + 1;
-		const index = `${x}.${y}`;
-		
-		if (!(index in temp)) {
-			temp[index] = Math.floor(Math.random() * size) + 1;
-			count--;
-		}
-	}
-
-	return temp
-}
+import type { TileAttributes } from "@/types/BoardTypes"
+import { useGame } from "@/context/useGame"
 
 function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
@@ -52,40 +32,6 @@ function numberToName(num: number) {
 			return "nine"
 		default:
 			return "four"
-	}
-}
-
-const boards: { [key: number]: { [key: string]: number } } = {
-	4: randomGenerate(4),
-	6: randomGenerate(6),
-	9: randomGenerate(9),
-}
-
-function generateTiles(size: number) {
-	const values: number[][] = [];
-	const fixed: boolean[][] = [];
-
-
-	for (let row = 0; row < size; row++) {
-		values[row] = [];
-		fixed[row] = [];
-
-		for (let col = 0; col < size; col++) {
-			const index = `${col}.${row}`;
-
-			if (index in boards[size]) {
-				values[row][col] = boards[size][index];
-				fixed[row][col] = true;
-			} else {
-				values[row][col] = 0;
-				fixed[row][col] = false;
-			}
-		}
-	}
-
-	return {
-		values,
-		fixed
 	}
 }
 
@@ -187,60 +133,64 @@ function isBoardComplete(board: number[][]) {
 	return board.every((row) => row.every((n) => n !== 0));
 }
 
-export default function Board({ size }: BoardAttributes) {
-	const { values, fixed } = useMemo(() => generateTiles(size), [size])
+export default function Board() {
+	const { state, dispatch } = useGame();
 
-	const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
-	const [ boardState, setBoardState ] = useState<number[][]>(values);
-	const [ fixedCells ] = useState<boolean[][]>(fixed);
+	const conflicts = useMemo(() => getConflicts(state.board), [state.board]);
 
-	const conflicts = useMemo(() => getConflicts(boardState), [boardState]);
-
-	const isComplete = isBoardComplete(boardState);
+	const isComplete = isBoardComplete(state.board);
 	const hasConflicts = conflicts.size > 0;
 	const isVictory = isComplete && !hasConflicts;
 
+	useEffect(() => {
+		if (isVictory) {
+			dispatch({ type: "FINISH_GAME" });
+		}
+	}, [isVictory, dispatch]);
+
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
-		for (let i = 1; i <= size; i++) {
+		for (let i = 1; i <= state.size; i++) {
 			labels.push(`${i}`);
 		}
 		return labels;
-	}, [size]);
+	}, [state.size]);
 
-	const handleNumberButtonClick = function(value: string) {
-		if (!selectedCell) return;
+	const handleSelectCell = (row: number, col: number) => {
+		dispatch({
+			type: "SELECT_CELL",
+			payload: { row, col }
+		})
+	}
 
-		const { row, col } = selectedCell;
+	const handleSetValue = (value: string) => {
+		if (!state.selectedCell) return;
 
-		if (fixedCells[row][col]) return;
+		let payload_value = value;
+		if (value === "") payload_value = "0";
 
-		const newBoardState = boardState.map((row: number[]) => [...row]);
-
-		if (value === "")
-			newBoardState[row][col] = 0;
-		else
-			newBoardState[row][col] = parseInt(value);
-
-		setBoardState(newBoardState);
+		dispatch({
+			type: "SET_VALUE",
+			payload: {
+				row: state.selectedCell.row,
+				col: state.selectedCell.col,
+				value: parseInt(payload_value),
+			}
+		})
 	}
 
 	return (
 		<div className="board">
-			<div className={"grid "+numberToName(size)}>
-				{boardState.map((row, rowIndex) => 
+			<div className={"grid "+numberToName(state.size)}>
+				{state.board.map((row, rowIndex) => 
 					row.map((value, colIndex) => (
 						<Tile 
 							value={value} 
 							key={`${rowIndex}-${colIndex}`} 
-							filled={fixedCells[rowIndex][colIndex]} 
+							filled={state.fixed[rowIndex][colIndex]} 
 							conflict={conflicts.has(`${colIndex}.${rowIndex}`)}
-							selected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
-							onClick={() => {
-								if (!fixedCells[rowIndex][colIndex]) {
-									setSelectedCell({ row: rowIndex, col: colIndex })
-								}
-							}}
+							selected={state.selectedCell?.row === rowIndex && state.selectedCell?.col === colIndex}
+							onClick={() => handleSelectCell(rowIndex, colIndex)}
 							x={colIndex}
 							y={rowIndex}
 							/>
@@ -252,9 +202,9 @@ export default function Board({ size }: BoardAttributes) {
 
 			{!isVictory && <div className="buttons">
 				{buttonsLabels.map((label) => (
-					<Button key={label} text={label} onClick={handleNumberButtonClick}/>
+					<Button key={label} text={label} onClick={handleSetValue}/>
 				))}
-				<Button className="eraser" onClick={handleNumberButtonClick} text="">
+				<Button className="eraser" onClick={handleSetValue} text="">
 					<Eraser />
 				</Button>
 			</div>}
