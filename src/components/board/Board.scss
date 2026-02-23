@@ -3,7 +3,6 @@
 $tile-size: 2.75rem;
 $inner-border-color: rgba(v.$primary-color, .15);
 $outer-border-color: rgba(v.$primary-color, .4);
-$dark-border-color: rgba(black, .3);
 
 @mixin sudoku-board($size, $block-x, $block-y) {
 	grid-template-columns: repeat($size, $tile-size);
@@ -83,30 +82,5 @@ $dark-border-color: rgba(black, .3);
 		margin-top: 1rem;
 		display: flex;
 		justify-content: space-between;
-
-		.button {
-			border: 1px solid $dark-border-color;
-			width: 2rem;
-			height: 2rem;
-			background: v.$quaternary-color;
-			border-radius: .2rem .2rem .1rem .1rem;
-			font-size: 1rem;
-			border-bottom-width: 3px;
-			color: v.$lighter-color;
-			cursor: pointer;
-			transition: 0.3s ease;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-
-			&:hover {
-				background: v.$tertiary-color;
-				color: v.$quaternary-color;
-			}
-
-			svg {
-				width: 70%;
-			}
-		}
 	}
 }

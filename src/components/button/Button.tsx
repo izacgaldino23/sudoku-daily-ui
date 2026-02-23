@@ -1,4 +1,5 @@
 import type { ButtonAttributes } from "@/types/BoardTypes";
+import "./Button.scss"
 
 export default function Button({ text, children, className, onClick }: ButtonAttributes) {
 	return (

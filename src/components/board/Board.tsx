@@ -1,9 +1,10 @@
 import { useEffect, useMemo } from "react"
 import "./Board.scss"
-import Button from "./button/Button"
+import Button from "../button/Button"
 import { Eraser } from "lucide-react"
-import type { TileAttributes } from "@/types/BoardTypes"
+import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
 import { useGame } from "@/context/useGame"
+import type { GameData } from "@/types/GameTypes"
 
 function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
@@ -129,67 +130,77 @@ function getConflicts(board: number[][]): Set<string> {
 	return conflicts;
 }
 
-function isBoardComplete(board: number[][]) {
+function isBoardComplete(state: GameData | undefined) {
+	if (!state) return false;
+	const { board } = state;
 	return board.every((row) => row.every((n) => n !== 0));
 }
 
-export default function Board() {
+export default function Board({ size }: BoardAttributes) {
 	const { state, dispatch } = useGame();
+	const currentState = state[size];
 
-	const conflicts = useMemo(() => getConflicts(state.board), [state.board]);
+	const conflicts = useMemo(() => {
+		if (!currentState) return new Set<string>();
+		return getConflicts(currentState.board);
+	}, [currentState]);
 
-	const isComplete = isBoardComplete(state.board);
+	const isComplete = isBoardComplete(currentState);
 	const hasConflicts = conflicts.size > 0;
-	const isVictory = isComplete && !hasConflicts;
+	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
 
 	useEffect(() => {
 		if (isVictory) {
-			dispatch({ type: "FINISH_GAME" });
+			dispatch({ type: "FINISH_GAME", size });
 		}
-	}, [isVictory, dispatch]);
+	}, [isVictory, dispatch, size]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
-		for (let i = 1; i <= state.size; i++) {
+		for (let i = 1; i <= size; i++) {
 			labels.push(`${i}`);
 		}
 		return labels;
-	}, [state.size]);
+	}, [size]);
 
 	const handleSelectCell = (row: number, col: number) => {
 		dispatch({
 			type: "SELECT_CELL",
-			payload: { row, col }
+			payload: { row, col },
+			size
 		})
 	}
 
 	const handleSetValue = (value: string) => {
-		if (!state.selectedCell) return;
+		if (!currentState || !currentState.selectedCell) return;
 
 		let payload_value = value;
 		if (value === "") payload_value = "0";
 
 		dispatch({
 			type: "SET_VALUE",
+			size,
 			payload: {
-				row: state.selectedCell.row,
-				col: state.selectedCell.col,
+				row: currentState.selectedCell.row,
+				col: currentState.selectedCell.col,
 				value: parseInt(payload_value),
 			}
 		})
 	}
 
+	if (!currentState) return null;
+
 	return (
 		<div className="board">
-			<div className={"grid "+numberToName(state.size)}>
-				{state.board.map((row, rowIndex) => 
+			<div className={"grid "+numberToName(size)}>
+				{currentState.board.map((row, rowIndex) => 
 					row.map((value, colIndex) => (
 						<Tile 
 							value={value} 
 							key={`${rowIndex}-${colIndex}`} 
-							filled={state.fixed[rowIndex][colIndex]} 
+							filled={currentState.fixed[rowIndex][colIndex]} 
 							conflict={conflicts.has(`${colIndex}.${rowIndex}`)}
-							selected={state.selectedCell?.row === rowIndex && state.selectedCell?.col === colIndex}
+							selected={currentState.selectedCell?.row === rowIndex && currentState.selectedCell?.col === colIndex}
 							onClick={() => handleSelectCell(rowIndex, colIndex)}
 							x={colIndex}
 							y={rowIndex}
@@ -202,9 +213,9 @@ export default function Board() {
 
 			{!isVictory && <div className="buttons">
 				{buttonsLabels.map((label) => (
-					<Button key={label} text={label} onClick={handleSetValue}/>
+					<Button className="square" key={label} text={label} onClick={handleSetValue}/>
 				))}
-				<Button className="eraser" onClick={handleSetValue} text="">
+				<Button className="eraser square" onClick={handleSetValue} text="">
 					<Eraser />
 				</Button>
 			</div>}

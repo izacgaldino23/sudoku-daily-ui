@@ -4,6 +4,7 @@ import Board from '@/components/board/Board'
 import { useEffect, useMemo } from 'react';
 import { useGame } from '@/context/useGame';
 import type { PlayAttributes } from '@/types/PlayTypes';
+import Button from '@/components/button/Button';
 
 function zeroPad(num: number) {
 	return String(num).padStart(2, '0');
@@ -66,41 +67,55 @@ function generateTiles(size: number) {
 
 export default function Play({ size }: PlayAttributes) {
 	const { state, dispatch } = useGame();
+	const currentState = state[size];
+
+	const isStarted = currentState && currentState.board.length > 0;
 
 	const { values, fixed } = useMemo(() => generateTiles(size), [size])
 
 	useEffect(() => {
-		dispatch({ type: "START_GAME", payload: { size, board: values, fixed } });
-	}, [size, values, fixed, dispatch]);
-
-	useEffect(() => {
-		if (state.status !== "playing") return;
+		if (!isStarted) return;
 
 		const interval = setInterval(() => {
-			dispatch({ type: "TICK" });
+			dispatch({ type: "TICK", size });
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [state.status, dispatch]);
+	}, [isStarted, dispatch, size]);
+
+	const handleSudokuStart = () => {
+		const validSizes = [4, 6, 9];
+		if (validSizes.includes(size)) {
+			dispatch({ type: "START_GAME", size, payload: { board: values, fixed } })
+		}
+	}
 
 	return (
 		<section className="play">
-			<div className='timer'>
-				<div className='clock'>
-					<div className="part minute">
-						<span className="value">{Math.floor(state.seconds / 60)}</span>
-						<span className="label">min</span>
+			{!isStarted && <div className='welcome-message'>
+				<h2>{size}x{size} Not solved yet</h2>
+
+				<Button text='Start' onClick={handleSudokuStart} />
+			</div>}
+
+			{isStarted && <div>
+				<div className='timer'>
+					<div className='clock'>
+						<div className="part minute">
+							<span className="value">{Math.floor(currentState.seconds / 60)}</span>
+							<span className="label">min</span>
+						</div>
+						<div className="part state.seconds">
+							<span className="value">{zeroPad(currentState.seconds % 60)}</span>
+							<span className="label">sec</span>
+						</div>
 					</div>
-					<div className="part state.seconds">
-						<span className="value">{zeroPad(state.seconds % 60)}</span>
-						<span className="label">sec</span>
-					</div>
+
+					<Timer />
 				</div>
 
-				<Timer />
-			</div>
-
-			<Board />
+				<Board size={size}/>
+			</div>}
 		</section>
 	)
 }

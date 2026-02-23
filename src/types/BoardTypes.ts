@@ -1,5 +1,7 @@
+import type { BoardSize } from "./GameTypes"
+
 export interface BoardAttributes {
-	size: number
+	size: BoardSize
 }
 
 export interface TileAttributes {

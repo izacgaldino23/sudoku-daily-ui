@@ -1,12 +1,15 @@
-export type GamesStatus = "playing" | "finished";
+export type GamesStatus = "playing" | "finished" | "waiting";
 
 export interface SelectedCell {
 	row: number;
 	col: number;
 }
 
-export interface GameState {
-	size: number;
+export type BoardSize = 4 | 6 | 9;
+
+export type GameState = Partial<Record<BoardSize, GameData>>;
+
+export type GameData = {
 	board: number[][];
 	fixed: boolean[][];
 	selectedCell: SelectedCell | null;
@@ -20,9 +23,9 @@ export interface GameContextType {
 }
 
 export type GameAction = 
-	| { type: "START_GAME"; payload: { size: number, board: number[][], fixed: boolean[][] } }
-	| { type: "SELECT_CELL"; payload: SelectedCell }
-	| { type: "SET_VALUE"; payload: { row: number, col: number, value: number } }
-	| { type: "CLEAR_VALUE"; payload: { row: number, col: number } }
-	| { type: "TICK"}
-	| { type: "FINISH_GAME" }
+	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][] } }
+	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
+	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }
+	| { type: "CLEAR_VALUE"; size: BoardSize; payload: { row: number, col: number } }
+	| { type: "TICK"; size: BoardSize;}
+	| { type: "FINISH_GAME"; size: BoardSize; }
