@@ -1,10 +1,10 @@
 import { Timer } from 'lucide-react'
 import './Play.scss'
-import Board from '@/components/board/Board'
+import Board from '@/components/game/board/Board'
 import { useEffect } from 'react';
 import { useGame } from '@/context/useGame';
 import type { PlayAttributes } from '@/types/PlayTypes';
-import Button from '@/components/button/Button';
+import Button from '@/components/inputs/button/Button';
 import { useSudoku } from '@/hooks/useSudoku';
 import { Status } from '@/types/GameTypes';
 

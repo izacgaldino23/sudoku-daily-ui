@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react"
 import "./Board.scss"
-import Button from "../button/Button"
+import Button from "../../inputs/button/Button"
 import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
 import { useGame } from "@/context/useGame"
