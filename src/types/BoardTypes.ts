@@ -19,4 +19,5 @@ export interface ButtonAttributes {
 	children?: React.ReactNode
 	className?: string
 	onClick?: (value: string) => void
+	disabled?: boolean
 }

@@ -1,4 +1,6 @@
-export type GamesStatus = "playing" | "finished" | "waiting";
+export const Status = { PLAYING: "playing", FINISHED: "finished", LOADING: "loading" };
+
+export type GamesStatus = typeof Status[keyof typeof Status];
 
 export interface SelectedCell {
 	row: number;
@@ -23,6 +25,7 @@ export interface GameContextType {
 }
 
 export type GameAction = 
+	| { type: "LOADING_GAME"; size: BoardSize; }
 	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][] } }
 	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
 	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }

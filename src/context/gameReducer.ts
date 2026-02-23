@@ -1,8 +1,9 @@
-import type { GameAction, GameState } from "@/types/GameTypes";
+import { Status, type GameAction, type GameState } from "@/types/GameTypes";
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
-	// console.log(state, action)
 	switch (action.type) {
+		case "LOADING_GAME":
+			return { ...state, [action.size]: { status: Status.LOADING } };
 		case "START_GAME":
 			return {
 				...state,
@@ -11,7 +12,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 					fixed: action.payload.fixed,
 					selectedCell: null,
 					seconds: 0,
-					status: "playing",
+					status: Status.PLAYING,
 				}
 			}
 		case "SELECT_CELL":
@@ -59,7 +60,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 		}
 		case "TICK": {
 			const currentState = state[action.size];
-			if (!currentState || currentState.status !== "playing") return state
+			if (!currentState || currentState.status !== Status.PLAYING) return state
 			
 			return {
 				...state,
@@ -75,7 +76,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 				...state,
 				[action.size]: {
 					...state[action.size],
-					status: "finished",
+					status: Status.FINISHED,
 				}
 			}
 		default:
