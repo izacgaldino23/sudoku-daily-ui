@@ -24,6 +24,19 @@ export interface GameContextType {
 	dispatch: React.Dispatch<GameAction>
 }
 
+export function BoardSizeToString(size: BoardSize) {
+	switch (size) {
+		case 4:
+			return "four"
+		case 6:
+			return "six"
+		case 9:
+			return "nine"
+		default:
+			return "four"
+	}
+}
+
 export type GameAction = 
 	| { type: "LOADING_GAME"; size: BoardSize; }
 	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][] } }

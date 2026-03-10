@@ -1,33 +1,42 @@
 import { useGame } from "@/context/useGame";
-import { fetchDailySudoku } from "@/services/api";
 import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDailySudoku } from "./queries/useDailySudoku";
 
 export function useSudoku() {
 	const { dispatch } = useGame();
-	const [ loading, setLoading ] = useState(false);
-
-	async function loadGame(size: BoardSize) {
-		setLoading(true);
-
-		dispatch({ type: "LOADING_GAME", size });
-
-		try {
-			const response = await fetchDailySudoku(size);
-
-			const data = mapFromResponse(response)
-			
-			dispatch({ type: "START_GAME", size, payload: { board: data.values, fixed: data.fixed} })
 	
-			setLoading(false);
-		} catch (error) {
-			console.error(error); // TODO: handle error
-		} finally {
-			setLoading(false);
-		}
+	const [ size , setSize ] = useState<BoardSize | null>(null);
 
+	const { data, isLoading, error } = useDailySudoku(size);
+
+	useEffect(() => {
+		if (!data || !size) return;
+
+		const dataMapped = mapFromResponse(data);
+
+		dispatch({
+			type: "START_GAME",
+			size,
+			payload: {
+				board: dataMapped.values,
+				fixed: dataMapped.fixed
+			}
+		});
+	}, [data, size, dispatch]);
+
+	function loadGame(newSize: BoardSize) {
+		dispatch({
+			type: "LOADING_GAME",
+			size: newSize 
+		});
+		setSize(newSize);
 	}
 
-	return { loading, loadGame }
+	return {
+		loading: isLoading,
+		loadGame,
+		error,
+	}
 }

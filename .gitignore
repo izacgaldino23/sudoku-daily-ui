@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 doc/*.md
+
+.env.development

@@ -1,5 +1,21 @@
-import { fetchSudokuBySize, type DailySudokuResponse } from "./apiMock";
+import { apiFetch } from "./apiClient";
 
-export async function fetchDailySudoku(size: number): Promise<DailySudokuResponse> {
-  return fetchSudokuBySize(size)
+export type Cell = {
+	row: number;
+	col: number;
+	value: number;
+}
+
+export type Board = Cell[]
+
+export type DailySudokuResponse = {
+	id: string
+	date: string
+	number: number
+	size: number
+	board: Board
+}
+
+export async function fetchDailySudoku(size: string): Promise<DailySudokuResponse> {
+    return apiFetch<DailySudokuResponse>(`/sudoku?size=${size}`);
 }
