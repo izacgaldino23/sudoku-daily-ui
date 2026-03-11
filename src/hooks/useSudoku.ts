@@ -3,9 +3,10 @@ import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
 import { useEffect, useState } from "react";
 import { useDailySudoku } from "./queries/useDailySudoku";
+import { Status } from "@/types/GameTypes";
 
 export function useSudoku() {
-	const { dispatch } = useGame();
+	const { state, dispatch } = useGame();
 	
 	const [ size , setSize ] = useState<BoardSize | null>(null);
 
@@ -25,11 +26,13 @@ export function useSudoku() {
 				session_token: dataMapped.session_token
 			}
 		});
-
-		console.log(dataMapped);
 	}, [data, size, dispatch]);
 
 	function loadGame(newSize: BoardSize) {
+		if (state[newSize]?.status === Status.PLAYING) {
+			return;
+		}
+
 		dispatch({
 			type: "LOADING_GAME",
 			size: newSize 

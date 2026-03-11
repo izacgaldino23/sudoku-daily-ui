@@ -15,7 +15,7 @@ export type GameData = {
 	board: number[][];
 	fixed: boolean[][];
 	selectedCell: SelectedCell | null;
-	seconds: number;
+	startTime: number;
 	status: GamesStatus;
 	session_token: string
 }
@@ -44,5 +44,5 @@ export type GameAction =
 	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
 	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }
 	| { type: "CLEAR_VALUE"; size: BoardSize; payload: { row: number, col: number } }
-	| { type: "TICK"; size: BoardSize;}
+	// | { type: "TICK"; size: BoardSize;}
 	| { type: "FINISH_GAME"; size: BoardSize; }

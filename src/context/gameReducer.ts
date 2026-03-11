@@ -12,7 +12,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 					board: action.payload.board,
 					fixed: action.payload.fixed,
 					selectedCell: null,
-					seconds: 0,
+					startTime: Date.now(),
 					status: Status.PLAYING,
 				}
 			}
@@ -59,18 +59,18 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 				}
 			}
 		}
-		case "TICK": {
-			const currentState = state[action.size];
-			if (!currentState || currentState.status !== Status.PLAYING) return state
+		// case "TICK": {
+		// 	const currentState = state[action.size];
+		// 	if (!currentState || currentState.status !== Status.PLAYING) return state
 			
-			return {
-				...state,
-				[action.size]: {
-					...state[action.size],
-					seconds: currentState.seconds + 1,
-				}
-			}
-		}
+		// 	return {
+		// 		...state,
+		// 		[action.size]: {
+		// 			...state[action.size],
+		// 			seconds: currentState.seconds + 1,
+		// 		}
+		// 	}
+		// }
 			
 		case "FINISH_GAME":
 			return {

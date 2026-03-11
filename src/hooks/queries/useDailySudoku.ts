@@ -6,6 +6,7 @@ export function useDailySudoku(size: BoardSize | null) {
     return useQuery({
         queryKey: ["dailySudoku", size],
         queryFn: () => fetchDailySudoku(BoardSizeToString(size!)),
-        enabled: size !== null
+        enabled: size !== null,
+        staleTime: Infinity
     });
 }

@@ -1,12 +1,21 @@
 import type { GameState } from "@/types/GameTypes";
-import { useReducer } from "react";
+import { useReducer, useEffect, useRef } from "react";
 import { gameReducer } from "./gameReducer";
 import { GameContext } from "./useGame";
+import { getGameState, setGameState } from "./sessionStore";
 
-const initialState: GameState = {}
+const initialState: GameState = getGameState() ?? {};
 
 export function GameProvider({children}: {children: React.ReactNode}) {
 	const [ state, dispatch ] = useReducer(gameReducer, initialState);
+	const prevStateRef = useRef(state);
+
+	useEffect(() => {
+		if (state !== prevStateRef.current) {
+			prevStateRef.current = state;
+			setGameState(state);
+		}
+	}, [state]);
 
 	return (
 		<GameContext.Provider value={{ state, dispatch }} >
