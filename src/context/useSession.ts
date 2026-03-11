@@ -1,0 +1,14 @@
+import { createContext, useContext } from "react"
+
+interface SessionContextType {
+	sessionID: string | null,
+	setSessionID: (id: string | null) => void
+}
+
+export const SessionContext = createContext<SessionContextType | undefined>(undefined);
+
+export function useSession() {
+	const context = useContext(SessionContext);
+	if (!context) throw new Error("useSession must be used within a SessionProvider");
+	return context;
+}

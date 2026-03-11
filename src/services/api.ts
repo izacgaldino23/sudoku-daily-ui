@@ -17,5 +17,8 @@ export type DailySudokuResponse = {
 }
 
 export async function fetchDailySudoku(size: string): Promise<DailySudokuResponse> {
-    return apiFetch<DailySudokuResponse>(`/sudoku?size=${size}`);
+    return apiFetch<DailySudokuResponse>({
+		url: `/sudoku`,
+		params: { size },
+	});
 }
