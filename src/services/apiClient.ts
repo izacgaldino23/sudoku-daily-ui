@@ -6,7 +6,7 @@ interface FetchRequest {
 	params?: Record<string, string>;
 }
 
-export async function apiFetch<T>({ url }: FetchRequest): Promise<T> {
+export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
 	}
@@ -14,6 +14,10 @@ export async function apiFetch<T>({ url }: FetchRequest): Promise<T> {
 	const sessionID = getSessionID();
 	if (sessionID) {
 		headers["X-Session-Id"] = sessionID;
+	}
+
+	if (params) {
+		url = `${url}?${new URLSearchParams(params).toString()}`;
 	}
 	
 	const response = await fetch(`${env.apiUrl}${url}`, {

@@ -8,6 +8,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 			return {
 				...state,
 				[action.size]: {
+					session_token: action.payload.session_token,
 					board: action.payload.board,
 					fixed: action.payload.fixed,
 					selectedCell: null,

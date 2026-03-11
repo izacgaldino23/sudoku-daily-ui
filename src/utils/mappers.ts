@@ -3,11 +3,13 @@ import type { DailySudokuResponse } from "@/services/api"
 interface Board {
 	values: number[][]
 	fixed: boolean[][]
+	session_token: string
 }
 
 export function mapFromResponse(data: DailySudokuResponse): Board {
 	const values: number[][] = [];
 	const fixed: boolean[][] = [];
+	const session_token = data.session_token
 
 	for (let i = 0; i < data.size; i++) {
 		values[i] = []
@@ -23,5 +25,5 @@ export function mapFromResponse(data: DailySudokuResponse): Board {
 		fixed[cell.row][cell.col] = true
 	}
 
-	return { values, fixed }
+	return { values, fixed, session_token }
 }

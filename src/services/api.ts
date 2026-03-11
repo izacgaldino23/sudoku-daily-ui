@@ -10,10 +10,10 @@ export type Board = Cell[]
 
 export type DailySudokuResponse = {
 	id: string
-	date: string
-	number: number
 	size: number
 	board: Board
+	date: string
+	session_token: string
 }
 
 export async function fetchDailySudoku(size: string): Promise<DailySudokuResponse> {

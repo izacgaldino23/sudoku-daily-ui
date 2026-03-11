@@ -21,9 +21,12 @@ export function useSudoku() {
 			size,
 			payload: {
 				board: dataMapped.values,
-				fixed: dataMapped.fixed
+				fixed: dataMapped.fixed,
+				session_token: dataMapped.session_token
 			}
 		});
+
+		console.log(dataMapped);
 	}, [data, size, dispatch]);
 
 	function loadGame(newSize: BoardSize) {

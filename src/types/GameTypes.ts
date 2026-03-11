@@ -17,6 +17,7 @@ export type GameData = {
 	selectedCell: SelectedCell | null;
 	seconds: number;
 	status: GamesStatus;
+	session_token: string
 }
 
 export interface GameContextType {
@@ -39,7 +40,7 @@ export function BoardSizeToString(size: BoardSize) {
 
 export type GameAction = 
 	| { type: "LOADING_GAME"; size: BoardSize; }
-	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][] } }
+	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][], session_token: string } }
 	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
 	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }
 	| { type: "CLEAR_VALUE"; size: BoardSize; payload: { row: number, col: number } }
