@@ -1,8 +1,8 @@
 import type { GameState } from "@/types/GameTypes";
 import { useReducer, useEffect, useRef } from "react";
 import { gameReducer } from "./gameReducer";
-import { GameContext } from "./useGame";
-import { getGameState, setGameState } from "./sessionStore";
+import { GameContext } from "./GameContext";
+import { getGameState, setGameState } from "./gameStorage";
 
 const initialState: GameState = getGameState() ?? {};
 

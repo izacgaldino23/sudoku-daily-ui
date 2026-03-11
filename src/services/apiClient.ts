@@ -1,5 +1,5 @@
 import { env } from "@/config/env";
-import { getSessionID, setSessionID } from "@/context/sessionStore";
+import { getSessionID, setSessionID } from "@/context";
 
 interface FetchRequest {
 	url: string;

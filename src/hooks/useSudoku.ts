@@ -1,4 +1,4 @@
-import { useGame } from "@/context/useGame";
+import { useGame } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
 import { useEffect, useState } from "react";

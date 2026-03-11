@@ -3,7 +3,7 @@ import "./Board.scss"
 import Button from "../../inputs/button/Button"
 import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
-import { useGame } from "@/context/useGame"
+import { useGame } from "@/context"
 import type { GameData } from "@/types/GameTypes"
 
 function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {

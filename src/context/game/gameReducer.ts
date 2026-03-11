@@ -28,7 +28,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 			const { row, col, value } = action.payload;
 			const currentState = state[action.size];
 
-			// return if this size is not started or this cell is fixed
 			if (!currentState || currentState.fixed[row][col]) return state
 
 			const newBoardState = currentState.board.map((row: number[]) => [...row])
@@ -59,18 +58,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 				}
 			}
 		}
-		// case "TICK": {
-		// 	const currentState = state[action.size];
-		// 	if (!currentState || currentState.status !== Status.PLAYING) return state
-			
-		// 	return {
-		// 		...state,
-		// 		[action.size]: {
-		// 			...state[action.size],
-		// 			seconds: currentState.seconds + 1,
-		// 		}
-		// 	}
-		// }
 			
 		case "FINISH_GAME":
 			return {

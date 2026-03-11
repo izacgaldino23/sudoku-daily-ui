@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import Play from "./Play";
-import { GameProvider } from "@/context/GameProvider";
+import { GameProvider } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 
 const defaultSize: BoardSize = 4;

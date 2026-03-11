@@ -1,5 +1,5 @@
-import { SessionContext } from "./useSession";
-import { getSessionID, setSessionID } from "./sessionStore";
+import { SessionContext } from "./SessionContext";
+import { getSessionID, setSessionID } from "./sessionStorage";
 
 export function SessionProvider({children}: {children: React.ReactNode}) {
 	return (

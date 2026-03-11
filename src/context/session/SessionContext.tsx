@@ -7,7 +7,7 @@ interface SessionContextType {
 
 export const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export function useSession() {
+export function useSession(): SessionContextType {
 	const context = useContext(SessionContext);
 	if (!context) throw new Error("useSession must be used within a SessionProvider");
 	return context;
