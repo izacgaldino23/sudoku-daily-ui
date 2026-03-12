@@ -49,7 +49,7 @@ export default function Play({ size }: PlayAttributes) {
 			{!isStarted && <div className='welcome-message'>
 				<h2>{size}x{size} Not solved yet</h2>
 
-				<Button text='Start' onClick={handleSudokuStart} disabled={loading} />
+				<Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />
 			</div>}
 
 			{isStarted && <div>

@@ -1,5 +1,6 @@
 import { env } from "@/config/env";
 import { getSessionID, setSessionID } from "@/context";
+import { createApiError, createNetworkError } from "./errors";
 
 const sessionHeader = "X-Session-Id";
 
@@ -22,18 +23,28 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 		url = `${url}?${new URLSearchParams(params).toString()}`;
 	}
 	
-	const response = await fetch(`${env.apiUrl}${url}`, {
-		headers
-	});
+	try {
+		const response = await fetch(`${env.apiUrl}${url}`, {
+			headers
+		});
 
-	const newSessionId = response.headers.get(sessionHeader);
-	if (newSessionId) {
-		setSessionID(newSessionId);
+		const newSessionId = response.headers.get(sessionHeader);
+		if (newSessionId) {
+			setSessionID(newSessionId);
+		}
+
+		if (!response.ok) {
+			throw createApiError(
+				`API Error: ${response.statusText}`,
+				response.status
+			);
+		}
+
+		return response.json();
+	} catch (error) {
+		if (error instanceof Error && error.name === "ApiError") {
+			throw error;
+		}
+		throw createNetworkError("Network error");
 	}
-
-	if (!response.ok) {
-		throw new Error(`API Error: ${response.statusText}`);
-	}
-
-	return response.json();
 }
