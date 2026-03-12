@@ -3,9 +3,9 @@ const SESSION_KEY = "sudoku_session_id";
 function getStoredSession(): string | null {
 	if (typeof window === "undefined") return null;
 	try {
-		return localStorage.getItem(SESSION_KEY);
+		return sessionStorage.getItem(SESSION_KEY);
 	} catch (e) {
-		console.error("Failed to get session from localStorage:", e);
+		console.error("Failed to get session from sessionStorage:", e);
 		return null;
 	}
 }
@@ -14,12 +14,12 @@ function setStoredSession(id: string | null): void {
 	if (typeof window === "undefined") return;
 	try {
 		if (id) {
-			localStorage.setItem(SESSION_KEY, id);
+			sessionStorage.setItem(SESSION_KEY, id);
 		} else {
-			localStorage.removeItem(SESSION_KEY);
+			sessionStorage.removeItem(SESSION_KEY);
 		}
 	} catch (e) {
-		console.error("Failed to set session in localStorage:", e);
+		console.error("Failed to set session in sessionStorage:", e);
 	}
 }
 

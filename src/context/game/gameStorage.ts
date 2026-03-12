@@ -1,4 +1,4 @@
-import type { GameState } from "@/types/GameTypes";
+import type { GameState, BoardSize } from "@/types/GameTypes";
 
 const GAME_STATE_KEY = "sudoku_game_state";
 
@@ -7,10 +7,27 @@ function getStoredGameState(): GameState | null {
 	try {
 		const stored = localStorage.getItem(GAME_STATE_KEY);
 		if (!stored) return null;
-		return JSON.parse(stored) as GameState;
+
+		const state = JSON.parse(stored) as GameState;
+
+		clearExpiredGames(state);
+		
+		return state;
 	} catch (e) {
 		console.error("Failed to get game state from localStorage:", e);
 		return null;
+	}
+}
+
+function clearExpiredGames(state: GameState): void {
+	for (const key in state) {
+		const size: BoardSize = Number(key) as BoardSize;
+
+		if (!state[size]) continue;
+
+		if (Date.now() - state[size].startTime > 60000) {
+			delete state[size];
+		}
 	}
 }
 

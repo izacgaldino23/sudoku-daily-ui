@@ -1,6 +1,8 @@
 import { env } from "@/config/env";
 import { getSessionID, setSessionID } from "@/context";
 
+const sessionHeader = "X-Session-Id";
+
 interface FetchRequest {
 	url: string;
 	params?: Record<string, string>;
@@ -13,7 +15,7 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 
 	const sessionID = getSessionID();
 	if (sessionID) {
-		headers["X-Session-Id"] = sessionID;
+		headers[sessionHeader] = sessionID;
 	}
 
 	if (params) {
@@ -24,7 +26,7 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 		headers
 	});
 
-	const newSessionId = response.headers.get("X-Session-Id");
+	const newSessionId = response.headers.get(sessionHeader);
 	if (newSessionId) {
 		setSessionID(newSessionId);
 	}
