@@ -1,4 +1,4 @@
-import type { DailySudokuResponse } from "@/services/api"
+import type { DailySudokuResponse } from "@/types/ApiTypes";
 
 interface Board {
 	values: number[][]

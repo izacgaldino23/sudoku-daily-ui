@@ -3,8 +3,8 @@ import "./Board.scss"
 import Button from "../../inputs/button/Button"
 import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
-import { useGame } from "@/context"
 import type { GameData } from "@/types/GameTypes"
+import { useGameStore } from "@/store/useGameStore"
 
 function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
@@ -137,7 +137,10 @@ function isBoardComplete(state: GameData | undefined) {
 }
 
 export default function Board({ size }: BoardAttributes) {
-	const { state, dispatch } = useGame();
+	const state = useGameStore(state => state.state);
+	const finishGame = useGameStore(state => state.finishGame);
+	const selectCell = useGameStore(state => state.selectCell);
+	const setValue = useGameStore(state => state.setValue);
 	const currentState = state[size];
 
 	const conflicts = useMemo(() => {
@@ -151,9 +154,9 @@ export default function Board({ size }: BoardAttributes) {
 
 	useEffect(() => {
 		if (isVictory) {
-			dispatch({ type: "FINISH_GAME", size });
+			finishGame(size);
 		}
-	}, [isVictory, dispatch, size]);
+	}, [isVictory, finishGame, size]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
@@ -164,11 +167,7 @@ export default function Board({ size }: BoardAttributes) {
 	}, [size]);
 
 	const handleSelectCell = (row: number, col: number) => {
-		dispatch({
-			type: "SELECT_CELL",
-			payload: { row, col },
-			size
-		})
+		selectCell(size, { row, col });
 	}
 
 	const handleSetValue = (value: string) => {
@@ -177,15 +176,7 @@ export default function Board({ size }: BoardAttributes) {
 		let payload_value = value;
 		if (value === "") payload_value = "0";
 
-		dispatch({
-			type: "SET_VALUE",
-			size,
-			payload: {
-				row: currentState.selectedCell.row,
-				col: currentState.selectedCell.col,
-				value: parseInt(payload_value),
-			}
-		})
+		setValue(size, { ...currentState.selectedCell, value: Number(payload_value) });
 	}
 
 	if (!currentState) return null;

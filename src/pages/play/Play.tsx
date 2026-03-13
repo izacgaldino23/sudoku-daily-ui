@@ -2,11 +2,11 @@ import { Timer } from 'lucide-react'
 import './Play.scss'
 import Board from '@/components/game/board/Board'
 import { useEffect, useState } from 'react';
-import { useGame } from "@/context";
 import type { PlayAttributes } from '@/types/PlayTypes';
 import Button from '@/components/inputs/button/Button';
 import { useSudoku } from '@/hooks/useSudoku';
 import { Status } from '@/types/GameTypes';
+import { useGameStore } from '@/store/useGameStore';
 
 function zeroPad(num: number) {
 	return String(num).padStart(2, '0');
@@ -18,7 +18,7 @@ function calcSeconds(startTime?: number) {
 }
 
 export default function Play({ size }: PlayAttributes) {
-	const { state } = useGame();
+	const state = useGameStore(s => s.state);
 	const { loading, loadGame } = useSudoku();
 
 	const currentState = state[size];

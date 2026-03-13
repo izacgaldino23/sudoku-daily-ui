@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import Play from "./Play";
-import { GameProvider } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 
 const defaultSize: BoardSize = 4;
@@ -28,8 +27,6 @@ export default function PlayWrapper() {
 	const convertedSize: BoardSize = nameToNumber(size);
 
 	return (
-		<GameProvider>
-			<Play size={convertedSize} />
-		</GameProvider>
+		<Play size={convertedSize} />
 	)
 }

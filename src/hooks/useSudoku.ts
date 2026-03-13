@@ -1,22 +1,22 @@
-import { useGame } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
 import { useEffect, useRef, useState } from "react";
 import { useDailySudoku } from "./sudoku/queries";
 import { Status } from "@/types/GameTypes";
 import { getErrorMessage } from "@/services/errors";
-import { useAlert } from "@/context/alert/AlertContext";
 import { useSubmitSudokuSolve } from "./sudoku/mutations";
+import { useGameStore } from "@/store/useGameStore";
+import { useAlertStore } from "@/store/useAlertStore";
 
 export function useSudoku() {
-	const { state, dispatch } = useGame();
+	const state = useGameStore(s => s.state);
+	const loadingGame = useGameStore(s => s.loadingGame);
+	const pushAlert = useAlertStore(s => s.pushAlert)
 	
 	const [size, setSize] = useState<BoardSize | null>(null);
 
 	const dailyQuery = useDailySudoku(size);
 	const submitMutation = useSubmitSudokuSolve();
-
-	const { pushAlert } = useAlert();
 
 	const errorShownRef = useRef(false);
 
@@ -36,26 +36,19 @@ export function useSudoku() {
 
 		const dataMapped = mapFromResponse(dailyQuery.data);
 
-		dispatch({
-			type: "START_GAME",
-			size,
-			payload: {
-				board: dataMapped.values,
-				fixed: dataMapped.fixed,
-				session_token: dataMapped.session_token
-			}
+		useGameStore.getState().startGame(size, {
+			board: dataMapped.values,
+			fixed: dataMapped.fixed,
+			session_token: dataMapped.session_token
 		});
-	}, [dailyQuery, size, dispatch]);
+	}, [dailyQuery.data, size]);
 
 	function loadGame(newSize: BoardSize) {
 		if (state[newSize]?.status === Status.PLAYING) {
 			return;
 		}
 
-		dispatch({
-			type: "LOADING_GAME",
-			size: newSize 
-		});
+		loadingGame(newSize);
 		setSize(newSize);
 	}
 
