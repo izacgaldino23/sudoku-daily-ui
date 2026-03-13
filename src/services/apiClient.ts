@@ -1,6 +1,6 @@
 import { env } from "@/config/env";
-import { getSessionID, setSessionID } from "@/context";
 import { createApiError, createNetworkError } from "./errors";
+import { useSessionStore } from "@/store/useSessionStore";
 
 const sessionHeader = "X-Session-Id";
 
@@ -15,11 +15,13 @@ interface PostRequest {
 }
 
 export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
+	const sessionID = useSessionStore.getState().sessionID;
+	const setSessionID = useSessionStore.getState().setSessionID;
+
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
 	}
 
-	const sessionID = getSessionID();
 	if (sessionID) {
 		headers[sessionHeader] = sessionID;
 	}
@@ -55,11 +57,12 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 }
 
 export async function apiPost<T>({ url, data }: PostRequest): Promise<T> {
+	const sessionID = useSessionStore.getState().sessionID;
+
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
 	}
 
-	const sessionID = getSessionID();
 	if (sessionID) {
 		headers[sessionHeader] = sessionID;
 	}
