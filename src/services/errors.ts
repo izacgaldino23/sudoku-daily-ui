@@ -38,17 +38,17 @@ export function getErrorMessage(error: unknown): string {
 	if (!error) return "";
 	
 	if (isNetworkError(error)) {
-		return "Sem conexão com o servidor";
+		return "network error";
 	}
 	if (isValidationError(error)) {
 		return error.message;
 	}
 	if (isApiError(error)) {
 		if (error.status === 401) return "Unauthorized";
-		if (error.status === 403) return "Acesso negado";
-		if (error.status === 404) return "Recurso não encontrado";
-		if (error.status === 500) return "Erro no servidor";
+		if (error.status === 403) return "Forbidden";
+		if (error.status === 404) return "Not found";
+		if (error.status === 500) return "Server error";
 		return error.message;
 	}
-	return "Erro desconhecido";
+	return "unknown error";
 }

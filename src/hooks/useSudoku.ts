@@ -1,16 +1,33 @@
 import { useGame } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDailySudoku } from "./queries/useDailySudoku";
 import { Status } from "@/types/GameTypes";
+import { getErrorMessage } from "@/services/errors";
+import { useAlert } from "@/context/alert/AlertContext";
 
 export function useSudoku() {
 	const { state, dispatch } = useGame();
 	
 	const [ size , setSize ] = useState<BoardSize | null>(null);
 
-	const { data, isLoading, error } = useDailySudoku(size);
+	const { data, isLoading, isError, error } = useDailySudoku(size);
+
+	const { pushAlert } = useAlert();
+
+	const errorShownRef = useRef(false);
+
+	useEffect(() => {
+		errorShownRef.current = false;
+	}, [size]);
+
+	useEffect(() => {
+		if (isError && !errorShownRef.current) {
+			errorShownRef.current = true;
+			pushAlert(getErrorMessage(error), "error");
+		}
+	}, [isError, error, pushAlert]);
 
 	useEffect(() => {
 		if (!data || !size) return;
@@ -43,6 +60,5 @@ export function useSudoku() {
 	return {
 		loading: isLoading,
 		loadGame,
-		error,
 	}
 }

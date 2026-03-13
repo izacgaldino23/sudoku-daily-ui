@@ -1,0 +1,89 @@
+.alert-stack {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	width: 360px;
+	z-index: 1000;
+}
+
+.alert {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+
+	padding: 14px 16px;
+	border-radius: 8px;
+	border: 1px solid transparent;
+
+	animation: alert-in 0.25s ease;
+
+	&__icon {
+		display: flex;
+	}
+
+	&__content {
+		flex: 1;
+	}
+
+	&__close {
+		background: none;
+		border: none;
+		cursor: pointer;
+		opacity: 0.7;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+/* animação entrada */
+
+@keyframes alert-in {
+	from {
+		opacity: 0;
+		transform: translateX(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* variants */
+
+.alert--neutral {
+	background: #f3f4f6;
+	border-color: #e5e7eb;
+	color: #374151;
+}
+
+.alert--info {
+	background: #e6f4f8;
+	border-color: #cde7ef;
+	color: #0f4c5c;
+}
+
+.alert--success {
+	background: #e7f6ec;
+	border-color: #cdebd8;
+	color: #1e6b3c;
+}
+
+.alert--warning {
+	background: #fff4db;
+	border-color: #ffe3a3;
+	color: #8a6d1c;
+}
+
+.alert--error {
+	background: #fde8e8;
+	border-color: #f8caca;
+	color: #8a2d2d;
+}
