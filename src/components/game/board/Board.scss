@@ -54,8 +54,9 @@ $outer-border-color: rgba(v.$primary-color, .4);
 			}
 
 			&.selected {
-				background-color: v.$tertiary-color !important;
+				// background-color: v.$tertiary-color !important;
 				border-color: rgba(black, .2) !important;
+				border: 2px solid !important;
 			}
 
 			&.conflict {

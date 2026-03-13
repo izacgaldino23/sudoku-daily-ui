@@ -6,7 +6,7 @@ export interface BoardAttributes {
 
 export interface TileAttributes {
 	value?: number
-	filled?: boolean
+	fixed?: boolean
 	x?: number
 	y?: number
 	onClick?: () => void

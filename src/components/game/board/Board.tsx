@@ -3,13 +3,13 @@ import "./Board.scss"
 import Button from "../../inputs/button/Button"
 import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
-import type { GameData } from "@/types/GameTypes"
 import { useGameStore } from "@/store/useGameStore"
+import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
 
-function Tile({ value, x, y, filled, onClick, selected, conflict }: TileAttributes) {
+function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
-	if (selected) classes.push('selected');
-	if (filled) classes.push('filled');
+	if (fixed) classes.push('filled');
+	if (selected && !fixed) classes.push('selected');
 	if (conflict) classes.push('conflict');
 
 	return (
@@ -34,106 +34,6 @@ function numberToName(num: number) {
 		default:
 			return "four"
 	}
-}
-
-function getConflicts(board: number[][]): Set<string> {
-	const size = board.length;
-	const conflicts = new Set<string>();
-
-	// verify rows
-	for (let row = 0; row < size; row++) {
-		const seen = new Map<number, number[]>();
-
-		for (let col = 0; col < size; col++) {
-			const n = board[row][col];
-			if (n === 0) continue;
-
-			if (!seen.has(n)) {
-				seen.set(n, [col]);
-			} else {
-				seen.get(n)?.push(col);
-			}
-		}
-
-		seen.forEach((value) => {
-			if (value.length === 1) return;
-			value.forEach((col) => {
-				conflicts.add(`${col}.${row}`);
-			})
-		})
-	}
-
-	// Verify cols
-	for (let col = 0; col < size; col++) {
-		const seen = new Map<number, number[]>();
-
-		for (let row = 0; row < size; row++) {
-			const n = board[row][col];
-			if (n === 0) continue;
-
-			if (!seen.has(n)) {
-				seen.set(n, [row]);
-			} else {
-				seen.get(n)?.push(row);
-			}
-		}
-
-		seen.forEach((value) => {
-			if (value.length === 1) return;
-			value.forEach((row) => {
-				conflicts.add(`${col}.${row}`);
-			})
-		})
-	}
-
-	// Verify blocks
-	const blockSizes: { [key: number]: number[] } = {
-		4: [2, 2],
-		6: [3, 2],
-		9: [3, 3],
-	};
-
-	const bs = blockSizes[size];
-	let currentRow = 0;
-	let currentCol = 0;
-
-	for (let block = 0; block < size; block++) {
-		const seen = new Map<number, number[][]>();
-
-		for (let row = currentRow; row < currentRow + bs[0]; row++) {
-			for (let col = currentCol; col < currentCol + bs[1]; col++) {
-				const n = board[row][col];
-				if (n === 0) continue;
-
-				if (!seen.has(n)) {
-					seen.set(n, [[row, col]]);
-				} else {
-					seen.get(n)?.push([row, col]);
-				}
-			}
-		}
-
-		seen.forEach((value) => {
-			if (value.length === 1) return;
-			value.forEach((pos) => {
-				conflicts.add(`${pos[1]}.${pos[0]}`);
-			})
-		})
-
-		currentCol += bs[1];
-		if (currentCol >= size) {
-			currentCol = 0;
-			currentRow += bs[0];
-		}
-	}
-
-	return conflicts;
-}
-
-function isBoardComplete(state: GameData | undefined) {
-	if (!state) return false;
-	const { board } = state;
-	return board.every((row) => row.every((n) => n !== 0));
 }
 
 export default function Board({ size }: BoardAttributes) {
@@ -189,7 +89,7 @@ export default function Board({ size }: BoardAttributes) {
 						<Tile 
 							value={value} 
 							key={`${rowIndex}-${colIndex}`} 
-							filled={currentState.fixed[rowIndex][colIndex]} 
+							fixed={currentState.fixed[rowIndex][colIndex]} 
 							conflict={conflicts.has(`${colIndex}.${rowIndex}`)}
 							selected={currentState.selectedCell?.row === rowIndex && currentState.selectedCell?.col === colIndex}
 							onClick={() => handleSelectCell(rowIndex, colIndex)}

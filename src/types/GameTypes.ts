@@ -20,11 +20,6 @@ export type GameData = {
 	session_token: string
 }
 
-export interface GameContextType {
-	state: GameState
-	dispatch: React.Dispatch<GameAction>
-}
-
 export function BoardSizeToString(size: BoardSize) {
 	switch (size) {
 		case 4:
@@ -38,10 +33,18 @@ export function BoardSizeToString(size: BoardSize) {
 	}
 }
 
-export type GameAction = 
-	| { type: "LOADING_GAME"; size: BoardSize; }
-	| { type: "START_GAME"; size: BoardSize; payload: { board: number[][], fixed: boolean[][], session_token: string } }
-	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
-	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }
-	| { type: "CLEAR_VALUE"; size: BoardSize; payload: { row: number, col: number } }
-	| { type: "FINISH_GAME"; size: BoardSize; }
+export class Binary {
+	val: number;
+
+	constructor(val: number) {
+		this.val = 1 <<val;
+	}
+
+	add(other: number) {
+		this.val = this.val | (1 << other);
+	}
+
+	contains(other: number) {
+		return (this.val & (1 << other)) !== 0;
+	}
+}
