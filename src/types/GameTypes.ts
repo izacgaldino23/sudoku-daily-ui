@@ -44,5 +44,4 @@ export type GameAction =
 	| { type: "SELECT_CELL"; size: BoardSize; payload: SelectedCell }
 	| { type: "SET_VALUE"; size: BoardSize; payload: { row: number, col: number, value: number } }
 	| { type: "CLEAR_VALUE"; size: BoardSize; payload: { row: number, col: number } }
-	// | { type: "TICK"; size: BoardSize;}
 	| { type: "FINISH_GAME"; size: BoardSize; }

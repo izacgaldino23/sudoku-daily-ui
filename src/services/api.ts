@@ -1,24 +1,16 @@
-import { apiFetch } from "./apiClient";
-
-export type Cell = {
-	row: number;
-	col: number;
-	value: number;
-}
-
-export type Board = Cell[]
-
-export type DailySudokuResponse = {
-	id: string
-	size: number
-	board: Board
-	date: string
-	session_token: string
-}
+import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/ApiTypes";
+import { apiFetch, apiPost } from "./apiClient";
 
 export async function fetchDailySudoku(size: string): Promise<DailySudokuResponse> {
     return apiFetch<DailySudokuResponse>({
 		url: `/sudoku`,
 		params: { size },
+	});
+}
+
+export async function submitSudokuSolve(request: SubmitSudokuSolve): Promise<void> {
+	return apiPost({
+		url: `/sudoku/submit`,
+		data: request,
 	});
 }

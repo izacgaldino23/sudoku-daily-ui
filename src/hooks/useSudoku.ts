@@ -2,17 +2,19 @@ import { useGame } from "@/context";
 import type { BoardSize } from "@/types/GameTypes";
 import { mapFromResponse } from "@/utils/mappers";
 import { useEffect, useRef, useState } from "react";
-import { useDailySudoku } from "./queries/useDailySudoku";
+import { useDailySudoku } from "./sudoku/queries";
 import { Status } from "@/types/GameTypes";
 import { getErrorMessage } from "@/services/errors";
 import { useAlert } from "@/context/alert/AlertContext";
+import { useSubmitSudokuSolve } from "./sudoku/mutations";
 
 export function useSudoku() {
 	const { state, dispatch } = useGame();
 	
-	const [ size , setSize ] = useState<BoardSize | null>(null);
+	const [size, setSize] = useState<BoardSize | null>(null);
 
-	const { data, isLoading, isError, error } = useDailySudoku(size);
+	const dailyQuery = useDailySudoku(size);
+	const submitMutation = useSubmitSudokuSolve();
 
 	const { pushAlert } = useAlert();
 
@@ -23,16 +25,16 @@ export function useSudoku() {
 	}, [size]);
 
 	useEffect(() => {
-		if (isError && !errorShownRef.current) {
+		if (dailyQuery.isError && !errorShownRef.current) {
 			errorShownRef.current = true;
-			pushAlert(getErrorMessage(error), "error");
+			pushAlert(getErrorMessage(dailyQuery.error), "error");
 		}
-	}, [isError, error, pushAlert]);
+	}, [dailyQuery, pushAlert]);
 
 	useEffect(() => {
-		if (!data || !size) return;
+		if (!dailyQuery.data || !size) return;
 
-		const dataMapped = mapFromResponse(data);
+		const dataMapped = mapFromResponse(dailyQuery.data);
 
 		dispatch({
 			type: "START_GAME",
@@ -43,7 +45,7 @@ export function useSudoku() {
 				session_token: dataMapped.session_token
 			}
 		});
-	}, [data, size, dispatch]);
+	}, [dailyQuery, size, dispatch]);
 
 	function loadGame(newSize: BoardSize) {
 		if (state[newSize]?.status === Status.PLAYING) {
@@ -57,8 +59,21 @@ export function useSudoku() {
 		setSize(newSize);
 	}
 
+	function submit() {
+		if (!size || !state[size]) return;
+
+		const gameState = state[size];
+		const playToken = gameState.session_token;
+		
+		submitMutation.mutate({
+			play_token: playToken,
+			solution: gameState.board,
+		});
+	}
+
 	return {
-		loading: isLoading,
+		loading: dailyQuery.isLoading,
 		loadGame,
+		submit,
 	}
 }
