@@ -20,6 +20,7 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
+		"X-Requested-Id": crypto.randomUUID(),
 	}
 
 	if (sessionID) {
