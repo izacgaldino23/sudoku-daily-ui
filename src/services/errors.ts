@@ -34,7 +34,7 @@ export function isValidationError(error: unknown): error is ValidationErrorType 
 	return error instanceof Error && (error as ValidationErrorType).name === "ValidationError";
 }
 
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: Error): string {
 	if (!error) return "";
 	
 	if (isNetworkError(error)) {
@@ -50,5 +50,6 @@ export function getErrorMessage(error: unknown): string {
 		if (error.status === 500) return "Server error";
 		return error.message;
 	}
-	return "unknown error";
+
+	return error.message;
 }

@@ -56,7 +56,7 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 	}
 }
 
-export async function apiPost<T>({ url, data }: PostRequest): Promise<T> {
+export async function apiPost<T = void>({ url, data }: PostRequest): Promise<T> {
 	const sessionID = useSessionStore.getState().sessionID;
 
 	const headers: Record<string, string> = {
@@ -81,11 +81,16 @@ export async function apiPost<T>({ url, data }: PostRequest): Promise<T> {
 			);
 		}
 
-		return response.json();
+		const text = await response.text();
+		if (text === "OK") {
+			return {} as T;
+		}
+		return text ? JSON.parse(text) : ({} as T);
 	} catch (error) {
 		if (error instanceof Error && error.name === "ApiError") {
 			throw error;
 		}
+		console.log(error);
 		throw createNetworkError("Network error");
 	}
 }

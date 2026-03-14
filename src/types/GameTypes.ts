@@ -16,6 +16,7 @@ export type GameData = {
 	fixed: boolean[][];
 	selectedCell: SelectedCell | null;
 	startTime: number;
+	endTime: number;
 	status: GamesStatus;
 	session_token: string
 }

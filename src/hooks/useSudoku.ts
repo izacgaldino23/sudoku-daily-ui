@@ -19,9 +19,11 @@ export function useSudoku() {
 	const submitMutation = useSubmitSudokuSolve();
 
 	const errorShownRef = useRef(false);
+	const submittedRef = useRef(false);
 
 	useEffect(() => {
 		errorShownRef.current = false;
+		submittedRef.current = false;
 	}, [size]);
 
 	useEffect(() => {
@@ -52,15 +54,25 @@ export function useSudoku() {
 		setSize(newSize);
 	}
 
-	function submit() {
-		if (!size || !state[size]) return;
+	function submit(currentSize: BoardSize) {
+		if (!state[currentSize] || submittedRef.current) return;
 
-		const gameState = state[size];
+		submittedRef.current = true;
+		const gameState = state[currentSize];
 		const playToken = gameState.session_token;
 		
 		submitMutation.mutate({
 			play_token: playToken,
 			solution: gameState.board,
+		}, {
+			onError: (err) => {
+				submittedRef.current = false;
+				pushAlert(getErrorMessage(err), "error");
+			},
+			onSuccess: () => {
+				console.log("success");
+				useGameStore.getState().finishGame(currentSize);
+			}
 		});
 	}
 

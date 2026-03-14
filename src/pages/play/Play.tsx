@@ -24,6 +24,7 @@ export default function Play({ size }: PlayAttributes) {
 	const currentState = state[size];
 
 	const isStarted = currentState && currentState.status == Status.PLAYING;
+	const isFinished = currentState && currentState.status == Status.FINISHED;
 	
 	const [ seconds, setSeconds ] = useState(calcSeconds(currentState?.startTime));
 
@@ -47,7 +48,9 @@ export default function Play({ size }: PlayAttributes) {
 	return (
 		<section className="play">
 			{!isStarted && <div className='welcome-message'>
-				<h2>{size}x{size} Not solved yet</h2>
+				{!isFinished && <h2>{size}x{size} Not solved yet</h2>}
+
+				{isFinished && <h2>{size}x{size} Finished in {zeroPad(Math.floor(seconds / 60))}:{zeroPad(Math.floor(seconds % 60))}</h2>}
 
 				<Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />
 			</div>}

@@ -5,7 +5,8 @@ import type { SubmitSudokuSolve } from "@/types/ApiTypes";
 export function useSubmitSudokuSolve() {
 	const mutation =  useMutation({
 		mutationFn: (data: SubmitSudokuSolve) => submitSudokuSolve(data),
-		retry: false,
+		retry: 3,
+		retryDelay: 1000,
 	})
 
 	return { ...mutation}

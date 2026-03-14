@@ -5,6 +5,8 @@ import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
 import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
+import { useSudoku } from "@/hooks/useSudoku"
+import { Status } from "@/types/GameTypes"
 
 function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
@@ -38,7 +40,6 @@ function numberToName(num: number) {
 
 export default function Board({ size }: BoardAttributes) {
 	const state = useGameStore(state => state.state);
-	const finishGame = useGameStore(state => state.finishGame);
 	const selectCell = useGameStore(state => state.selectCell);
 	const setValue = useGameStore(state => state.setValue);
 	const currentState = state[size];
@@ -51,12 +52,15 @@ export default function Board({ size }: BoardAttributes) {
 	const isComplete = isBoardComplete(currentState);
 	const hasConflicts = conflicts.size > 0;
 	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
+	const finished = currentState && currentState.status === Status.FINISHED;
+
+	const { submit } = useSudoku();
 
 	useEffect(() => {
-		if (isVictory) {
-			finishGame(size);
+		if (isVictory && !finished) {
+			submit(size);
 		}
-	}, [isVictory, finishGame, size]);
+	}, [submit, isVictory, finished, size]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
@@ -100,13 +104,13 @@ export default function Board({ size }: BoardAttributes) {
 				)}
 			</div>
 
-			{isVictory && <div className="victory">Você finalizou!</div>}
+			{finished && <div className="victory">Você finalizou!</div>}
 
-			{!isVictory && <div className="buttons">
+			{!finished && <div className="buttons">
 				{buttonsLabels.map((label) => (
 					<Button className="square" key={label} text={label} onClick={handleSetValue}/>
 				))}
-				<Button className="eraser square" onClick={handleSetValue} text="">
+				<Button className="eraser square" onClick={handleSetValue} text="" disabled={isVictory}>
 					<Eraser />
 				</Button>
 			</div>}

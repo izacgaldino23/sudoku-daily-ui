@@ -11,7 +11,7 @@ interface GameStore {
 	selectCell: (size: BoardSize, payload: SelectedCell) => void
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
 	clearValue: (size: BoardSize, payload: { row: number, col: number }) => void
-	finishGame: (size: BoardSize,) => void
+	finishGame: (size: BoardSize) => void
 }
 
 export const useGameStore = create<GameStore>()(
@@ -89,7 +89,8 @@ export const useGameStore = create<GameStore>()(
 					...s.state,
 					[size]: {
 						...s.state[size],
-						status: Status.FINISHED
+						status: Status.FINISHED,
+						endTime: Date.now()
 					}
 				}
 			})),
