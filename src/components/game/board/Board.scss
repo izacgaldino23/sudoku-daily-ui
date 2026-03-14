@@ -30,6 +30,7 @@ $outer-border-color: rgba(v.$primary-color, .4);
 }
 
 .board {
+	position: relative;
 	.grid {
 		display: inline-grid;
 		overflow: hidden;
@@ -60,9 +61,9 @@ $outer-border-color: rgba(v.$primary-color, .4);
 			}
 
 			&.conflict {
-				background-color: v.$red1-color;
-				color: rgba(black, .5);
-				border-color: rgba(black, .2);
+				background-color: rgba(v.$red2-color, .15);
+				color: v.$red2-color;
+				border-color: v.$red2-color;
 			}
 		}
 
@@ -83,5 +84,5 @@ $outer-border-color: rgba(v.$primary-color, .4);
 		margin-top: 1rem;
 		display: flex;
 		justify-content: space-between;
-	}
+	}	
 }

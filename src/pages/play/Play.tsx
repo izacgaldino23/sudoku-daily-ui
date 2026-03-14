@@ -1,16 +1,13 @@
 import { Timer } from 'lucide-react'
 import './Play.scss'
 import Board from '@/components/game/board/Board'
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { PlayAttributes } from '@/types/PlayTypes';
 import Button from '@/components/inputs/button/Button';
 import { useSudoku } from '@/hooks/useSudoku';
 import { Status } from '@/types/GameTypes';
 import { useGameStore } from '@/store/useGameStore';
-
-function zeroPad(num: number) {
-	return String(num).padStart(2, '0');
-}
+import { SecondsToClock } from '@/utils/gameLogic';
 
 function calcSeconds(startTime?: number) {
 	if (!startTime) return 0;
@@ -45,25 +42,37 @@ export default function Play({ size }: PlayAttributes) {
 		}
 	}
 
+	const { hours, minutes, remainingSeconds } = useMemo(() => SecondsToClock(seconds), [seconds]);
+
 	return (
 		<section className="play">
 			{!isStarted && <div className='welcome-message'>
 				{!isFinished && <h2>{size}x{size} Not solved yet</h2>}
 
-				{isFinished && <h2>{size}x{size} Finished in {zeroPad(Math.floor(seconds / 60))}:{zeroPad(Math.floor(seconds % 60))}</h2>}
+				{/* {isFinished && <h2>{size}x{size} Finished in {zeroPad(Math.floor(seconds / 60))}:{zeroPad(Math.floor(seconds % 60))}</h2>} */}
+				{isFinished && (
+					<div className="victory">
+						<div className="title">Great Job!</div>
+						<div className="subtitle">You finished in {hours}:{minutes}:{remainingSeconds}</div>
+					</div>
+				)}
 
-				<Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />
+				{!isFinished && <Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />}
 			</div>}
 
 			{isStarted && <div>
 				<div className='timer'>
 					<div className='clock'>
+						{hours != "00" && (<div className="part hour">
+							<span className="value">{hours}</span>
+							<span className="label">h</span>
+						</div>)}
 						<div className="part minute">
-							<span className="value">{Math.floor(seconds / 60)}</span>
+							<span className="value">{minutes}</span>
 							<span className="label">min</span>
 						</div>
 						<div className="part state.seconds">
-							<span className="value">{zeroPad(Math.floor(seconds % 60))}</span>
+							<span className="value">{remainingSeconds}</span>
 							<span className="label">sec</span>
 						</div>
 					</div>

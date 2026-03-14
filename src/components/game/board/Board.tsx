@@ -104,7 +104,12 @@ export default function Board({ size }: BoardAttributes) {
 				)}
 			</div>
 
-			{finished && <div className="victory">Você finalizou!</div>}
+			{finished && (
+				<div className="victory">
+					<div className="title">Parabéns!</div>
+					<div className="subtitle">Você completou o sudoku</div>
+				</div>
+			)}
 
 			{!finished && <div className="buttons">
 				{buttonsLabels.map((label) => (

@@ -20,7 +20,7 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
-		"X-Requested-Id": crypto.randomUUID(),
+		"X-Request-Id": crypto.randomUUID(),
 	}
 
 	if (sessionID) {
@@ -62,6 +62,7 @@ export async function apiPost<T = void>({ url, data }: PostRequest): Promise<T> 
 
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
+		"X-Request-Id": crypto.randomUUID(),
 	}
 
 	if (sessionID) {

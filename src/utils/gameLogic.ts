@@ -6,7 +6,6 @@ const gridColsBySize: Record<number, number> = {
 	9: 3
 }
 
-
 function getGridIndexByPosition(col: number, row: number, size: number, gridRows: number, gridCols: number) {
 	const gridColCount = size / gridCols;
 
@@ -86,4 +85,22 @@ export function isBoardComplete(state: GameData | undefined) {
 	if (!state) return false;
 	const { board } = state;
 	return board.every((row) => row.every((n) => n !== 0));
+}
+
+interface Clock {
+	hours: string;
+	minutes: string;
+	remainingSeconds: string;
+}
+
+function zeroPad(num: number) {
+	return String(num).padStart(2, '0');
+}
+
+export function SecondsToClock(seconds: number): Clock {
+	const hours = zeroPad(Math.floor(seconds / 3600));
+	const minutes = zeroPad(Math.floor((seconds % 3600) / 60));
+	const remainingSeconds = zeroPad(Math.floor(seconds % 60));
+
+	return { hours, minutes, remainingSeconds };
 }
