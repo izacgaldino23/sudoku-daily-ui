@@ -40,6 +40,14 @@
 					width: calc(100% + 1rem);
 				}
 			}
+
+			&.active {
+				color: v.$lighter-color;
+
+				&:before {
+					width: calc(100% + 1rem);
+				}
+			}
 		}
 	}
 }

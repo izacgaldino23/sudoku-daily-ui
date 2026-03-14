@@ -26,6 +26,10 @@ export default function Play({ size }: PlayAttributes) {
 	const [ seconds, setSeconds ] = useState(calcSeconds(currentState?.startTime));
 
 	useEffect(() => {
+		setSeconds(calcSeconds(currentState?.startTime));
+	}, [currentState?.startTime]);
+
+	useEffect(() => {
 		if (!isStarted) return;
 
 		const interval = setInterval(() => {
@@ -33,7 +37,7 @@ export default function Play({ size }: PlayAttributes) {
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [isStarted, currentState]);
+	}, [isStarted, currentState?.startTime]);
 
 	const handleSudokuStart = () => {
 		const validSizes = [4, 6, 9];
@@ -71,7 +75,7 @@ export default function Play({ size }: PlayAttributes) {
 							<span className="value">{minutes}</span>
 							<span className="label">min</span>
 						</div>
-						<div className="part state.seconds">
+						<div className="part seconds">
 							<span className="value">{remainingSeconds}</span>
 							<span className="label">sec</span>
 						</div>
