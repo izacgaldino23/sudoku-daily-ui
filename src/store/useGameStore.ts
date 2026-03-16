@@ -2,6 +2,12 @@ import { Status, type BoardSize, type GameState, type SelectedCell } from "@/typ
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
 
+const TODAY = () => new Date().toDateString();
+
+function isToday(timestamp: number): boolean {
+	return new Date(timestamp).toDateString() === TODAY();
+}
+
 interface GameStore {
 	state: GameState;
 	
@@ -98,6 +104,17 @@ export const useGameStore = create<GameStore>()(
 		{ 
 			name: "sudoku-game-state",
 			storage: createJSONStorage(() => localStorage),
+			onRehydrateStorage: () => (state) => {
+				if (!state) return;
+				
+				const hasValidState = Object.values(state.state).some(
+					(gameData) => gameData?.startTime && isToday(gameData.startTime)
+				);
+
+				if (!hasValidState) {
+					state.state = {};
+				}
+			}
 		}
 	)
 )

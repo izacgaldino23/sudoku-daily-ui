@@ -21,7 +21,6 @@
 				background-color: v.$quaternary-color;
 				color: v.$lighter-color;
 				border-radius: 0 0 .5rem .5rem;
-				// box-shadow: .2rem .2rem .3rem rgba(.5, .5, .5, .2);
 
 				&:before {
 					content: "";
@@ -36,6 +35,17 @@
 					margin-bottom: .5rem;
 				}
 			}
+		}
+	}
+
+	.profile-icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+		margin: 1rem;
+
+		img {
+			width: 3rem;
 		}
 	}
 }
