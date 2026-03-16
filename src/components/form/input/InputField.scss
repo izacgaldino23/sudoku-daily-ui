@@ -1,0 +1,53 @@
+@use "@/styles/_variables.scss" as v;
+
+.input-field {
+	display: flex;
+	flex-direction: column;
+	gap: .3rem;
+
+	label {
+		font-size: .9rem;
+		color: v.$primary-color;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		span {
+			display: flex;
+			cursor: pointer;
+
+			svg {
+				width: 1.2rem;
+			}
+		}
+	}
+
+	input {
+		border: 1px solid rgba(black, .3);
+		border-radius: .2rem;
+		padding: .5rem .7rem;
+		font-size: 1rem;
+		background: v.$lighter-color;
+		color: v.$primary-color;
+		outline: none;
+		transition: 0.3s ease;
+
+		margin-bottom: 1rem;
+
+		&::placeholder {
+			color: rgba(v.$primary-color, .5);
+		}
+
+		&:focus {
+			border-color: v.$quaternary-color;
+			box-shadow: 0 0 0 2px rgba(v.$quaternary-color, .2);
+		}
+
+		&:disabled {
+			opacity: .5;
+			cursor: not-allowed;
+			background: rgba(v.$lighter-color, .7);
+		}
+	}
+}

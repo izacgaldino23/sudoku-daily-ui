@@ -3,7 +3,7 @@ import './Play.scss'
 import Board from '@/components/game/board/Board'
 import { useEffect, useMemo, useState } from 'react';
 import type { PlayAttributes } from '@/types/PlayTypes';
-import Button from '@/components/inputs/button/Button';
+import Button from '@/components/form/button/Button';
 import { useSudoku } from '@/hooks/useSudoku';
 import { Status } from '@/types/GameTypes';
 import { useGameStore } from '@/store/useGameStore';

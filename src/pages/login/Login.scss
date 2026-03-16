@@ -1,0 +1,40 @@
+@use "@/styles/_variables.scss" as v;
+
+.enter-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	background-color: v.$lighter-color;
+
+	.panel {
+		display: flex;
+		flex-direction: column;
+		background-color: white;
+
+		min-width: 380px;
+
+		padding: 4rem 2.5rem;
+		border-radius: .5rem;
+    	box-shadow: 1px 1px 5px rgba(black, .2);
+
+		h2 {
+			margin-bottom: 1.5rem;
+			color: v.$quaternary-color;
+		}
+
+		.change-form-link {
+			margin-top: 2rem;
+			padding-top: 2rem;
+			text-align: center;
+			border-top: 1px dashed rgba(v.$primary-color, .5);
+			color: rgba(v.$primary-color, .9);
+
+			a {
+				color: rgba(v.$quaternary-color, .9);
+				cursor: pointer;
+			}
+		}
+	}
+}

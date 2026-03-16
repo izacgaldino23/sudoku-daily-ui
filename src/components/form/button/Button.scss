@@ -22,6 +22,14 @@ $dark-border-color: rgba(black, .3);
 		padding: 0;
 	}
 
+	&:not(.square) {
+		padding: .5rem 1.5rem;
+	}
+
+	&.right {
+		margin-left: auto;
+	}
+
 	&:hover {
 		background: v.$tertiary-color;
 		color: v.$quaternary-color;
