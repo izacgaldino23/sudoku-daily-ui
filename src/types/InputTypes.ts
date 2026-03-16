@@ -14,4 +14,5 @@ export interface InputFieldProps {
 	disabled?: boolean;
 	required?: boolean;
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	ref?: React.RefObject<HTMLInputElement | null>;
 }

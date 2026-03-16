@@ -3,7 +3,7 @@ import "./InputField.scss"
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 
-export function InputField({ id, label, type, value, placeholder, disabled, onChange, required }: InputFieldProps) {
+export function InputField({ id, label, type, value, placeholder, disabled, onChange, required, ref }: InputFieldProps) {
 	const isPassword = type === InputFieldType.PASSWORD;
 	const [ showPassword, setShowPassword ] = useState<boolean>(false)
 
@@ -27,7 +27,7 @@ export function InputField({ id, label, type, value, placeholder, disabled, onCh
 				</label>
 			)}
 
-			<input id={id} type={isPassword && showPassword ? "text" : type} value={value} placeholder={placeholder} disabled={disabled} onChange={onChange} required={required} />
+			<input ref={ref} id={id} type={isPassword && showPassword ? "text" : type} value={value} placeholder={placeholder} disabled={disabled} onChange={onChange} required={required} />
 		</div>
 	)
 }
