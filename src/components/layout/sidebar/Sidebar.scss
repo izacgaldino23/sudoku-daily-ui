@@ -33,15 +33,7 @@
 				border-bottom-right-radius: .5rem;
 			}
 
-			&:hover {
-				color: v.$lighter-color;
-
-				&:before {
-					width: calc(100% + 1rem);
-				}
-			}
-
-			&.active {
+			&:hover, &.active {
 				color: v.$lighter-color;
 
 				&:before {
