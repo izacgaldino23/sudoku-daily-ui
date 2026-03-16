@@ -1,7 +1,6 @@
 @use "@/styles/_variables.scss" as v;
 
 .logo {
-	cursor: default;
 	position: absolute;
 	top: 0;
     left: 0;
@@ -11,6 +10,8 @@
 
 	display: flex;
 	align-items: center;
+	text-decoration: none;
+
 
 	.sector {
 		display: inline-grid;
@@ -36,8 +37,7 @@
 
 	.title {
 		text-wrap: auto;
-    	width: 50%;
-	}
+    	width: 50%;	}
 
 	::selection {
 		background-color: transparent;

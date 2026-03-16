@@ -42,24 +42,11 @@ export default function Login() {
 				):(
 					<p className="change-form-link">Have an account? <a onClick={toggleAuthMode}>Login</a></p>
 				)}
-				
 			</section>
-			{/* {isLogin ? (
-			) : (
-				<section className="register panel">
-					<h2>Register</h2>
 
-					<form action="">
-						<InputField id="username" label="Username" type="email" placeholder="Enter a unique username" disabled={false} required={true} />
-						<InputField id="email" label="Email" type="email" placeholder="Enter your email" disabled={false} required={true} />
-						<InputField id="password" label="Password" type="password" placeholder="Enter your password" disabled={false} required={true} />
-
-						<Button text="Login" className="right" onClick={() => {}} disabled={false} />
-					</form>
-
-					<p className="change-form-link">Have an account? <a onClick={() => setIsLogin(true)}>Login</a></p>
-				</section>
-			)} */}
+			<footer className="enter-footer">
+				<p>© Copyright 2026. All rights reserved.</p>
+			</footer>
 		</div>
 	)
 }

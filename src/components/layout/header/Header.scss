@@ -43,9 +43,14 @@
 		right: 0;
 		top: 0;
 		margin: 1rem;
+		border-radius: .5rem;
+    	overflow: hidden;
+		// box-shadow: 1px 1px 3px rgba(black, .2);
+		border: 1px solid rgba(v.$quaternary-color, .2);
 
 		img {
-			width: 3rem;
+			width: 2.5rem;
+			display: block;
 		}
 	}
 }

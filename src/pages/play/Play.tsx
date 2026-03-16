@@ -64,28 +64,30 @@ export default function Play({ size }: PlayAttributes) {
 				{!isFinished && <Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />}
 			</div>}
 
-			{isStarted && <div>
-				<div className='timer'>
-					<div className='clock'>
-						{hours != "00" && (<div className="part hour">
-							<span className="value">{hours}</span>
-							<span className="label">h</span>
-						</div>)}
-						<div className="part minute">
-							<span className="value">{minutes}</span>
-							<span className="label">min</span>
+			{isStarted && (
+				<div className='game'>
+					<div className='timer'>
+						<div className='clock'>
+							{hours != "00" && (<div className="part hour">
+								<span className="value">{hours}</span>
+								<span className="label">h</span>
+							</div>)}
+							<div className="part minute">
+								<span className="value">{minutes}</span>
+								<span className="label">min</span>
+							</div>
+							<div className="part seconds">
+								<span className="value">{remainingSeconds}</span>
+								<span className="label">sec</span>
+							</div>
 						</div>
-						<div className="part seconds">
-							<span className="value">{remainingSeconds}</span>
-							<span className="label">sec</span>
-						</div>
+
+						<Timer />
 					</div>
 
-					<Timer />
+					<Board size={size}/>
 				</div>
-
-				<Board size={size}/>
-			</div>}
+			)}
 		</section>
 	)
 }
