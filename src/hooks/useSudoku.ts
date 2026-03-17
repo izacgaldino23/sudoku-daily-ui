@@ -1,5 +1,5 @@
 import type { BoardSize } from "@/types/GameTypes";
-import { mapFromResponse } from "@/utils/mappers";
+import { mapSudokuFromResponse } from "@/utils/mappers";
 import { useEffect, useRef, useState } from "react";
 import { useDailySudoku } from "./sudoku/queries";
 import { Status } from "@/types/GameTypes";
@@ -36,7 +36,7 @@ export function useSudoku() {
 	useEffect(() => {
 		if (!dailyQuery.data || !size) return;
 
-		const dataMapped = mapFromResponse(dailyQuery.data);
+		const dataMapped = mapSudokuFromResponse(dailyQuery.data);
 
 		useGameStore.getState().startGame(size, {
 			board: dataMapped.values,

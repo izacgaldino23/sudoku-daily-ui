@@ -3,14 +3,46 @@ import { InputField } from "@/components/form/input/InputField";
 import Logo from "@/components/layout/logo/Logo";
 import "./Login.scss"
 import { useRef, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useAlertStore } from "@/store/useAlertStore";
+
+interface formValidation {
+	valid: boolean;
+	email?: string;
+	password?: string;
+	username?: string;
+}
+
+function isFormValid(email: string, password: string, username?: string): formValidation {
+	if (username && username.length < 8) {
+		return { username: "Username must be at least 8 characters long", valid: false };
+	}
+
+	if (email.length < 8) {
+		return { email: "Email must be at least 8 characters long", valid: false };
+	} else if (!email.includes("@")) {
+		return { email: "Email must include @", valid: false };
+	}
+
+	if (password.length < 8) {
+		return { password: "Password must be at least 8 characters long", valid: false };
+	} else if (password.length > 32) {
+		return { password: "Password must be less than 32 characters long", valid: false };
+	}
+
+	return { valid: true };
+}
 
 export default function Login() {
 	const [ isLogin, setIsLogin ] = useState<boolean>(true);
 	const title = isLogin ? "Login" : "Register";
+	const { login, register } = useAuth();
 
 	const [ username, setUsername ] = useState<string>("");
 	const [ email, setEmail ] = useState<string>("");
 	const [ password, setPassword ] = useState<string>("");
+
+	const pushAlert = useAlertStore(s => s.pushAlert);
 
 	const emailRef = useRef<HTMLInputElement>(null);
 
@@ -22,6 +54,16 @@ export default function Login() {
 		setTimeout(() => emailRef.current?.focus(), 0);
 	};
 
+	const handleFormSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const result = isFormValid(email, password, username);
+		if (!result.valid) return pushAlert(result.email || result.password || result.username || "Something went wrong", "error");
+
+		if (isLogin) login({ email, password }); 
+		else register({ username, email, password }); 
+	};
+
 	return (
 		<div className="enter-container">
 			<Logo />
@@ -29,7 +71,7 @@ export default function Login() {
 			<section className="login panel">
 				<h2>{title}</h2>
 
-				<form action="" key={isLogin ? "login" : "register"} >
+				<form action="" onSubmit={handleFormSubmit} key={isLogin ? "login" : "register"} >
 					<InputField id="email" label="Email" type="email" value={email} ref={emailRef} placeholder="Enter your email" disabled={false} required={true} onChange={(e) => setEmail(e.target.value)} />
 					{!isLogin && <InputField id="username" label="Username" type="text" value={username} placeholder="Enter your username" disabled={false} required={true} onChange={(e) => setUsername(e.target.value)} />}
 					<InputField id="password" label="Password" type="password" value={password} placeholder="Enter your password" disabled={false} required={true} onChange={(e) => setPassword(e.target.value)} />

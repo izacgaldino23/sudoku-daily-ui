@@ -1,4 +1,5 @@
 import type { DailySudokuResponse } from "@/types/ApiTypes";
+import type { LoginResponse } from "@/types/AuthTypes";
 
 interface Board {
 	values: number[][]
@@ -6,7 +7,14 @@ interface Board {
 	session_token: string
 }
 
-export function mapFromResponse(data: DailySudokuResponse): Board {
+interface AuthUser {
+	username: string
+	email: string
+	accessToken: string
+	refreshToken: string
+}
+
+export function mapSudokuFromResponse(data: DailySudokuResponse): Board {
 	const values: number[][] = [];
 	const fixed: boolean[][] = [];
 	const session_token = data.session_token
@@ -26,4 +34,13 @@ export function mapFromResponse(data: DailySudokuResponse): Board {
 	}
 
 	return { values, fixed, session_token }
+}
+
+export function mapAuthLoginFromResponse(data: LoginResponse): AuthUser {
+	return {
+		username: data.username,
+		email: data.email,
+		accessToken: data.accessToken,
+		refreshToken: data.refreshToken
+	}
 }
