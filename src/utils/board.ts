@@ -1,4 +1,4 @@
-import type { BoardSize } from "@/types";
+import type { BoardSize } from "@/types/game"
 
 export function BoardSizeToString(size: BoardSize) {
 	switch (size) {

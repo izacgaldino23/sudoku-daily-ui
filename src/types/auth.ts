@@ -22,3 +22,7 @@ export type LoginResponse = {
 	username: string;
 	email: string;
 }
+
+export type RefreshResponse = {
+	accessToken: string;
+}
