@@ -1,4 +1,5 @@
-import { Binary, type GameData } from "@/types/GameTypes";
+import { Binary } from "@/utils/binary";
+import type { GameData } from "@/types/game";
 
 const gridColsBySize: Record<number, number> = {
 	4: 2,

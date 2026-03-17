@@ -1,10 +1,10 @@
 import { mapAuthLoginFromResponse } from "@/utils/mappers";
 import { useEffect, useRef } from "react";
-import { getErrorMessage } from "@/services/errors";
+import { getErrorMessage } from "@/types/errors";
 import { useAlertStore } from "@/store/useAlertStore";
 import { useLoginUser, useRegisterUser } from "./auth/mutations";
 import { useAuthStore } from "@/store/useAuthStore";
-import type { LoginRequest, RegisterRequest } from "@/types/AuthTypes";
+import type { LoginRequest, RegisterRequest } from "@/types/auth";
 
 	type LoginCallback = () => void;
 	type RegisterCallback = () => void;

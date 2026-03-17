@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchDailySudoku } from "@/services/sudokuApi";
-import { BoardSizeToString, type BoardSize } from "@/types/GameTypes";
+import { BoardSizeToString } from "@/utils/board";
+import type { BoardSize } from "@/types/game";
 
 export function useDailySudoku(size: BoardSize | null) {
     return useQuery({

@@ -1,9 +1,9 @@
-import type { BoardSize } from "@/types/GameTypes";
+import type { BoardSize } from "@/types/game";
 import { mapSudokuFromResponse } from "@/utils/mappers";
 import { useEffect, useRef, useState } from "react";
 import { useDailySudoku } from "./sudoku/queries";
-import { Status } from "@/types/GameTypes";
-import { getErrorMessage } from "@/services/errors";
+import { Status } from "@/types/game";
+import { getErrorMessage } from "@/types/errors";
 import { useSubmitSudokuSolve } from "./sudoku/mutations";
 import { useGameStore } from "@/store/useGameStore";
 import { useAlertStore } from "@/store/useAlertStore";

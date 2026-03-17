@@ -2,11 +2,11 @@ import { useEffect, useMemo } from "react"
 import "./Board.scss"
 import Button from "../../form/button/Button"
 import { Eraser } from "lucide-react"
-import type { BoardAttributes, TileAttributes } from "@/types/BoardTypes"
+import type { BoardAttributes, TileAttributes } from "@/types/ui"
 import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
 import { useSudoku } from "@/hooks/useSudoku"
-import { Status } from "@/types/GameTypes"
+import { Status } from "@/types/game"
 
 function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];

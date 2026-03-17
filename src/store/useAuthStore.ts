@@ -1,4 +1,4 @@
-import { type AuthData } from "@/types/AuthTypes"
+import { type AuthData } from "@/types/auth"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 

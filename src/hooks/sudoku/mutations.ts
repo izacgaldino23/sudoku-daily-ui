@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { submitSudokuSolve } from "@/services/sudokuApi";
-import type { SubmitSudokuSolve } from "@/types/ApiTypes";
+import type { SubmitSudokuSolve } from "@/types/api";
 
 export function useSubmitSudokuSolve() {
 	const mutation =  useMutation({

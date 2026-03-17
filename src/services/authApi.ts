@@ -1,4 +1,4 @@
-import type { LoginRequest, LoginResponse, RegisterRequest } from "@/types/AuthTypes";
+import type { LoginRequest, LoginResponse, RegisterRequest } from "@/types/auth";
 import { apiPost } from "./apiClient";
 
 export async function registerUser(request: RegisterRequest): Promise<void> {

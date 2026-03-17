@@ -1,4 +1,4 @@
-import { InputFieldType, type InputFieldProps } from "@/types/InputTypes";
+import { InputFieldType, type InputFieldProps } from "@/types/ui";
 import "./InputField.scss"
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";

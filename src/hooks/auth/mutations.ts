@@ -1,5 +1,5 @@
 import { loginUser, registerUser } from "@/services/authApi";
-import type { LoginRequest, RegisterRequest } from "@/types/AuthTypes";
+import type { LoginRequest, RegisterRequest } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 
 export function useRegisterUser() {

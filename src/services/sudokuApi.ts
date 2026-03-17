@@ -1,4 +1,4 @@
-import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/ApiTypes";
+import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/api";
 import { apiFetch, apiPost } from "./apiClient";
 
 export async function fetchDailySudoku(size: string): Promise<DailySudokuResponse> {

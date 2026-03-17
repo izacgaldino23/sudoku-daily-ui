@@ -1,4 +1,4 @@
-import type { AlertItem } from "@/types/AlertTypes";
+import type { AlertItem } from "@/types/ui";
 import { Alert } from "./Alert";
 
 interface Props {

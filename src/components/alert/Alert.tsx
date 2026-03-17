@@ -1,4 +1,4 @@
-import type { AlertItem } from "@/types/AlertTypes";
+import type { AlertItem } from "@/types/ui";
 import { X, Info, CheckCircle, AlertTriangle, XCircle, Shield } from "lucide-react";
 
 import "./Alert.scss";

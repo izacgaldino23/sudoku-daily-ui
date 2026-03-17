@@ -1,4 +1,4 @@
-import { Status, type BoardSize, type GameState, type SelectedCell } from "@/types/GameTypes"
+import { Status, type BoardSize, type GameState, type SelectedCell } from "@/types/game"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
 
