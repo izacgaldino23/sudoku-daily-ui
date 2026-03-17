@@ -1,6 +1,6 @@
 import { env } from "@/config/env";
-import { createApiError, createNetworkError } from "./errors";
 import { useSessionStore } from "@/store/useSessionStore";
+import { createApiError, createNetworkError } from "@/types/errors";
 
 const sessionHeader = "X-Session-Id";
 
@@ -36,6 +36,9 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 			headers
 		});
 
+		const text = await response.text();
+		const parsed = text ? safeJsonParse(text) : null;
+
 		const newSessionId = response.headers.get(sessionHeader);
 		if (newSessionId) {
 			setSessionID(newSessionId);
@@ -43,12 +46,14 @@ export async function apiFetch<T>({ url, params }: FetchRequest): Promise<T> {
 
 		if (!response.ok) {
 			throw createApiError(
-				`API Error: ${response.statusText}`,
-				response.status
+				parsed?.message || `API Error: ${response.statusText}`,
+				response.status,
+				undefined,
+				parsed?.validation_errors
 			);
 		}
 
-		return response.json();
+		return parsed as T;
 	} catch (error) {
 		if (error instanceof Error && error.name === "ApiError") {
 			throw error;
@@ -76,23 +81,36 @@ export async function apiPost<T = void>({ url, data }: PostRequest): Promise<T> 
 			body: JSON.stringify(data)
 		});
 
+		const text = await response.text();
+		const parsed = text ? safeJsonParse(text) : null;
+
 		if (!response.ok) {
 			throw createApiError(
-				`API Error: ${response.statusText}`,
-				response.status
+				parsed?.message || `API Error: ${response.statusText}`,
+				response.status,
+				undefined,
+				parsed?.validation_errors
 			);
 		}
 
-		const text = await response.text();
-		if (text === "OK") {
+		if ([204, 201].includes(response.status) || !text || text === "OK") {
 			return {} as T;
 		}
-		return text ? JSON.parse(text) : ({} as T);
+
+		return parsed as T;
 	} catch (error) {
 		if (error instanceof Error && error.name === "ApiError") {
 			throw error;
 		}
-		console.log(error);
+		
 		throw createNetworkError("Network error");
+	}
+}
+
+function safeJsonParse(text: string) {
+	try {
+		return JSON.parse(text);
+	} catch {
+		return null;
 	}
 }

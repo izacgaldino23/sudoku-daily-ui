@@ -2,7 +2,7 @@ import type { LoginRequest, LoginResponse, RegisterRequest } from "@/types/auth"
 import { apiPost } from "./apiClient";
 
 export async function registerUser(request: RegisterRequest): Promise<void> {
-	return apiPost({
+	return apiPost<void>({
 		url: `/auth/register`,
 		data: request,
 	});

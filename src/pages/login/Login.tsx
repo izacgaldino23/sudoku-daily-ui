@@ -65,7 +65,7 @@ export default function Login() {
 		if (isLogin) {
 			login({ email, password }, () => navigate("/"));
 		} else {
-			register({ username, email, password }, () => setIsLogin(true));
+			register({ username, email, password }, toggleAuthMode);
 		}
 	};
 
@@ -77,11 +77,41 @@ export default function Login() {
 				<h2>{title}</h2>
 
 				<form action="" onSubmit={handleFormSubmit} key={isLogin ? "login" : "register"} >
-					<InputField id="email" label="Email" type="email" value={email} ref={emailRef} placeholder="Enter your email" disabled={false} required={true} onChange={(e) => setEmail(e.target.value)} />
-					{!isLogin && <InputField id="username" label="Username" type="text" value={username} placeholder="Enter your username" disabled={false} required={true} onChange={(e) => setUsername(e.target.value)} />}
-					<InputField id="password" label="Password" type="password" value={password} placeholder="Enter your password" disabled={false} required={true} onChange={(e) => setPassword(e.target.value)} />
+					<InputField
+						id="email"
+						label="Email"
+						type="email"
+						value={email}
+						ref={emailRef}
+						placeholder="Enter your email"
+						disabled={false}
+						required={true}
+						onChange={(e) => setEmail(e.target.value)} />
+					{!isLogin && (
+						<InputField 
+							id="username" 
+							label="Username" 
+							type="text" 
+							value={username} 
+							placeholder="Enter your username" 
+							disabled={false} 
+							required={true} 
+							onChange={(e) => setUsername(e.target.value)} />
+					)}
+					<InputField 
+						id="password" 
+						label="Password" 
+						type="password" 
+						value={password} 
+						placeholder="Enter your password" 
+						disabled={false} 
+						required={true} 
+						onChange={(e) => setPassword(e.target.value)} />
 
-					<Button text="Access" className="right" onClick={() => {}} disabled={false} />
+					<Button 
+						text="Access" 
+						className="right" 
+						onClick={() => {}} disabled={false} />
 				</form>
 
 				{isLogin ? (

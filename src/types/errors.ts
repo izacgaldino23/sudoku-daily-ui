@@ -1,12 +1,29 @@
-export type ApiErrorType = Error & { status: number; code?: string; name: "ApiError" };
+export type ValidationError = {
+	field: string;
+	message: string;
+};
+
+export type ApiErrorType = Error & { 
+	name: "ApiError"
+	status: number;
+	code?: string; 
+	validationErrors?: ValidationError[];
+};
+
 export type NetworkErrorType = Error & { name: "NetworkError" };
 export type ValidationErrorType = Error & { name: "ValidationError" };
 
-export function createApiError(message: string, status: number, code?: string): ApiErrorType {
+export function createApiError(
+	message: string,
+	status: number,
+	code?: string,
+	validationErrors?: ValidationError[]
+): ApiErrorType {
 	const error = new Error(message) as ApiErrorType;
 	error.name = "ApiError";
 	error.status = status;
 	error.code = code;
+	error.validationErrors = validationErrors;
 	return error;
 }
 
