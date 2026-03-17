@@ -6,68 +6,83 @@ import { useLoginUser, useRegisterUser } from "./auth/mutations";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { LoginRequest, RegisterRequest } from "@/types/AuthTypes";
 
-export function useAuth() {
-	const pushAlert = useAlertStore(s => s.pushAlert)
+	type LoginCallback = () => void;
+	type RegisterCallback = () => void;
 
-	const registerMutation = useRegisterUser();
-	const loginMutation = useLoginUser();
+	export function useAuth() {
+		const pushAlert = useAlertStore(s => s.pushAlert)
 
-	const errorShownRef = useRef(false);
-	const registerRef = useRef(false);
-	const loginRef = useRef(false);
+		const registerMutation = useRegisterUser();
+		const loginMutation = useLoginUser();
 
-	useEffect(() => {
-		errorShownRef.current = false;
-		registerRef.current = false;
-		loginRef.current = false;
-	}, []);
+		const errorShownRef = useRef(false);
+		const registerRef = useRef(false);
+		const loginRef = useRef(false);
 
-	useEffect(() => {
-		if (!loginMutation.data) return;
+		const loginSuccessRef = useRef<LoginCallback | null>(null);
+		const registerSuccessRef = useRef<RegisterCallback | null>(null);
 
-		const dataMapped = mapAuthLoginFromResponse(loginMutation.data);
+		useEffect(() => {
+			errorShownRef.current = false;
+			registerRef.current = false;
+			loginRef.current = false;
+		}, []);
 
-		useAuthStore.getState().login(dataMapped);
-	}, [loginMutation.data]);
+		useEffect(() => {
+			if (!loginMutation.data) return;
 
-	function login(data: LoginRequest) {
-		if (loginRef.current) return;
+			const dataMapped = mapAuthLoginFromResponse(loginMutation.data);
 
-		loginRef.current = true;
-		
-		loginMutation.mutate({
-			email: data.email,
-			password: data.password,
-		}, {
-			onError: (err) => {
-				loginRef.current = false;
-				pushAlert(getErrorMessage(err), "error");
-			},
-			onSuccess: () => {
-				pushAlert("Successfully logged in!", "success")
-			}
-		});
-	}
+			useAuthStore.getState().login(dataMapped);
+			loginSuccessRef.current?.();
+		}, [loginMutation.data]);
 
-	function register(data: RegisterRequest) {
-		if (registerRef.current) return;
+		useEffect(() => {
+			if (!registerMutation.data) return;
 
-		registerRef.current = true;
-		
-		registerMutation.mutate({
-			username: data.username,
-			email: data.email,
-			password: data.password,
-		}, {
-			onError: (err) => {
-				registerRef.current = false;
-				pushAlert(getErrorMessage(err), "error");
-			},
-			onSuccess: () => {
-				pushAlert("Successfully registered!", "success")
-			}
-		});
-	}
+			registerSuccessRef.current?.();
+		}, [registerMutation.data]);
+
+		function login(data: LoginRequest, onSuccess?: () => void) {
+			if (loginRef.current) return;
+
+			loginRef.current = true;
+			loginSuccessRef.current = onSuccess || null;
+			
+			loginMutation.mutate({
+				email: data.email,
+				password: data.password,
+			}, {
+				onError: (err) => {
+					loginRef.current = false;
+					pushAlert(getErrorMessage(err), "error");
+				},
+				onSuccess: () => {
+					pushAlert("Successfully logged in!", "success")
+				}
+			});
+		}
+
+		function register(data: RegisterRequest, onSuccess?: () => void) {
+			if (registerRef.current) return;
+
+			registerRef.current = true;
+			registerSuccessRef.current = onSuccess || null;
+			
+			registerMutation.mutate({
+				username: data.username,
+				email: data.email,
+				password: data.password,
+			}, {
+				onError: (err) => {
+					registerRef.current = false;
+					pushAlert(getErrorMessage(err), "error");
+				},
+				onSuccess: () => {
+					pushAlert("Successfully registered!", "success")
+				}
+			});
+		}
 
 	return {
 		loading: loginMutation.status == "pending" || registerMutation.status == "pending",

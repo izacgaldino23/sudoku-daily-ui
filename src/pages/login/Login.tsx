@@ -5,6 +5,7 @@ import "./Login.scss"
 import { useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlertStore } from "@/store/useAlertStore";
+import { useNavigate } from "react-router-dom";
 
 interface formValidation {
 	valid: boolean;
@@ -37,6 +38,7 @@ export default function Login() {
 	const [ isLogin, setIsLogin ] = useState<boolean>(true);
 	const title = isLogin ? "Login" : "Register";
 	const { login, register } = useAuth();
+	const navigate = useNavigate();
 
 	const [ username, setUsername ] = useState<string>("");
 	const [ email, setEmail ] = useState<string>("");
@@ -60,8 +62,11 @@ export default function Login() {
 		const result = isFormValid(email, password, username);
 		if (!result.valid) return pushAlert(result.email || result.password || result.username || "Something went wrong", "error");
 
-		if (isLogin) login({ email, password }); 
-		else register({ username, email, password }); 
+		if (isLogin) {
+			login({ email, password }, () => navigate("/"));
+		} else {
+			register({ username, email, password }, () => setIsLogin(true));
+		}
 	};
 
 	return (
