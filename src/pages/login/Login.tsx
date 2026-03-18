@@ -2,10 +2,11 @@ import Button from "@/components/form/button/Button";
 import { InputField } from "@/components/form/input/InputField";
 import Logo from "@/components/layout/logo/Logo";
 import "./Login.scss"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlertStore } from "@/store/useAlertStore";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface formValidation {
 	valid: boolean;
@@ -37,8 +38,17 @@ function isFormValid(email: string, password: string, username?: string): formVa
 export default function Login() {
 	const [ isLogin, setIsLogin ] = useState<boolean>(true);
 	const title = isLogin ? "Login" : "Register";
+	const buttonText = isLogin ? "Access" : "Register";
 	const { login, register } = useAuth();
 	const navigate = useNavigate();
+
+	const authState = useAuthStore(s => s.state);
+
+	useEffect(() => {
+		if (authState?.username) {
+		navigate("/", { replace: true });
+		}
+	}, [authState?.username, navigate]);
 
 	const [ username, setUsername ] = useState<string>("");
 	const [ email, setEmail ] = useState<string>("");
@@ -109,7 +119,7 @@ export default function Login() {
 						onChange={(e) => setPassword(e.target.value)} />
 
 					<Button 
-						text="Access" 
+						text={buttonText} 
 						className="right" 
 						onClick={() => {}} disabled={false} />
 				</form>
