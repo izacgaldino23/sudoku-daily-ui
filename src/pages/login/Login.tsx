@@ -3,10 +3,11 @@ import { InputField } from "@/components/form/input/InputField";
 import Logo from "@/components/layout/logo/Logo";
 import "./Login.scss"
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useLoginUser, useRegisterUser } from "@/hooks/auth/mutations";
 import { useAlertStore } from "@/store/useAlertStore";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
+import { getErrorMessage } from "@/types/errors";
 
 interface formValidation {
 	valid: boolean;
@@ -39,7 +40,8 @@ export default function Login() {
 	const [ isLogin, setIsLogin ] = useState<boolean>(true);
 	const title = isLogin ? "Login" : "Register";
 	const buttonText = isLogin ? "Access" : "Register";
-	const { login, register } = useAuth();
+	const loginMutation = useLoginUser();
+	const registerMutation = useRegisterUser();
 	const navigate = useNavigate();
 
 	const authState = useAuthStore(s => s.state);
@@ -73,9 +75,27 @@ export default function Login() {
 		if (!result.valid) return pushAlert(result.email || result.password || result.username || "Something went wrong", "error");
 
 		if (isLogin) {
-			login({ email, password }, () => navigate("/"));
+			loginMutation.mutate(
+				{ email, password },
+				{
+					onError: (err) => pushAlert(getErrorMessage(err), "error"),
+					onSuccess: () => {
+						pushAlert("Successfully logged in!", "success");
+						navigate("/");
+					},
+				}
+			);
 		} else {
-			register({ username, email, password }, toggleAuthMode);
+			registerMutation.mutate(
+				{ username, email, password },
+				{
+					onError: (err) => pushAlert(getErrorMessage(err), "error"),
+					onSuccess: () => {
+						pushAlert("Successfully registered!", "success");
+						toggleAuthMode();
+					},
+				}
+			);
 		}
 	};
 

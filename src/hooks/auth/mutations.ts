@@ -1,33 +1,27 @@
-import { loginUser, refresh, registerUser } from "@/services/authApi";
-import type { LoginRequest, RegisterRequest } from "@/types/auth";
+import { loginUser, registerUser } from "@/services/authApi";
 import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions } from "@tanstack/react-query";
+import type { ApiErrorType, NetworkErrorType, ValidationErrorType } from "@/types/errors";
+
+type AuthError = ApiErrorType | NetworkErrorType | ValidationErrorType;
+
+const MUTATION_CONFIG: Pick<UseMutationOptions<unknown, AuthError, unknown, unknown>, "retry" | "retryDelay"> = {
+	retry: 3,
+	retryDelay: 1000,
+};
 
 export function useRegisterUser() {
-	const mutation =  useMutation({
-		mutationFn: (data: RegisterRequest) => registerUser(data),
-		retry: 3,
-		retryDelay: 1000,
-	})
-
-	return { ...mutation}
+	return useMutation({
+		mutationFn: registerUser,
+		...MUTATION_CONFIG,
+		mutationKey: ["auth", "register"],
+	});
 }
 
 export function useLoginUser() {
-	const mutation =  useMutation({
-		mutationFn: (data: LoginRequest) => loginUser(data),
-		retry: 3,
-		retryDelay: 1000,
-	})
-
-	return { ...mutation}
-}
-
-export function useRefresh() {
-	const mutation =  useMutation({
-		mutationFn: (data: string) => refresh(data),
-		retry: 3,
-		retryDelay: 1000,
-	})
-
-	return { ...mutation}
+	return useMutation({
+		mutationFn: loginUser,
+		...MUTATION_CONFIG,
+		mutationKey: ["auth", "login"],
+	});
 }
