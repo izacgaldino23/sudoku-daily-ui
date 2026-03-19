@@ -1,13 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { submitSudokuSolve } from "@/services/sudokuApi";
-import type { SubmitSudokuSolve } from "@/types/api";
+import { MUTATION_CONFIG } from "../config";
 
 export function useSubmitSudokuSolve() {
-	const mutation =  useMutation({
-		mutationFn: (data: SubmitSudokuSolve) => submitSudokuSolve(data),
-		retry: 3,
-		retryDelay: 1000,
-	})
-
-	return { ...mutation}
+	return useMutation({
+		mutationFn: submitSudokuSolve,
+		...MUTATION_CONFIG,
+		mutationKey: ["sudoku", "submit"],
+	});
 }

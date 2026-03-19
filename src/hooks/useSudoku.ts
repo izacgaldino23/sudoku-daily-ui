@@ -1,37 +1,19 @@
 import type { BoardSize } from "@/types/game";
 import { mapSudokuFromResponse } from "@/utils/mappers";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDailySudoku } from "./sudoku/queries";
 import { Status } from "@/types/game";
-import { getErrorMessage } from "@/types/errors";
 import { useSubmitSudokuSolve } from "./sudoku/mutations";
 import { useGameStore } from "@/store/useGameStore";
-import { useAlertStore } from "@/store/useAlertStore";
 
 export function useSudoku() {
 	const state = useGameStore(s => s.state);
 	const loadingGame = useGameStore(s => s.loadingGame);
-	const pushAlert = useAlertStore(s => s.pushAlert)
 	
 	const [size, setSize] = useState<BoardSize | null>(null);
 
 	const dailyQuery = useDailySudoku(size);
 	const submitMutation = useSubmitSudokuSolve();
-
-	const errorShownRef = useRef(false);
-	const submittedRef = useRef(false);
-
-	useEffect(() => {
-		errorShownRef.current = false;
-		submittedRef.current = false;
-	}, [size]);
-
-	useEffect(() => {
-		if (dailyQuery.isError && !errorShownRef.current) {
-			errorShownRef.current = true;
-			pushAlert(getErrorMessage(dailyQuery.error), "error");
-		}
-	}, [dailyQuery, pushAlert]);
 
 	useEffect(() => {
 		if (!dailyQuery.data || !size) return;
@@ -55,24 +37,17 @@ export function useSudoku() {
 	}
 
 	function submit(currentSize: BoardSize) {
-		if (!state[currentSize] || submittedRef.current) return;
+		if (!state[currentSize]) return;
 
-		submittedRef.current = true;
 		const gameState = state[currentSize];
-		const playToken = gameState.session_token;
 		
 		submitMutation.mutate({
-			play_token: playToken,
+			play_token: gameState.session_token,
 			solution: gameState.board,
 		}, {
-			onError: (err) => {
-				submittedRef.current = false;
-				pushAlert(getErrorMessage(err), "error");
-			},
 			onSuccess: () => {
-				console.log("success");
 				useGameStore.getState().finishGame(currentSize);
-			}
+			},
 		});
 	}
 
@@ -80,5 +55,7 @@ export function useSudoku() {
 		loading: dailyQuery.isLoading,
 		loadGame,
 		submit,
+		submitMutation,
+		dailyQuery,
 	}
 }
