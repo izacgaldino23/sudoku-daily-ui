@@ -1,3 +1,5 @@
+import type { BoardSize } from "./game";
+
 export type AuthData = {
 	accessToken: string;
 	refreshToken: string;
@@ -25,4 +27,16 @@ export type LoginResponse = {
 
 export type RefreshResponse = {
 	accessToken: string;
+}
+
+export type ProfileResume = {
+	TotalGames: Record<BoardSize, number>
+	TodayGames: Record<BoardSize, GameResult>
+	BestTimes: Record<BoardSize, GameResult>
+}
+
+export type GameResult = {
+	Size: BoardSize
+	Finished: boolean
+	Time: number
 }
