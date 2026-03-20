@@ -4,7 +4,7 @@ import Board from '@/components/game/board/Board'
 import { useEffect, useMemo, useState } from 'react';
 import type { PlayAttributes } from '@/types/ui';
 import Button from '@/components/form/button/Button';
-import { useSudoku } from '@/hooks/useSudoku';
+import { useGame } from '@/hooks/sudoku/useGame';
 import { Status } from '@/types/game';
 import { useGameStore } from '@/store/useGameStore';
 import { SecondsToClock } from '@/utils/gameLogic';
@@ -16,7 +16,7 @@ function calcSeconds(startTime?: number) {
 
 export default function Play({ size }: PlayAttributes) {
 	const state = useGameStore(s => s.state);
-	const { loading, loadGame } = useSudoku();
+	const { loadGame } = useGame();
 
 	const currentState = state[size];
 
@@ -61,7 +61,7 @@ export default function Play({ size }: PlayAttributes) {
 					</div>
 				)}
 
-				{!isFinished && <Button text={loading ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={loading} />}
+				{!isFinished && <Button text={currentState?.status === Status.LOADING ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={currentState?.status === Status.LOADING} />}
 			</div>}
 
 			{isStarted && (

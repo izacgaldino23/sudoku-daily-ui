@@ -1,6 +1,9 @@
 import { Status, type BoardSize, type GameState, type SelectedCell } from "@/types/game"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
+import { fetchDailySudoku, submitSudokuSolve } from "@/services/sudokuApi";
+import { mapSudokuFromResponse } from "@/utils/mappers";
+import { BoardSizeToString } from "@/utils/board";
 
 const TODAY = () => new Date().toDateString();
 
@@ -18,11 +21,13 @@ interface GameStore {
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
 	clearValue: (size: BoardSize, payload: { row: number, col: number }) => void
 	finishGame: (size: BoardSize) => void
+	loadGame: (size: BoardSize) => Promise<void>
+	submitSolve: (size: BoardSize) => Promise<void>
 }
 
 export const useGameStore = create<GameStore>()(
 	persist(
-		(set) => ({
+		(set, get) => ({
 			state: {},
 			loadingGame: (size: BoardSize) => set(s => ({
 				state: {
@@ -100,6 +105,33 @@ export const useGameStore = create<GameStore>()(
 					}
 				}
 			})),
+			loadGame: async (size: BoardSize) => {
+				const { state } = get();
+				if (state[size]?.status === Status.PLAYING) return;
+				
+				get().loadingGame(size);
+				
+				const data = await fetchDailySudoku(BoardSizeToString(size));
+				const mapped = mapSudokuFromResponse(data);
+				
+				get().startGame(size, {
+					board: mapped.values,
+					fixed: mapped.fixed,
+					session_token: mapped.session_token
+				});
+			},
+			submitSolve: async (size: BoardSize) => {
+				const { state } = get();
+				const gameState = state[size];
+				if (!gameState) return;
+				
+				await submitSudokuSolve({
+					play_token: gameState.session_token,
+					solution: gameState.board,
+				});
+				
+				get().finishGame(size);
+			},
 		}),
 		{ 
 			name: "sudoku-game-state",

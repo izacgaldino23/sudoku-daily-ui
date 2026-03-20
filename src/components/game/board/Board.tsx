@@ -5,7 +5,7 @@ import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/ui"
 import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
-import { useSudoku } from "@/hooks/useSudoku"
+import { useGame } from "@/hooks/sudoku/useGame"
 import { Status } from "@/types/game"
 
 function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
@@ -54,13 +54,13 @@ export default function Board({ size }: BoardAttributes) {
 	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
 	const finished = currentState && currentState.status === Status.FINISHED;
 
-	const { submit } = useSudoku();
+	const { submitSolve } = useGame();
 
 	useEffect(() => {
 		if (isVictory && !finished) {
-			submit(size);
+			submitSolve(size);
 		}
-	}, [submit, isVictory, finished, size]);
+	}, [submitSolve, isVictory, finished, size]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
