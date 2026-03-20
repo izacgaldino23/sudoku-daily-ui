@@ -4,6 +4,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { fetchDailySudoku, submitSudokuSolve } from "@/services/sudokuApi";
 import { mapSudokuFromResponse } from "@/utils/mappers";
 import { BoardSizeToString } from "@/utils/board";
+import { useAlertStore } from "./useAlertStore";
+import { getErrorMessage } from "@/types/errors";
 
 const TODAY = () => new Date().toDateString();
 
@@ -111,26 +113,34 @@ export const useGameStore = create<GameStore>()(
 				
 				get().loadingGame(size);
 				
-				const data = await fetchDailySudoku(BoardSizeToString(size));
-				const mapped = mapSudokuFromResponse(data);
-				
-				get().startGame(size, {
-					board: mapped.values,
-					fixed: mapped.fixed,
-					session_token: mapped.session_token
-				});
+				try {
+					const data = await fetchDailySudoku(BoardSizeToString(size));
+					const mapped = mapSudokuFromResponse(data);
+					
+					get().startGame(size, {
+						board: mapped.values,
+						fixed: mapped.fixed,
+						session_token: mapped.session_token
+					});
+				} catch (err) {
+					useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
+				}
 			},
 			submitSolve: async (size: BoardSize) => {
 				const { state } = get();
 				const gameState = state[size];
 				if (!gameState) return;
 				
-				await submitSudokuSolve({
-					play_token: gameState.session_token,
-					solution: gameState.board,
-				});
-				
-				get().finishGame(size);
+				try {
+					await submitSudokuSolve({
+						play_token: gameState.session_token,
+						solution: gameState.board,
+					});
+					
+					get().finishGame(size);
+				} catch (err) {
+					useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
+				}
 			},
 		}),
 		{ 
