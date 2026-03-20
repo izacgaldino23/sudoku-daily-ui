@@ -1,5 +1,6 @@
 import type { RequestConfig } from "@/types/api";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAlertStore } from "@/store/useAlertStore";
 import { refresh } from "@/services/authApi";
 
 let isRefreshing = false;
@@ -34,6 +35,7 @@ export async function tryRefreshToken(): Promise<boolean> {
 				refreshToken: authState.refreshToken,
 			});
 		} catch {
+			useAlertStore.getState().pushAlert("Session expired. Please login again.", "warning");
 			useAuthStore.getState().logout();
 		} finally {
 			isRefreshing = false;
