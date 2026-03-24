@@ -1,5 +1,5 @@
-import type { RequestConfig } from "@/types/api";
-import { sessionHeader } from "@/types/api";
+import type { RequestConfig } from "@/types/api/api";
+import { sessionHeader } from "@/types/api/api";
 import { useSessionStore } from "@/store/useSessionStore";
 
 export function sessionInterceptor(config: RequestConfig): void {

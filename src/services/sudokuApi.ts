@@ -1,7 +1,7 @@
-import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/api";
 import { sessionInterceptor } from "./api/interceptors/session";
 import { authInterceptor } from "./api/interceptors/auth";
 import { apiFetch, apiPost } from "./api/client";
+import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/api/sudoku";
 
 const interceptors = [sessionInterceptor, authInterceptor];
 

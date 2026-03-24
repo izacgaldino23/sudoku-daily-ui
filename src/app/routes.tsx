@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./AppLayout";
-import Leaderboard from "@/pages/Leaderboard";
+import Leaderboard from "@/pages/leaderboard/Leaderboard";
 import Login from "@/pages/login/Login";
 import Profile from "@/pages/Profile";
 import About from "@/pages/About";

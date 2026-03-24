@@ -1,4 +1,4 @@
-import type { RequestConfig } from "@/types/api";
+import type { RequestConfig } from "@/types/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAlertStore } from "@/store/useAlertStore";
 import { refresh } from "@/services/authApi";

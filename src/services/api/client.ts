@@ -1,5 +1,5 @@
 import { createApiError, createNetworkError } from "@/types/errors";
-import type { RequestConfig, ApiRequest } from "@/types/api";
+import type { RequestConfig, ApiRequest } from "@/types/api/api";
 import { env } from "@/config/env";
 
 export { env };
@@ -21,7 +21,11 @@ export async function applyInterceptors(
 export function buildUrl(baseUrl: string, config: RequestConfig): string {
 	let url = `${baseUrl}${config.url}`;
 	if (config.params) {
-		url = `${url}?${new URLSearchParams(config.params).toString()}`;
+		const parsedParams: Record<string, string> = {};
+		for (const [key, value] of Object.entries(config.params)) {
+			parsedParams[key] = String(value);
+		}
+		url = `${url}?${new URLSearchParams(parsedParams).toString()}`;
 	}
 	return url;
 }

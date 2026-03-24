@@ -7,6 +7,7 @@ import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
 import { useGame } from "@/hooks/sudoku/useGame"
 import { Status } from "@/types/game"
+import { BoardSizeToString } from "@/utils/board"
 
 function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
 	const classes = ['tile'];
@@ -23,19 +24,6 @@ function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttribute
 			{value !== 0 ? value : ""}
 		</div>
 	)
-}
-
-function numberToName(num: number) {
-	switch (num) {
-		case 4:
-			return "four"
-		case 6:
-			return "six"
-		case 9:
-			return "nine"
-		default:
-			return "four"
-	}
 }
 
 export default function Board({ size }: BoardAttributes) {
@@ -87,7 +75,7 @@ export default function Board({ size }: BoardAttributes) {
 
 	return (
 		<div className="board">
-			<div className={"grid "+numberToName(size)}>
+			<div className={"grid "+BoardSizeToString(size)}>
 				{currentState.board.map((row, rowIndex) => 
 					row.map((value, colIndex) => (
 						<Tile 

@@ -1,4 +1,4 @@
-import type { LoginRequest, LoginResponse, ProfileResume, RefreshResponse, RegisterRequest } from "@/types/auth";
+import type { LoginRequest, LoginResponse, ProfileResume, RefreshResponse, RegisterRequest } from "@/types/api/auth";
 import { sessionInterceptor } from "./api/interceptors/session";
 import { authInterceptor } from "./api/interceptors/auth";
 import { apiFetch, apiPost } from "./api/client";
