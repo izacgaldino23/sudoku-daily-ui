@@ -1,3 +1,4 @@
+import Button from "@/components/form/button/Button";
 import "./Leaderboard.scss";
 
 export default function Leaderboard() {
@@ -10,18 +11,18 @@ export default function Leaderboard() {
 					<ul>
 						<li>
 							<h3>Name</h3>
-							<span>1th place</span>
 							<p>Score</p>
+							<span>1th place</span>
 						</li>
 						<li>
 							<h3>Name 2</h3>
-							<span>2th place</span>
 							<p>Score</p>
+							<span>2th place</span>
 						</li>
 						<li>
 							<h3>Name 3</h3>
-							<span>3th place</span>
 							<p>Score</p>
+							<span>3th place</span>
 						</li>
 					</ul>
 				</section>
@@ -54,8 +55,8 @@ export default function Leaderboard() {
 				</table>
 
 				<nav>
-					<button>Previous</button>
-					<button>Next</button>
+					<Button text="Previous" className="left" />
+					<Button text="Next" className="right" />
 				</nav>
 			</div>
 		</div>

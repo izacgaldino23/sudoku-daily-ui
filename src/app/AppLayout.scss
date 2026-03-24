@@ -20,6 +20,11 @@
 			align-items: flex-start;
 			justify-content: space-between;
 			width: 100vw;
+
+			h1 {
+				font-size: 2rem;
+				color: v.$primary-color;
+			}
 		}
 	}
 }
