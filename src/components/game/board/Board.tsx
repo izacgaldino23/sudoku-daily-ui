@@ -5,7 +5,6 @@ import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/ui"
 import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
-import { useGame } from "@/hooks/sudoku/useGame"
 import { Status } from "@/types/game"
 import { BoardSizeToString } from "@/utils/board"
 
@@ -42,7 +41,7 @@ export default function Board({ size }: BoardAttributes) {
 	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
 	const finished = currentState && currentState.status === Status.FINISHED;
 
-	const { submitSolve } = useGame();
+	const { submitSolve } = useGameStore();
 
 	useEffect(() => {
 		if (isVictory && !finished) {

@@ -1,11 +1,9 @@
 import { Status, type BoardSize, type GameState, type SelectedCell } from "@/types/game"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
-import { fetchDailySudoku, submitSudokuSolve } from "@/services/sudokuApi";
-import { mapSudokuFromResponse } from "@/utils/mappers";
-import { BoardSizeToString } from "@/utils/board";
 import { useAlertStore } from "./useAlertStore";
 import { getErrorMessage } from "@/types/errors";
+import { submitSudokuSolve } from "@/services/sudokuApi";
 
 const TODAY = () => new Date().toDateString();
 
@@ -18,12 +16,12 @@ interface GameStore {
 	
 	// actions
 	loadingGame: (size: BoardSize) => void
-	startGame: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => void
+	removeGame: (size: BoardSize) => void
+	setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => void
 	selectCell: (size: BoardSize, payload: SelectedCell) => void
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
 	clearValue: (size: BoardSize, payload: { row: number, col: number }) => void
 	finishGame: (size: BoardSize) => void
-	loadGame: (size: BoardSize) => Promise<void>
 	submitSolve: (size: BoardSize) => Promise<void>
 }
 
@@ -37,7 +35,13 @@ export const useGameStore = create<GameStore>()(
 					[size]: { status: Status.LOADING }
 				}
 			})),
-			startGame: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => set(s => ({
+			removeGame: (size: BoardSize) => set(s => ({
+				state: {
+					...s.state,
+					[size]: null
+				}
+			})),
+			setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => set(s => ({
 				state: {
 					...s.state,
 					[size]: {
@@ -107,25 +111,25 @@ export const useGameStore = create<GameStore>()(
 					}
 				}
 			})),
-			loadGame: async (size: BoardSize) => {
-				const { state } = get();
-				if (state[size]?.status === Status.PLAYING) return;
+			// loadGame: async (size: BoardSize) => {
+			// 	const { state } = get();
+			// 	if (state[size]?.status === Status.PLAYING) return;
 				
-				get().loadingGame(size);
+			// 	get().loadingGame(size);
 				
-				try {
-					const data = await fetchDailySudoku(BoardSizeToString(size));
-					const mapped = mapSudokuFromResponse(data);
+			// 	try {
+			// 		const data = await fetchDailySudoku(BoardSizeToString(size));
+			// 		const mapped = mapSudokuFromResponse(data);
 					
-					get().startGame(size, {
-						board: mapped.values,
-						fixed: mapped.fixed,
-						session_token: mapped.session_token
-					});
-				} catch (err) {
-					useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
-				}
-			},
+			// 		get().setPuzzle(size, {
+			// 			board: mapped.values,
+			// 			fixed: mapped.fixed,
+			// 			session_token: mapped.session_token
+			// 		});
+			// 	} catch (err) {
+			// 		useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
+			// 	}
+			// },
 			submitSolve: async (size: BoardSize) => {
 				const { state } = get();
 				const gameState = state[size];

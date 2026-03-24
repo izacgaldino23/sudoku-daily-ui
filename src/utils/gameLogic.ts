@@ -90,8 +90,8 @@ export function isBoardComplete(state: GameData | undefined) {
 
 interface Clock {
 	hours: string;
-	minutes: string;
-	remainingSeconds: string;
+	minutes: number;
+	remainingSeconds: number;
 }
 
 function zeroPad(num: number) {
@@ -100,8 +100,8 @@ function zeroPad(num: number) {
 
 export function SecondsToClock(seconds: number): Clock {
 	const hours = zeroPad(Math.floor(seconds / 3600));
-	const minutes = zeroPad(Math.floor((seconds % 3600) / 60));
-	const remainingSeconds = zeroPad(Math.floor(seconds % 60));
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const remainingSeconds = Math.floor(seconds % 60);
 
 	return { hours, minutes, remainingSeconds };
 }

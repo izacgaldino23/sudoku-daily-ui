@@ -1,5 +1,5 @@
-import type { DailySudokuResponse } from "@/types/api/api";
 import type { LoginResponse } from "@/types/api/auth";
+import type { DailySudokuResponse } from "@/types/api/sudoku";
 
 interface Board {
 	values: number[][]
