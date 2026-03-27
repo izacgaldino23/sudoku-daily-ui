@@ -1,4 +1,4 @@
-export const Types = { PLAYING: "playing", FINISHED: "finished", LOADING: "loading" };
+export const Types = { DAILY: "daily", ALLTIME: "alltime", STREAK: "streak", TOTAL: "total" };
 
 export type LeaderboardTypes = typeof Types[keyof typeof Types];
 

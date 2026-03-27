@@ -36,6 +36,11 @@ export async function makeRequest<T>(
 ): Promise<T> {
 	const preparedConfig = await applyInterceptors({ ...config }, interceptors);
 
+	preparedConfig.headers = {
+		...preparedConfig.headers,
+		"Content-Type": "application/json",
+	}
+
 	const response = await fetch(buildUrl(env.apiUrl, preparedConfig), {
 		method: preparedConfig.method,
 		headers: preparedConfig.headers,

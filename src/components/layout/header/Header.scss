@@ -1,13 +1,20 @@
 @use "@/styles/_variables.scss" as v;
 
 .header {
+	height: 4.3rem;
 	nav {
 		display: flex;
 		gap: 2rem;
 		justify-content: center;
+		height: 100%;
 
 		a {
-			padding: 1.5rem;
+			// padding: 1.5rem;
+			width: 4.3rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
 			text-decoration: none;
 			color: v.$primary-color;
 			position: relative;

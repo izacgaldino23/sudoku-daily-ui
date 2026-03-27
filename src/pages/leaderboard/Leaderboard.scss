@@ -29,7 +29,7 @@ $text-muted: #94a3b8;
             linear-gradient($bg-grid 1px, transparent 1px),
             linear-gradient(90deg, $bg-grid 1px, transparent 1px);
         background-size: 20px 20px;
-        padding: 4rem 5rem 0;
+        padding: 3rem 5rem 0;
         color: white;
 
         overflow: hidden;
@@ -73,22 +73,24 @@ $text-muted: #94a3b8;
                     font-weight: bold;
                     border-radius: 8px 8px 0 0;
                     color: rgba(0, 0, 0, 0.6);
+                    cursor: default;
                 }
 
                 &:nth-child(1) {
                     order: 2;
+
+                    h3 {
+                        &::before {
+                            content: '👑';
+                            display: block;
+                        }
+                    }
 
                     span {
                         height: 140px;
                         background: v.$red2-color;
                         color: v.$lighter-color;
                         font-size: 1.5rem;
-
-                        &::before {
-                            content: '👑';
-                            display: block;
-                            margin-bottom: 5px;
-                        }
                     }
                 }
 
