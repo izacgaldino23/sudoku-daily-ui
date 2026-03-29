@@ -40,11 +40,13 @@ export default function Login() {
 	const [ isLogin, setIsLogin ] = useState<boolean>(true);
 	const title = isLogin ? "Login" : "Register";
 	const buttonText = isLogin ? "Access" : "Register";
+	const navigate = useNavigate();
+	
 	const loginMutation = useLoginUser();
 	const registerMutation = useRegisterUser();
-	const navigate = useNavigate();
 
 	const authState = useAuthStore(s => s.state);
+	const login = useAuthStore(s => s.login);
 
 	useEffect(() => {
 		if (authState?.username) {
@@ -79,7 +81,13 @@ export default function Login() {
 				{ email, password },
 				{
 					onError: (err) => pushAlert(getErrorMessage(err), "error"),
-					onSuccess: () => {
+					onSuccess: (data) => {
+						login({
+							accessToken: data.accessToken,
+							refreshToken: data.refreshToken,
+							username: data.username,
+							email: data.email,
+						})
 						pushAlert("Successfully logged in!", "success");
 						navigate("/");
 					},
