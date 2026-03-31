@@ -1,63 +1,22 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Login from "@/pages/login/Login";
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useSessionStore } from "@/store/useSessionStore";
-import { useAlertStore } from "@/store/useAlertStore";
-import { AlertStack } from "@/components/alert/AlertStack";
+import { renderWithProviders, clearTestStores } from "./test-query-client";
 
 const mockedUsedNavigate = vi.fn();
 
 vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockedUsedNavigate,
-  };
+	const actual = await vi.importActual('react-router-dom');
+	return {
+		...actual,
+		useNavigate: () => mockedUsedNavigate,
+	};
 });
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: false,
-		},
-		mutations: {
-			retry: false,
-		},
-	},
-});
-
-function TestWrapper ({ children }: { children: React.ReactNode }) {
-	const alerts = useAlertStore((state) => state.alerts);
-	const removeAlert = useAlertStore((state) => state.removeAlert);
-
-	return (
-		<QueryClientProvider client={queryClient}>
-			<BrowserRouter>
-				{children}
-				<AlertStack alerts={alerts} removeAlert={removeAlert} />
-			</BrowserRouter>
-		</QueryClientProvider>
-	);
-}
-
-function renderWithProviders (ui: React.ReactElement) {
-	return render(ui, { wrapper: TestWrapper });
-}
-
-// function waitForTime(time: number) {
-// 	return new Promise((resolve) => setTimeout(resolve, time));
-// }
 
 describe("Login Page", () => {
 	beforeEach(() => {
-		useAuthStore.getState().logout();
-		useSessionStore.getState().setSessionID(null);
-		queryClient.clear();
-		useAlertStore.getState().alerts = [];
+		clearTestStores();
 	});
 
 	it("renders login form by default", () => {
@@ -106,6 +65,7 @@ describe("Login Page", () => {
 			expect(screen.queryByText(/successfully logged in/i)).toBeInTheDocument();
 		});
 
+		const { useAuthStore } = await import("@/store/useAuthStore");
 		const authState = useAuthStore.getState().state;
 		expect(authState).toEqual({
 			accessToken: "mock-access-token",
