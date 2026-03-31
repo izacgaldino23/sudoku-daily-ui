@@ -1,6 +1,7 @@
 import { createApiError, createNetworkError } from "@/types/errors";
 import type { RequestConfig, ApiRequest } from "@/types/api/api";
 import { env } from "@/config/env";
+import { handleSessionResponse } from "./interceptors/session";
 
 export { env };
 
@@ -36,16 +37,16 @@ export async function makeRequest<T>(
 ): Promise<T> {
 	const preparedConfig = await applyInterceptors({ ...config }, interceptors);
 
-	preparedConfig.headers = {
-		...preparedConfig.headers,
-		"Content-Type": "application/json",
-	}
+	const finalHeaders = new Headers(preparedConfig.headers);
+	finalHeaders.set("Content-Type", "application/json");
 
 	const response = await fetch(buildUrl(env.apiUrl, preparedConfig), {
 		method: preparedConfig.method,
-		headers: preparedConfig.headers,
+		headers: finalHeaders,
 		body: preparedConfig.body,
 	});
+
+	handleSessionResponse(response);
 
 	if (response.status === 401 && preparedConfig.requiresAuth) {
 		throw createApiError("Session expired", 401);

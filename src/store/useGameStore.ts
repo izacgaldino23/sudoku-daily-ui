@@ -1,9 +1,6 @@
 import { Status, type BoardSize, type GameState, type SelectedCell } from "@/types/game"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
-import { useAlertStore } from "./useAlertStore";
-import { getErrorMessage } from "@/types/errors";
-import { submitSudokuSolve } from "@/services/sudokuApi";
 
 const TODAY = () => new Date().toDateString();
 
@@ -22,12 +19,11 @@ interface GameStore {
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
 	clearValue: (size: BoardSize, payload: { row: number, col: number }) => void
 	finishGame: (size: BoardSize) => void
-	submitSolve: (size: BoardSize) => Promise<void>
 }
 
 export const useGameStore = create<GameStore>()(
 	persist(
-		(set, get) => ({
+		(set) => ({
 			state: {},
 			loadingGame: (size: BoardSize) => set(s => ({
 				state: {
@@ -111,41 +107,6 @@ export const useGameStore = create<GameStore>()(
 					}
 				}
 			})),
-			// loadGame: async (size: BoardSize) => {
-			// 	const { state } = get();
-			// 	if (state[size]?.status === Status.PLAYING) return;
-				
-			// 	get().loadingGame(size);
-				
-			// 	try {
-			// 		const data = await fetchDailySudoku(BoardSizeToString(size));
-			// 		const mapped = mapSudokuFromResponse(data);
-					
-			// 		get().setPuzzle(size, {
-			// 			board: mapped.values,
-			// 			fixed: mapped.fixed,
-			// 			session_token: mapped.session_token
-			// 		});
-			// 	} catch (err) {
-			// 		useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
-			// 	}
-			// },
-			submitSolve: async (size: BoardSize) => {
-				const { state } = get();
-				const gameState = state[size];
-				if (!gameState) return;
-				
-				try {
-					await submitSudokuSolve({
-						play_token: gameState.session_token,
-						solution: gameState.board,
-					});
-					
-					get().finishGame(size);
-				} catch (err) {
-					useAlertStore.getState().pushAlert(getErrorMessage(err as Error), "error");
-				}
-			},
 		}),
 		{ 
 			name: "sudoku-game-state",

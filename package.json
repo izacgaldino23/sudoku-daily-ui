@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --project=cli",
-    "test:ui": "vitest --project=browser",
-    "test:run": "vitest run"
+    "test:ui": "vitest --project=browser"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",

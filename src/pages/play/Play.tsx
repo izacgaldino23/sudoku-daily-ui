@@ -18,6 +18,10 @@ function calcSeconds(startTime?: number) {
 	return (Date.now() - startTime) / 1000
 }
 
+function zeroPad(num: number) {
+	return String(num).padStart(2, '0');
+}
+
 export default function Play({ size }: PlayAttributes) {
 	const state = useGameStore(s => s.state);
 	const mutation = useDailySudoku();
@@ -84,7 +88,7 @@ export default function Play({ size }: PlayAttributes) {
 				{isFinished && (
 					<div className="victory">
 						<div className="title">Great Job!</div>
-						<div className="subtitle">You finished in {hours}:{minutes}:{remainingSeconds}</div>
+						<div className="subtitle">You finished in {hours != 0 && zeroPad(hours)+":"}{zeroPad(minutes)}:{remainingSeconds}</div>
 					</div>
 				)}
 
@@ -95,8 +99,8 @@ export default function Play({ size }: PlayAttributes) {
 				<div className='game'>
 					<div className='timer'>
 						<div className='clock'>
-							{hours != "00" && (<div className="part hour">
-								<span className="value">{hours}</span>
+							{hours != 0 && (<div className="part hour">
+								<span className="value">{zeroPad(hours)}</span>
 								<span className="label">h</span>
 							</div>)}
 							<div className="part minute">

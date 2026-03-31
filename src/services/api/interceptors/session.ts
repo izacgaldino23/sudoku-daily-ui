@@ -4,7 +4,7 @@ import { useSessionStore } from "@/store/useSessionStore";
 
 export function sessionInterceptor(config: RequestConfig): void {
 	const sessionID = useSessionStore.getState().sessionID;
-
+	
 	if (sessionID) {
 		config.headers = {
 			...config.headers,
