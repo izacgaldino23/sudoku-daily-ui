@@ -17,5 +17,5 @@ export type entries = {
 
 export type LeaderboardResponse = {
 	has_next: boolean;
-	entries: Array<entries>;
+	solves: Array<entries>;
 };
