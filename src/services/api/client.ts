@@ -24,6 +24,9 @@ export function buildUrl(baseUrl: string, config: RequestConfig): string {
 	if (config.params) {
 		const parsedParams: Record<string, string> = {};
 		for (const [key, value] of Object.entries(config.params)) {
+			if (value === undefined) {
+				continue;
+			}
 			parsedParams[key] = String(value);
 		}
 		url = `${url}?${new URLSearchParams(parsedParams).toString()}`;

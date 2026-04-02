@@ -16,6 +16,50 @@ $text-muted: #94a3b8;
     justify-content: center;
 }
 
+.leaderboard_filters {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+
+    .filter_group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+            color: v.$primary-color;
+            font-weight: 600;
+        }
+
+        .filter_buttons {
+            display: flex;
+            gap: 0.25rem;
+
+            .button {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+                background: v.$lighter-color;
+                color: v.$primary-color;
+                border: 1px solid rgba(v.$primary-color, 0.2);
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: rgba(v.$primary-color, 0.1);
+                }
+
+                &.active {
+                    background: v.$primary-color;
+                    color: v.$lighter-color;
+                }
+            }
+        }
+    }
+}
+
 .leaderboard_list {
     margin-top: 3rem !important;
     font-family: 'Inter', sans-serif;
