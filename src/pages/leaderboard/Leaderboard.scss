@@ -80,6 +80,16 @@ $text-muted: #94a3b8;
         border-radius: 1rem;
 
         margin-bottom: 1rem;
+        min-height: 200px;
+
+        .loading {
+            text-align: center;
+            padding: .7rem 1rem;
+            background: rgba(white, .2);
+            display: table;
+            margin: 2rem auto 0;
+            border-radius: .2rem;
+        }
 
         ul {
             list-style: none;

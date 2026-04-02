@@ -47,7 +47,7 @@ export default function Leaderboard() {
 		size: needsSize(type) ? BoardSizeToString(size) : undefined,
 	}), [type, size, page]);
 
-	const { isLoading, isFetching, data } = useGetLeaderboard(queryParams);
+	const { data } = useGetLeaderboard(queryParams);
 
 	const solves = useMemo(() => data?.solves ?? [], [data]);
 	const topThree = useMemo(() => getPodium(solves), [solves]);
@@ -84,16 +84,12 @@ export default function Leaderboard() {
 				)}
 			</div>
 
-			{(isLoading || isFetching) ? (
-				<div>Loading...</div>
-			) : (
-				<LeaderboardList
-					topThree={topThree}
-					remaining={remaining}
-					page={page}
-					hasNext={data?.has_next}
-				/>
-			)}
+			<LeaderboardList
+				topThree={topThree}
+				remaining={remaining}
+				page={page}
+				hasNext={data?.has_next}
+			/>
 		</div>
 	);
 }

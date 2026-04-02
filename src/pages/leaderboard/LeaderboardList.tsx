@@ -13,7 +13,7 @@ export const LeaderboardList = memo(function LeaderboardList({ topThree, remaini
 	return (
 		<div className="leaderboard_list">
 			<section className="top-three">
-				<ul>
+				{(topThree && topThree[0].username != "") ? (<ul>
 					{topThree.map((entry, index) => (
 						<li key={index}>
 							<h3>{entry.username}</h3>
@@ -21,7 +21,7 @@ export const LeaderboardList = memo(function LeaderboardList({ topThree, remaini
 							<span>{entry.rank}th place</span>
 						</li>
 					))}
-				</ul>
+				</ul>) : (<p className="loading">Nothing here</p>)}
 			</section>
 
 			<table>
