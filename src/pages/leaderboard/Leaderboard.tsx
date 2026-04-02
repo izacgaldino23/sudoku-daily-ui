@@ -1,10 +1,11 @@
-import Button from "@/components/form/button/Button";
-import "./Leaderboard.scss";
 import { useGetLeaderboard } from "@/hooks/leaderboard/queries";
-import { Types, type entries, type LeaderboardResponse, type LeaderboardTypes } from "@/types/api/leaderboard";
+import { Types, type entries, type LeaderboardTypes } from "@/types/api/leaderboard";
 import type { BoardSize } from "@/types/game";
 import { BoardSizeToString } from "@/utils/board";
-import { useEffect, useState } from "react";
+import "./Leaderboard.scss";
+import { useMemo, useState } from "react";
+import { FilterGroup } from "./FilterGroup";
+import { LeaderboardList } from "./LeaderboardList";
 
 const TYPES: { value: LeaderboardTypes; label: string }[] = [
 	{ value: Types.DAILY, label: "Daily" },
@@ -14,145 +15,85 @@ const TYPES: { value: LeaderboardTypes; label: string }[] = [
 ];
 
 const SIZES = [
-	{ value: 4, label: "4x4" },
-	{ value: 6, label: "6x6" },
-	{ value: 9, label: "9x9" },
+	{ value: "4", label: "4x4" },
+	{ value: "6", label: "6x6" },
+	{ value: "9", label: "9x9" },
 ];
 
 const needsSize = (type: LeaderboardTypes): boolean => {
 	return type === Types.DAILY || type === Types.ALLTIME;
 };
 
-function getPodium(data: LeaderboardResponse): entries[] {
-	let top: entries[] = [];
-
-	if (data.solves.length < 3) {
-		return [...data.solves, ...Array(3 - data.solves.length).fill({ rank: 0, username: "", value: "" })];
-	} else {
-		top = data.solves.slice(0, 3);
+const getPodium = (solves: entries[]): entries[] => {
+	if (solves.length < 3) {
+		return [...solves, ...Array(3 - solves.length).fill({ rank: 0, username: "", value: "" })];
 	}
+	return solves.slice(0, 3);
+};
 
-	return top;
-}
-
-function getRemaining(data: LeaderboardResponse): entries[] {
-	let remaining: entries[] = [];
-
-	if (data.solves.length > 3) {
-		remaining = data.solves.slice(3);
-	}
-
-	return remaining
-}
+const getRemaining = (solves: entries[]): entries[] => {
+	return solves.length > 3 ? solves.slice(3) : [];
+};
 
 export default function Leaderboard() {
-	const [ topThree, setTopThree ] = useState<entries[]>([]);
-	const [ remaining, setRemaining ] = useState<entries[]>([]);
 	const [ page, setPage ] = useState(1);
 	const [ size, setSize ] = useState<BoardSize>(9);
 	const [ type, setType ] = useState<LeaderboardTypes>(Types.DAILY);
 
-	const { isLoading, data, refetch } = useGetLeaderboard({
+	const queryParams = useMemo(() => ({
 		type: type,
 		limit: 15,
 		page: page,
 		size: needsSize(type) ? BoardSizeToString(size) : undefined,
-	});
-	const value = "solves";
+	}), [type, size, page]);
 
-	useEffect(() => {
-		if (!data || !data.solves) return;
+	const { isLoading, isFetching, data } = useGetLeaderboard(queryParams);
 
-		setTopThree(getPodium(data));
-		setRemaining(getRemaining(data));
-	}, [data]);
+	const solves = useMemo(() => data?.solves ?? [], [data]);
+	const topThree = useMemo(() => getPodium(solves), [solves]);
+	const remaining = useMemo(() => getRemaining(solves), [solves]);
 
-	useEffect(() => {
+	const handleTypeChange = (newType: string) => {
+		setType(newType as LeaderboardTypes);
 		setPage(1);
-		refetch();
-	}, [type, size, refetch]);
+	};
 
-	if (isLoading) return <div>Loading...</div>;
+	const handleSizeChange = (newSize: string) => {
+		setSize(parseInt(newSize) as BoardSize);
+		setPage(1);
+	};
 
 	return (
 		<div className="leaderboard">
 			<h1>Leaderboard</h1>
 
 			<div className="leaderboard_filters">
-				<div className="filter_group">
-					<label>Type:</label>
-					<div className="filter_buttons">
-						{TYPES.map((t) => (
-							<Button
-								key={t.value}
-								text={t.label}
-								className={type === t.value ? "active" : ""}
-								onClick={() => setType(t.value)}
-							/>
-						))}
-					</div>
-				</div>
-
+				<FilterGroup
+					label="Type"
+					options={TYPES.map(t => ({ value: t.value, label: t.label }))}
+					value={type}
+					onChange={handleTypeChange}
+				/>
 				{needsSize(type) && (
-					<div className="filter_group">
-						<label>Size:</label>
-						<div className="filter_buttons">
-							{SIZES.map((s) => (
-								<Button
-									key={s.value}
-									text={s.label}
-									className={size === s.value ? "active" : ""}
-									onClick={() => setSize(s.value as BoardSize)}
-								/>
-							))}
-						</div>
-					</div>
+					<FilterGroup
+						label="Size"
+						options={SIZES}
+						value={String(size)}
+						onChange={handleSizeChange}
+					/>
 				)}
 			</div>
 
-			{!isLoading && (
-				<div className="leaderboard_list">
-					<section className="top-three">
-						<ul>
-							{topThree.map((entry, index) => (
-								<li key={index}>
-									<h3>{entry.username}</h3>
-									<p>{entry.value} {value}</p>
-									<span>{entry.rank}th place</span>
-								</li>
-							))}
-						</ul>
-					</section>
-
-					<table>
-						<thead>
-							<tr>
-								<th>Rank</th>
-								<th>Name</th>
-								<th>Score</th>
-							</tr>
-						</thead>
-						<tbody>
-							{remaining.map((entry, index) => (
-								<tr key={index}>
-									<td>{entry.rank}</td>
-									<td>{entry.username}</td>
-									<td>{entry.value} {value}</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-
-					<nav>
-						{page > 1 && (
-							<Button text="Previous" className="left" />
-						)}
-						{data?.has_next && (
-							<Button text="Next" className="right" />
-						)}
-					</nav>
-				</div>
+			{(isLoading || isFetching) ? (
+				<div>Loading...</div>
+			) : (
+				<LeaderboardList
+					topThree={topThree}
+					remaining={remaining}
+					page={page}
+					hasNext={data?.has_next}
+				/>
 			)}
 		</div>
-	)
+	);
 }
