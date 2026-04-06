@@ -9,8 +9,6 @@ import { useGameStore } from '@/store/useGameStore';
 import { SecondsToClock } from '@/utils/gameLogic';
 import { BoardSizeToString } from '@/utils/board';
 import { mapSudokuFromResponse } from '@/utils/mappers';
-import { useAlertStore } from '@/store/useAlertStore';
-import { getErrorMessage } from '@/types/errors';
 import { useDailySudoku } from '@/hooks/sudoku/mutations';
 
 function calcSeconds(startTime?: number) {
@@ -25,8 +23,6 @@ function zeroPad(num: number) {
 export default function Play({ size }: PlayAttributes) {
 	const state = useGameStore(s => s.state);
 	const mutation = useDailySudoku();
-
-	const pushAlert = useAlertStore(s => s.pushAlert);
 
 	const setPuzzle = useGameStore(state => state.setPuzzle);
 	const loadingGame = useGameStore(state => state.loadingGame);
@@ -70,9 +66,8 @@ export default function Play({ size }: PlayAttributes) {
 						});
 					}
 				},
-				onError: (error) => {
-					pushAlert(getErrorMessage(error as Error), "error");
-					removeGame(size)
+				onSettled: () => {
+					removeGame(size);
 				},
 			});
 		}

@@ -8,7 +8,6 @@ import { useLoginUser, useRegisterUser } from "@/hooks/auth/mutations";
 import { useAlertStore } from "@/store/useAlertStore";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getErrorMessage } from "@/types/errors";
 
 interface formValidation {
 	valid: boolean;
@@ -83,7 +82,6 @@ export default function Login() {
 			loginMutation.mutate(
 				{ email, password },
 				{
-					onError: (err) => pushAlert(getErrorMessage(err), "error"),
 					onSuccess: (data) => {
 						login({
 							accessToken: data.access_token,
@@ -100,7 +98,6 @@ export default function Login() {
 			registerMutation.mutate(
 				{ username, email, password },
 				{
-					onError: (err) => pushAlert(getErrorMessage(err), "error"),
 					onSuccess: () => {
 						pushAlert("Successfully registered!", "success");
 						toggleAuthMode();
