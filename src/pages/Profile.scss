@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
 
@@ -20,6 +20,10 @@
         color: v.$quaternary-color;
         font-size: 1.1rem;
         margin-bottom: 2rem;
+
+        strong {
+            color: v.$primary-color;
+        }
     }
 
     .loading {
@@ -41,67 +45,86 @@
     .profile_content {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .stats_section {
         h2 {
             color: v.$primary-color;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
             border-bottom: 2px solid rgba(v.$primary-color, 0.2);
             padding-bottom: 0.5rem;
         }
     }
 
-    .stats_grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-
-        @media (max-width: 600px) {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    .stat_card {
+    .stat_row {
         background: v.$lighter-color;
         border: 1px solid rgba(v.$primary-color, 0.2);
         border-radius: 12px;
-        padding: 1.5rem;
+        padding: 1rem 1.5rem;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        justify-content: space-between;
+        gap: 1rem;
         transition: all 0.2s ease;
 
+        &:not(:last-child) {
+            margin-bottom: 0.75rem;
+        }
+
         &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(v.$primary-color, 0.15);
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(v.$primary-color, 0.1);
         }
 
-        .stat_label {
-            font-size: 0.9rem;
-            color: v.$quaternary-color;
+        .stat_size {
             font-weight: 600;
-        }
-
-        .stat_value {
-            font-size: 1.5rem;
-            font-weight: bold;
             color: v.$primary-color;
+            font-size: 1rem;
+            min-width: 50px;
         }
 
-        &.finished {
-            background: rgba(v.$green-color, 0.3);
-            border-color: v.$green-color;
+        .stat_details {
+            display: flex;
+            gap: 1.5rem;
+            flex: 1;
+            justify-content: flex-end;
+
+            .stat_item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 80px;
+
+                .stat_item_label {
+                    font-size: 0.75rem;
+                    color: v.$quaternary-color;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .stat_item_value {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: v.$primary-color;
+                }
+            }
         }
 
-        &.best_time {
-            background: linear-gradient(135deg, rgba(v.$tertiary-color, 0.3), rgba(v.$quaternary-color, 0.2));
-            border-color: v.$quaternary-color;
+        &.has_today {
+            border-left: 3px solid v.$green-color;
+        }
 
-            .stat_value {
+        &.has_best {
+            border-left: 3px solid v.$quaternary-color;
+            background: linear-gradient(90deg, rgba(v.$tertiary-color, 0.15), v.$lighter-color);
+
+            .stat_size {
+                color: v.$quaternary-color;
+            }
+
+            .stat_item_value {
                 color: v.$quaternary-color;
             }
         }

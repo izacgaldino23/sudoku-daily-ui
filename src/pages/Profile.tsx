@@ -1,5 +1,5 @@
 import { useGetProfileResume } from "@/hooks/profile/queries";
-import { BoardSizeToString } from "@/utils/board";
+import { BoardSizeToDisplayString } from "@/utils/board";
 import type { BoardSize, GameResult } from "@/types/api/auth";
 import "./Profile.scss";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -16,14 +16,14 @@ export default function Profile() {
 
 	const boardSizes: BoardSize[] = [4, 6, 9];
 
-	const totalGames = (data?.TotalGames ?? {}) as Record<BoardSize, number>;
 	const todayGames = (data?.TodayGames ?? {}) as Record<BoardSize, GameResult>;
 	const bestTimes = (data?.BestTimes ?? {}) as Record<BoardSize, GameResult>;
+	const totalGames = (data?.TotalGames ?? {}) as Record<BoardSize, number>;
 
 	return (
 		<div className="profile">
 			<h1>Profile</h1>
-			<p className="profile_username">Welcome, {state?.username}</p>
+			<p className="profile_username">Welcome, <strong>{state?.username}</strong></p>
 
 			{isLoading && <div className="loading">Loading...</div>}
 
@@ -31,51 +31,41 @@ export default function Profile() {
 
 			{data && (
 				<div className="profile_content">
-					<section className="stats_section">
-						<h2>Total Games</h2>
-						<div className="stats_grid">
-							{boardSizes.map((size) => (
-								<div key={size} className="stat_card">
-									<span className="stat_label">{BoardSizeToString(size)}</span>
-									<span className="stat_value">{totalGames[size] || 0}</span>
+					{boardSizes.map((size) => {
+						const today = todayGames[size];
+						const best = bestTimes[size];
+						const total = totalGames[size] || 0;
+
+						const hasToday = today?.Finished;
+						const hasBest = best?.Finished;
+
+						return (
+							<div
+								key={size}
+								className={`stat_row ${hasToday ? "has_today" : ""} ${hasBest ? "has_best" : ""}`}
+							>
+								<span className="stat_size">{BoardSizeToDisplayString(size)}</span>
+								<div className="stat_details">
+									<div className="stat_item">
+										<span className="stat_item_label">Total</span>
+										<span className="stat_item_value">{total}</span>
+									</div>
+									<div className="stat_item">
+										<span className="stat_item_label">Today</span>
+										<span className="stat_item_value">
+											{today ? (today.Finished ? formatTime(today.Time) : "-") : "-"}
+										</span>
+									</div>
+									<div className="stat_item">
+										<span className="stat_item_label">Best</span>
+										<span className="stat_item_value">
+											{best?.Finished ? formatTime(best.Time) : "-"}
+										</span>
+									</div>
 								</div>
-							))}
-						</div>
-					</section>
-
-					<section className="stats_section">
-						<h2>Today's Games</h2>
-						<div className="stats_grid">
-							{boardSizes.map((size) => {
-								const game = todayGames[size];
-								return (
-									<div key={size} className={`stat_card ${game?.Finished ? "finished" : ""}`}>
-										<span className="stat_label">{BoardSizeToString(size)}</span>
-										<span className="stat_value">
-											{game ? (game.Finished ? formatTime(game.Time) : "In progress") : "Not played"}
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					</section>
-
-					<section className="stats_section">
-						<h2>Best Times</h2>
-						<div className="stats_grid">
-							{boardSizes.map((size) => {
-								const game = bestTimes[size];
-								return (
-									<div key={size} className="stat_card best_time">
-										<span className="stat_label">{BoardSizeToString(size)}</span>
-										<span className="stat_value">
-											{game?.Finished ? formatTime(game.Time) : "-"}
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					</section>
+							</div>
+						);
+					})}
 				</div>
 			)}
 		</div>

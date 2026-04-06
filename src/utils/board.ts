@@ -12,3 +12,7 @@ export function BoardSizeToString(size: BoardSize) {
 			return "four"
 	}
 }
+
+export function BoardSizeToDisplayString(size: BoardSize) {
+	return `${size}x${size}`;
+}
