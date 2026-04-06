@@ -1,5 +1,7 @@
 import type { BoardSize } from "../game";
 
+export type { BoardSize };
+
 export type AuthData = {
 	accessToken: string;
 	refreshToken: string;

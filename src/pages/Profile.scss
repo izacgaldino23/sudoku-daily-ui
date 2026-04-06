@@ -1,0 +1,109 @@
+@use "@/styles/_variables.scss" as v;
+
+.profile {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+
+    h1 {
+        color: v.$primary-color;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile_username {
+        text-align: center;
+        color: v.$quaternary-color;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(v.$primary-color, 0.1);
+        border-radius: 8px;
+        color: v.$primary-color;
+    }
+
+    .error {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(v.$red2-color, 0.2);
+        border-radius: 8px;
+        color: v.$red2-color;
+    }
+
+    .profile_content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .stats_section {
+        h2 {
+            color: v.$primary-color;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(v.$primary-color, 0.2);
+            padding-bottom: 0.5rem;
+        }
+    }
+
+    .stats_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .stat_card {
+        background: v.$lighter-color;
+        border: 1px solid rgba(v.$primary-color, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(v.$primary-color, 0.15);
+        }
+
+        .stat_label {
+            font-size: 0.9rem;
+            color: v.$quaternary-color;
+            font-weight: 600;
+        }
+
+        .stat_value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: v.$primary-color;
+        }
+
+        &.finished {
+            background: rgba(v.$green-color, 0.3);
+            border-color: v.$green-color;
+        }
+
+        &.best_time {
+            background: linear-gradient(135deg, rgba(v.$tertiary-color, 0.3), rgba(v.$quaternary-color, 0.2));
+            border-color: v.$quaternary-color;
+
+            .stat_value {
+                color: v.$quaternary-color;
+            }
+        }
+    }
+}
