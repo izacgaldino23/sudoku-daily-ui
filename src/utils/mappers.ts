@@ -40,7 +40,7 @@ export function mapAuthLoginFromResponse(data: LoginResponse): AuthUser {
 	return {
 		username: data.username,
 		email: data.email,
-		accessToken: data.accessToken,
-		refreshToken: data.refreshToken
+		accessToken: data.access_token,
+		refreshToken: data.refresh_token
 	}
 }

@@ -1,6 +1,7 @@
 import Button from "@/components/form/button/Button";
 import { InputField } from "@/components/form/input/InputField";
 import Logo from "@/components/layout/logo/Logo";
+import { AlertStack } from "@/components/alert/AlertStack";
 import "./Login.scss"
 import { useEffect, useRef, useState } from "react";
 import { useLoginUser, useRegisterUser } from "@/hooks/auth/mutations";
@@ -59,6 +60,8 @@ export default function Login() {
 	const [ password, setPassword ] = useState<string>("");
 
 	const pushAlert = useAlertStore(s => s.pushAlert);
+	const alerts = useAlertStore(s => s.alerts);
+	const removeAlert = useAlertStore(s => s.removeAlert);
 
 	const emailRef = useRef<HTMLInputElement>(null);
 
@@ -83,8 +86,8 @@ export default function Login() {
 					onError: (err) => pushAlert(getErrorMessage(err), "error"),
 					onSuccess: (data) => {
 						login({
-							accessToken: data.accessToken,
-							refreshToken: data.refreshToken,
+							accessToken: data.access_token,
+							refreshToken: data.refresh_token,
 							username: data.username,
 							email: data.email,
 						})
@@ -109,6 +112,7 @@ export default function Login() {
 
 	return (
 		<div className="enter-container">
+			<AlertStack alerts={alerts} removeAlert={removeAlert} />
 			<Logo />
 
 			<section className="login panel">
