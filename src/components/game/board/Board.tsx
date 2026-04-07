@@ -44,6 +44,8 @@ export default function Board({ size }: BoardAttributes) {
 	const setValue = useGameStore(state => state.setValue);
 	const finishGame = useGameStore(state => state.finishGame);
 	const clearValue = useGameStore(state => state.clearValue);
+	const setBrush = useGameStore(state => state.setBrush);
+	const clearBrush = useGameStore(state => state.clearBrush);
 	const currentState = state[size];
 
 	const conflicts = useMemo(() => {
@@ -78,17 +80,13 @@ export default function Board({ size }: BoardAttributes) {
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
+			if (!currentState || !currentState.selectedCell) return;
+
 			const value = event.key;
 			if (value >= '0' && value <= '9') {
-				if (!currentState || !currentState.selectedCell) return;
-
-				let payload_value = value;
-				if (value === "") payload_value = "0";
-
-				setValue(size, { ...currentState.selectedCell, value: Number(payload_value) });
-			} else if (value === "Backspace") {
-				if (!currentState || !currentState.selectedCell) return;
-
+				setValue(size, { ...currentState.selectedCell, value: Number(value) });
+				clearBrush(size);
+			} else if (value === "Backspace" || value === "Delete") {
 				clearValue(size, { ...currentState.selectedCell });
 			}
 		};
@@ -98,7 +96,7 @@ export default function Board({ size }: BoardAttributes) {
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [currentState, setValue, size, clearValue]);
+	}, [currentState, setValue, size, clearValue, clearBrush]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
@@ -109,16 +107,50 @@ export default function Board({ size }: BoardAttributes) {
 	}, [size]);
 
 	const handleSelectCell = (row: number, col: number) => {
-		selectCell(size, { row, col });
+		if (!currentState) return;
+
+		if (currentState.brush !== null) {
+			setValue(size, { row, col, value: currentState.brush });
+		} else if (
+			currentState.selectedCell?.row === row &&
+			currentState.selectedCell?.col === col
+		) {
+			selectCell(size, { row: -1, col: -1 });
+		} else {
+			selectCell(size, { row, col });
+		}
 	}
 
-	const handleSetValue = (value: string) => {
-		if (!currentState || !currentState.selectedCell) return;
+	const handleNumberClick = (value: number) => {
+		if (!currentState) return;
 
-		let payload_value = value;
-		if (value === "") payload_value = "0";
+		const hasSelectedCell = currentState.selectedCell && 
+			currentState.selectedCell.row >= 0 && 
+			currentState.selectedCell.col >= 0;
 
-		setValue(size, { ...currentState.selectedCell, value: Number(payload_value) });
+		if (hasSelectedCell) {
+			setValue(size, { ...currentState.selectedCell!, value });
+		} else if (currentState.brush === value) {
+			clearBrush(size);
+		} else {
+			setBrush(size, value);
+		}
+	}
+
+	const handleEraserClick = () => {
+		if (!currentState) return;
+
+		const hasSelectedCell = currentState.selectedCell && 
+			currentState.selectedCell.row >= 0 && 
+			currentState.selectedCell.col >= 0;
+
+		if (hasSelectedCell) {
+			clearValue(size, { ...currentState.selectedCell! });
+		} else if (currentState.brush === 0) {
+			clearBrush(size);
+		} else {
+			setBrush(size, 0);
+		}
 	}
 
 	if (!currentState) return null;
@@ -152,9 +184,14 @@ export default function Board({ size }: BoardAttributes) {
 
 			{!finished && <div className="buttons">
 				{buttonsLabels.map((label) => (
-					<Button className="square" key={label} text={label} onClick={handleSetValue}/>
+					<Button 
+						className={`square ${currentState.brush === Number(label) ? 'active' : ''}`} 
+						key={label} 
+						text={label} 
+						onClick={() => handleNumberClick(Number(label))}
+					/>
 				))}
-				<Button className="eraser square" onClick={handleSetValue} text="" disabled={isVictory}>
+				<Button className={`eraser square ${currentState.brush === 0 ? 'active' : ''}`} onClick={handleEraserClick} text="" disabled={isVictory}>
 					<Eraser />
 				</Button>
 			</div>}

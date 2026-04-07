@@ -15,6 +15,7 @@ export type GameData = {
 	board: number[][];
 	fixed: boolean[][];
 	selectedCell: SelectedCell | null;
+	brush: number | null;
 	startTime: number;
 	endTime: number;
 	status: GamesStatus;

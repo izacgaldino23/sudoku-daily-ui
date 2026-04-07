@@ -19,6 +19,8 @@ interface GameStore {
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
 	clearValue: (size: BoardSize, payload: { row: number, col: number }) => void
 	finishGame: (size: BoardSize) => void
+	setBrush: (size: BoardSize, value: number) => void
+	clearBrush: (size: BoardSize) => void
 }
 
 export const useGameStore = create<GameStore>()(
@@ -37,19 +39,20 @@ export const useGameStore = create<GameStore>()(
 					[size]: null
 				}
 			})),
-			setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => set(s => ({
-				state: {
-					...s.state,
-					[size]: {
-						session_token: payload.session_token,
-						board: payload.board,
-						fixed: payload.fixed,
-						selectedCell: null,
-						startTime: Date.now(),
-						status: Status.PLAYING,
-					}
+setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => set(s => ({
+			state: {
+				...s.state,
+				[size]: {
+					session_token: payload.session_token,
+					board: payload.board,
+					fixed: payload.fixed,
+					selectedCell: null,
+					brush: null,
+					startTime: Date.now(),
+					status: Status.PLAYING,
 				}
-			})),
+			}
+		})),
 			selectCell: (size: BoardSize, payload: SelectedCell) => set(s => ({
 				state: {
 					...s.state,
@@ -104,6 +107,24 @@ export const useGameStore = create<GameStore>()(
 						...s.state[size],
 						status: Status.FINISHED,
 						endTime: Date.now()
+					}
+				}
+			})),
+			setBrush: (size: BoardSize, value: number) => set(s => ({
+				state: {
+					...s.state,
+					[size]: {
+						...s.state[size],
+						brush: value
+					}
+				}
+			})),
+			clearBrush: (size: BoardSize) => set(s => ({
+				state: {
+					...s.state,
+					[size]: {
+						...s.state[size],
+						brush: null
 					}
 				}
 			})),

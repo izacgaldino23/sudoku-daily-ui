@@ -55,13 +55,12 @@ $outer-border-color: rgba(v.$primary-color, .4);
 			font-family: var(--font-numbers);
 
 			&.filled {
-				background-color: rgba(black, .05);
+				background-color: rgba(black, .0);
 				color: inherit;
 				font-weight: normal;
 			}
 
 			&.selected {
-				// background-color: v.$tertiary-color !important;
 				border-color: rgba(black, .2) !important;
 				border: 2px solid !important;
 			}
