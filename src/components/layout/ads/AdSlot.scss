@@ -18,4 +18,5 @@ $margin-left: calc(190px - $width - $margin-right);
 	font-weight: normal;
 	font-size: .8rem;
     margin-left: $margin-left;
+    justify-self: end;
 }

@@ -15,6 +15,7 @@ export default function AppLayout() {
 
 			<div className="main-layout">
 				<main className="content">
+					<div></div>
 					<Outlet />
 
 					<AdSlot />
