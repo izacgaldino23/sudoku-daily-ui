@@ -22,16 +22,8 @@ export default function Header() {
 			</nav>
 
 			<NavLink to={isLoggedIn ? "/profile" : "/login"}  className="profile-icon">
-				{/* <img src={defaultAvatar} alt="avatar" /> */}
 				<User />
 			</NavLink>
-			{/* {isPlayActive && (
-				<nav>
-					<NavLink to="/">4x4</NavLink>
-					<NavLink to="/play/medium">6x6</NavLink>
-					<NavLink to="/play/hard">9x9</NavLink>
-				</nav>
-			)} */}
 		</header>
 	)
 }

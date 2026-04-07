@@ -101,7 +101,7 @@ export default function Play({ size }: PlayAttributes) {
 				{isFinished && (
 					<div className="victory">
 						<div className="title">Great Job!</div>
-						<div className="subtitle">You finished in {hours != 0 && zeroPad(hours)+":"}{zeroPad(minutes)}:{remainingSeconds}</div>
+						<div className="subtitle">You finished in {hours != 0 && zeroPad(hours)+"h"} {zeroPad(minutes)}m {remainingSeconds}s</div>
 					</div>
 				)}
 

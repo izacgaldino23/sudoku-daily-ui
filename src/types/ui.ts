@@ -26,11 +26,12 @@ export interface BoardAttributes {
 export interface TileAttributes {
 	value?: number
 	fixed?: boolean
-	x?: number
-	y?: number
+	x: number
+	y: number
 	onClick?: () => void
 	selected?: boolean
 	conflict?: boolean
+	size: BoardSize
 }
 
 export interface ButtonAttributes {

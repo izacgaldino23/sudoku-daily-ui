@@ -5,17 +5,27 @@ import { Eraser } from "lucide-react"
 import type { BoardAttributes, TileAttributes } from "@/types/ui"
 import { useGameStore } from "@/store/useGameStore"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
-import { Status } from "@/types/game"
+import { Status, type BoardSize } from "@/types/game"
 import { BoardSizeToString } from "@/utils/board"
 import { useSubmitSudokuSolve } from "@/hooks/sudoku/mutations"
 import { getErrorMessage } from "@/types/errors"
 import { useAlertStore } from "@/store/useAlertStore"
 
-function Tile({ value, x, y, fixed, onClick, selected, conflict }: TileAttributes) {
+function getCornerReference(size: BoardSize, x: number, y: number) {
+	if (x === 0 && y === 0) return "corner top-left";
+	else if (x === size - 1 && y === 0) return "corner top-right";
+	else if (x === 0 && y === size - 1) return "corner bottom-left";
+	else if (x === size - 1 && y === size - 1) return "corner bottom-right";
+
+	return "";
+}
+
+function Tile({ value, x, y, fixed, onClick, selected, conflict, size }: TileAttributes) {
 	const classes = ['tile'];
 	if (fixed) classes.push('filled');
 	if (selected && !fixed) classes.push('selected');
 	if (conflict) classes.push('conflict');
+	classes.push('corner', getCornerReference(size, x, y));
 
 	return (
 		<div 
@@ -127,6 +137,7 @@ export default function Board({ size }: BoardAttributes) {
 							onClick={() => handleSelectCell(rowIndex, colIndex)}
 							x={colIndex}
 							y={rowIndex}
+							size={size}
 							/>
 					))
 				)}

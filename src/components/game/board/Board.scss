@@ -31,6 +31,11 @@ $outer-border-color: rgba(v.$primary-color, .4);
 
 .board {
 	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
 	.grid {
 		display: inline-grid;
 		overflow: hidden;
@@ -66,6 +71,21 @@ $outer-border-color: rgba(v.$primary-color, .4);
 				color: v.$red2-color;
 				border-color: v.$red2-color;
 			}
+
+			&.corner {
+				&.top-left {
+					border-radius: .5rem 0 0 0;
+				}
+				&.top-right {
+					border-radius: 0 .5rem 0 0;
+				}
+				&.bottom-left {
+					border-radius: 0 0 0 .5rem;
+				}
+				&.bottom-right {
+					border-radius: 0 0 .5rem 0;
+				}
+			}
 		}
 
 		&.four {
@@ -86,6 +106,7 @@ $outer-border-color: rgba(v.$primary-color, .4);
 		display: flex;
 		justify-content: space-between;
 		button {
+			margin: 0 .2rem;
 			font-family: var(--font-numbers);
 		}
 	}	
