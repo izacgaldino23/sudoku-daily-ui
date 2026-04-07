@@ -1,4 +1,4 @@
-import { Timer } from 'lucide-react'
+import { Crown, Timer } from 'lucide-react'
 import './Play.scss'
 import Board from '@/components/game/board/Board'
 import { useEffect, useMemo, useState } from 'react';
@@ -81,14 +81,22 @@ export default function Play({ size }: PlayAttributes) {
 	return (
 		<section className="play">
 			<nav className='puzzle-size'>
-				<NavLink to="/">4x4</NavLink>
-				<NavLink to="/play/medium">6x6</NavLink>
-				<NavLink to="/play/hard">9x9</NavLink>
+				<NavLink to="/">
+					{ (state && state[4] && state[4].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					4x4
+				</NavLink>
+				<NavLink to="/play/medium">
+					{ (state && state[6] && state[6].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					6x6
+				</NavLink>
+				<NavLink to="/play/hard">
+					{ (state && state[9] && state[9].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					9x9
+				</NavLink>
 			</nav>
 
 			{!isStarted && (<div className='welcome-message'>
 				<hr />
-				{!isFinished && <h2>{size}x{size} Not solved yet</h2>}
 
 				{isFinished && (
 					<div className="victory">
@@ -99,8 +107,6 @@ export default function Play({ size }: PlayAttributes) {
 
 				{!isFinished && (
 					<div className='start'>
-						<hr />
-
 						<Button text={currentState?.status === Status.LOADING ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={currentState?.status === Status.LOADING} />
 					</div>	
 				)}

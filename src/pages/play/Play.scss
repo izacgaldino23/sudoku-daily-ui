@@ -2,7 +2,7 @@
 
 .play {
 	$spacing: 1.5rem;
-	
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -19,9 +19,15 @@
 	}
 
 	.puzzle-size {
+		$padding: .5rem;
+		$radius: 2rem;
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		background-color: v.$primary-color;
+		border-radius: $radius;
+		padding: $padding;
 
 		a {
 			display: inline-flex;
@@ -30,47 +36,52 @@
 			padding: 0.6rem 1.5rem;
 			min-width: 80px;
 
-			background-color: v.$quaternary-color;
-			color: #e0e0e0;
+			color: rgba(white, 0.7);
 			text-decoration: none;
 			font-weight: 500;
 			font-size: 0.9rem;
 			transition: all 0.2s ease-in-out;
-			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: calc($radius - $padding);
+			position: relative;
 
 			font-family: var(--font-numbers);
 
-			&:not(:last-child) {
-				border-right: none;
+			.icon-crown {
+				position: absolute;
+				left: 50%;
+				bottom: calc(100% + .8rem);
+				transform: translateX(-50%);
+				color: v.$primary-color;
 			}
 
-			&:first-child {
-				border-radius: 8px 0 0 8px;
+			&::after {
+				content: '';
+				position: absolute;
+				bottom: 6px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 0%;
+				height: 2px;
+				background-color: v.$primary-color;
+				border-radius: 2px;
+				transition: all 0.2s ease-in-out;
 			}
-						&:last-child {
-				border-radius: 0 8px 8px 0;
+
+			&:not(:last-child):not(:first-child) {
+				margin: 0 .7rem;
 			}
 
 			&:hover {
-				background-color: lighten(v.$quaternary-color, 5%);
+				background-color: v.$primary-color;
 			}
 
 			&.active {
-				background-color: darken(v.$quaternary-color, 10%);
-				color: #ffffff;
-				box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-				position: relative;
+				background-color: v.$background-color;
+				color: v.$primary-color;
+				box-shadow: 0 1px 3px rgba(black, 0.3);
 
 				&::after {
-					content: '';
-					position: absolute;
-					bottom: 6px;
-					left: 50%;
-					transform: translateX(-50%);
-					width: 12px;
-					height: 2px;
-					background-color: #fff;
-					border-radius: 2px;
+					width: 30%;
 				}
 			}
 		}
