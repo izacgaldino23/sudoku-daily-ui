@@ -10,6 +10,7 @@ import { SecondsToClock } from '@/utils/gameLogic';
 import { BoardSizeToString } from '@/utils/board';
 import { mapSudokuFromResponse } from '@/utils/mappers';
 import { useDailySudoku } from '@/hooks/sudoku/mutations';
+import { NavLink } from 'react-router-dom';
 
 function calcSeconds(startTime?: number) {
 	if (!startTime) return 0;
@@ -66,8 +67,10 @@ export default function Play({ size }: PlayAttributes) {
 						});
 					}
 				},
-				onSettled: () => {
-					removeGame(size);
+				onSettled: (_, error) => {
+					if (error) {
+						removeGame(size);
+					}
 				},
 			});
 		}
@@ -77,7 +80,14 @@ export default function Play({ size }: PlayAttributes) {
 
 	return (
 		<section className="play">
+			<nav className='puzzle-size'>
+				<NavLink to="/">4x4</NavLink>
+				<NavLink to="/play/medium">6x6</NavLink>
+				<NavLink to="/play/hard">9x9</NavLink>
+			</nav>
+
 			{!isStarted && (<div className='welcome-message'>
+				<hr />
 				{!isFinished && <h2>{size}x{size} Not solved yet</h2>}
 
 				{isFinished && (
@@ -87,11 +97,19 @@ export default function Play({ size }: PlayAttributes) {
 					</div>
 				)}
 
-				{!isFinished && <Button text={currentState?.status === Status.LOADING ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={currentState?.status === Status.LOADING} />}
+				{!isFinished && (
+					<div className='start'>
+						<hr />
+
+						<Button text={currentState?.status === Status.LOADING ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={currentState?.status === Status.LOADING} />
+					</div>	
+				)}
 			</div>)}
 
 			{isStarted && (
 				<div className='game'>
+					<hr />
+
 					<div className='timer'>
 						<div className='clock'>
 							{hours != 0 && (<div className="part hour">
@@ -108,8 +126,10 @@ export default function Play({ size }: PlayAttributes) {
 							</div>
 						</div>
 
-						<Timer />
+						<Timer className='clock-icon' />
 					</div>
+
+					<hr />
 
 					<Board size={size}/>
 				</div>

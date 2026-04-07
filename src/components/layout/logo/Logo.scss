@@ -1,11 +1,11 @@
 @use "@/styles/_variables.scss" as v;
 
 .logo {
-	position: absolute;
-	top: 0;
-    left: 0;
+	// position: absolute;
+	// top: 0;
+    // left: 0;
 
-	padding: 1rem;
+	padding: .7rem 1rem;
 	color: v.$primary-color;
 
 	display: flex;

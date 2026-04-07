@@ -47,6 +47,7 @@ $outer-border-color: rgba(v.$primary-color, .4);
 			font-size: 1.15rem;
 			color: v.$quaternary-color;
 			font-weight: bold;
+			font-family: var(--font-numbers);
 
 			&.filled {
 				background-color: rgba(black, .05);
@@ -84,5 +85,8 @@ $outer-border-color: rgba(v.$primary-color, .4);
 		margin-top: 1rem;
 		display: flex;
 		justify-content: space-between;
+		button {
+			font-family: var(--font-numbers);
+		}
 	}	
 }

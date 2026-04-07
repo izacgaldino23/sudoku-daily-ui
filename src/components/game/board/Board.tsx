@@ -33,6 +33,7 @@ export default function Board({ size }: BoardAttributes) {
 	const selectCell = useGameStore(state => state.selectCell);
 	const setValue = useGameStore(state => state.setValue);
 	const finishGame = useGameStore(state => state.finishGame);
+	const clearValue = useGameStore(state => state.clearValue);
 	const currentState = state[size];
 
 	const conflicts = useMemo(() => {
@@ -75,6 +76,10 @@ export default function Board({ size }: BoardAttributes) {
 				if (value === "") payload_value = "0";
 
 				setValue(size, { ...currentState.selectedCell, value: Number(payload_value) });
+			} else if (value === "Backspace") {
+				if (!currentState || !currentState.selectedCell) return;
+
+				clearValue(size, { ...currentState.selectedCell });
 			}
 		};
 
@@ -83,7 +88,7 @@ export default function Board({ size }: BoardAttributes) {
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [currentState, setValue, size]);
+	}, [currentState, setValue, size, clearValue]);
 
 	const buttonsLabels = useMemo(() => {
 		const labels: string[] = [];
