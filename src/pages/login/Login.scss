@@ -1,5 +1,11 @@
 @use "@/styles/_variables.scss" as v;
 
+.logo {
+	position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .enter-container {
 	display: flex;
 	justify-content: center;
