@@ -7,7 +7,7 @@ import { User } from "lucide-react";
 export default function Header() {
 	const location = useLocation();
 	const isPlayActive = location.pathname === "/" || location.pathname.startsWith("/play");
-	const authState = useAuthStore.getState().state;
+	const authState = useAuthStore(s => s.state);
 
 	const isLoggedIn = (authState && authState.username);
 
@@ -21,8 +21,9 @@ export default function Header() {
 				<NavLink to="/about">About</NavLink>
 			</nav>
 
-			<NavLink to={isLoggedIn ? "/profile" : "/login"}  className="profile-icon">
-				<User />
+			<NavLink to={isLoggedIn ? "/profile" : "/login"}  className="profile-link">
+				{isLoggedIn && (<h3>{authState.username}</h3>)}
+				<User className="profile-icon"/>
 			</NavLink>
 		</header>
 	)

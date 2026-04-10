@@ -31,68 +31,32 @@
 				}
 			}
 		}
-
 	}
 
-	.profile-icon {
-		margin: 1rem;
-		border-radius: 10rem;
-		overflow: hidden;
-		width: 2.5rem;
-		height: 2.5rem;
-		background-color: v.$lighter-color;
-		color: v.$primary-color;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	.profile-link {
 		margin-left: auto;
+		display: flex;
+    	align-items: center;
+		text-decoration: none;
 
-		img {
-			
-			display: block;
+		h3 {
+			color: v.$primary-color;
+			font-size: .8rem;
+		}
+		
+		.profile-icon {
+			margin: 1rem;
+			margin-left: .7rem;
+			border-radius: 10rem;
+			overflow: hidden;
+			width: 2.5rem;
+			height: 2.5rem;
+			background-color: v.$lighter-color;
+			color: v.$primary-color;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: .4rem;
 		}
 	}
-
-	// nav {
-	// 	display: flex;
-	// 	gap: 2rem;
-	// 	justify-content: center;
-	// 	height: 100%;
-
-	// 	a {
-	// 		// padding: 1.5rem;
-	// 		width: 4.3rem;
-	// 		display: flex;
-	// 		justify-content: center;
-	// 		align-items: center;
-
-	// 		text-decoration: none;
-	// 		color: v.$primary-color;
-	// 		position: relative;
-	// 		z-index: 1;
-	// 		transition: 0.3s ease;
-	// 		position: relative;
-	// 		opacity: .75;
-
-	// 		&.active {
-	// 			opacity: 1;
-	// 			background-color: v.$quaternary-color;
-	// 			color: v.$lighter-color;
-	// 			border-radius: 0 0 .5rem .5rem;
-
-	// 			&:before {
-	// 				content: "";
-	// 				width: 40%;
-	// 				height: 10%;
-	// 				position: absolute;
-	// 				background: v.$lighter-color;
-	// 				bottom: 0;
-	// 				border-radius: 1rem;
-	// 				inset: 0;
-	// 				margin: auto;
-	// 				margin-bottom: .5rem;
-	// 			}
-	// 		}
-	// 	}
-	// }
 }

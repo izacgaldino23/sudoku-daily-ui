@@ -1,10 +1,5 @@
 @use "@/styles/_variables.scss" as v;
 
-.logo {
-	position: absolute;
-    top: 0;
-    left: 0;
-}
 
 .enter-container {
 	display: flex;
@@ -14,6 +9,12 @@
 	width: 100vw;
 	background-color: v.$lighter-color;
 	position: relative;
+	
+	.logo {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 
 	.panel {
 		display: flex;
