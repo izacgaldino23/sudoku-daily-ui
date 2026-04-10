@@ -1,0 +1,47 @@
+@use "@/styles/_variables.scss" as v;
+
+$inner-border-color: rgba(v.$primary-color, .15);
+
+.tile {
+	background-color: #f5f5f5;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid $inner-border-color;
+	font-size: 1.15rem;
+	color: v.$quaternary-color;
+	font-weight: bold;
+	font-family: var(--font-numbers);
+
+	&.filled {
+		background-color: rgba(black, .0);
+		color: inherit;
+		font-weight: normal;
+	}
+
+	&.selected {
+		border-color: rgba(black, .2) !important;
+		border: 2px solid !important;
+	}
+
+	&.conflict {
+		background-color: rgba(v.$red2-color, .15);
+		color: v.$red2-color;
+		border-color: v.$red2-color;
+	}
+
+	&.corner {
+		&.top-left {
+			border-radius: .5rem 0 0 0;
+		}
+		&.top-right {
+			border-radius: 0 .5rem 0 0;
+		}
+		&.bottom-left {
+			border-radius: 0 0 0 .5rem;
+		}
+		&.bottom-right {
+			border-radius: 0 0 .5rem 0;
+		}
+	}
+}
