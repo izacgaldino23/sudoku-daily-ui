@@ -18,3 +18,13 @@ export type SubmitSudokuSolve = {
 	play_token: string
 	solution: number[][]
 }
+
+export type MyDailySolvesResponse = SolvesResponse[]
+
+export type SolvesResponse = {
+	date: string;
+	duration: number;
+	id: string;
+	size: number;
+	started_at: string;
+}

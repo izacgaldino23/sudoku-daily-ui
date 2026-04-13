@@ -9,8 +9,8 @@ import { useGameStore } from '@/store/useGameStore';
 import { SecondsToClock } from '@/utils/gameLogic';
 import { BoardSizeToString } from '@/utils/board';
 import { mapSudokuFromResponse } from '@/utils/mappers';
-import { useDailySudoku } from '@/hooks/sudoku/mutations';
-import { NavLink } from 'react-router-dom';
+import { useDailySudoku, useGetDailySolves } from '@/hooks/sudoku/mutations';
+import { NavLink, useLocation } from 'react-router-dom';
 
 function calcSeconds(startTime?: number) {
 	if (!startTime) return 0;
@@ -23,11 +23,13 @@ function zeroPad(num: number) {
 
 export default function Play({ size }: PlayAttributes) {
 	const state = useGameStore(s => s.state);
-	const mutation = useDailySudoku();
+	const dailySudokuMutation = useDailySudoku();
+	const getDailySolves = useGetDailySolves();
 
 	const setPuzzle = useGameStore(state => state.setPuzzle);
 	const loadingGame = useGameStore(state => state.loadingGame);
 	const removeGame = useGameStore(state => state.removeGame);
+	const loadSolve = useGameStore(state => state.loadSolve);
 
 	const currentState = state[size];
 
@@ -35,6 +37,8 @@ export default function Play({ size }: PlayAttributes) {
 	const isFinished = currentState && currentState.status == Status.FINISHED;
 	
 	const [ seconds, setSeconds ] = useState(calcSeconds(currentState?.startTime));
+
+	const cameFromLogin = useLocation().state?.fromLogin;
 
 	useEffect(() => {
 		setSeconds(calcSeconds(currentState?.startTime));
@@ -50,12 +54,33 @@ export default function Play({ size }: PlayAttributes) {
 		return () => clearInterval(interval);
 	}, [isStarted, currentState?.startTime]);
 
+	useEffect(() => {
+		if (cameFromLogin) {
+			getDailySolves.mutate(undefined, {
+				onSuccess: (data) => {
+					for (const solve of data) {
+						const startTime = new Date(solve.started_at).getTime();
+						loadSolve(size, {
+							startTime: startTime,
+							endTime: startTime + solve.duration,
+						});
+					}
+				},
+				onSettled: (_, error) => {
+					if (error) {
+						removeGame(size);
+					}
+				},
+			});
+		}
+	}, [cameFromLogin, getDailySolves, loadSolve, removeGame, size]);
+
 	const handleSudokuStart = () => {
 		const validSizes = [4, 6, 9];
 		if (validSizes.includes(size)) {
 			loadingGame(size);
 
-			mutation.mutate(BoardSizeToString(size), {
+			dailySudokuMutation.mutate(BoardSizeToString(size), {
 				onSuccess: (data) => {
 					const mapped = mapSudokuFromResponse(data);
 

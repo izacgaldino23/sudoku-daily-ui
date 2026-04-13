@@ -90,7 +90,7 @@ export default function Login() {
 							email: data.email,
 						})
 						pushAlert("Successfully logged in!", "success");
-						navigate("/");
+						navigate("/", { state: { fromLogin: true}});
 					},
 				}
 			);

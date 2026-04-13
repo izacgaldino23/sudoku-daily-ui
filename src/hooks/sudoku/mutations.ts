@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { fetchDailySudoku, submitSudokuSolve } from "@/services/sudokuApi";
+import { fetchDailySudoku, getDailySolves, submitSudokuSolve } from "@/services/sudokuApi";
 import { useErrorHandler } from "../useErrorHandler";
 
 export function useSubmitSudokuSolve() {
@@ -26,4 +26,16 @@ export function useDailySudoku() {
 	});
 
 	return mutation;
+}
+
+export function useGetDailySolves() {
+	const handleError = useErrorHandler();
+
+	return useMutation({
+		mutationFn: getDailySolves,
+		retry: 3,
+		retryDelay: 1000,
+		mutationKey: ["sudoku", "me"],
+		onError: handleError,
+	});
 }

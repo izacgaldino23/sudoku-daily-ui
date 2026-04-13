@@ -2,6 +2,7 @@ import { createApiError, createNetworkError } from "@/types/errors";
 import type { RequestConfig, ApiRequest } from "@/types/api/api";
 import { env } from "@/config/env";
 import { handleSessionResponse } from "./interceptors/session";
+import { tryRefreshToken } from "./interceptors/auth";
 
 export { env };
 
@@ -36,7 +37,8 @@ export function buildUrl(baseUrl: string, config: RequestConfig): string {
 
 export async function makeRequest<T>(
 	config: RequestConfig,
-	interceptors: Interceptor[]
+	interceptors: Interceptor[],
+	retry?: boolean,
 ): Promise<T> {
 	const preparedConfig = await applyInterceptors({ ...config }, interceptors);
 
@@ -52,6 +54,14 @@ export async function makeRequest<T>(
 	handleSessionResponse(response);
 
 	if (response.status === 401 && preparedConfig.requiresAuth) {
+		if (finalHeaders.has("Authorization") && !retry) {
+			try {
+				await tryRefreshToken();
+				return await makeRequest<T>(config, interceptors, true);
+			} catch {
+				throw createApiError("Session expired and refresh token expired", 401);
+			}
+		}
 		throw createApiError("Session expired", 401);
 	}
 

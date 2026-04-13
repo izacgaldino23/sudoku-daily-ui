@@ -1,7 +1,7 @@
 import { sessionInterceptor } from "./api/interceptors/session";
 import { authInterceptor } from "./api/interceptors/auth";
 import { apiFetch, apiPost } from "./api/client";
-import type { DailySudokuResponse, SubmitSudokuSolve } from "@/types/api/sudoku";
+import type { DailySudokuResponse, MyDailySolvesResponse, SubmitSudokuSolve } from "@/types/api/sudoku";
 
 const interceptors = [sessionInterceptor, authInterceptor];
 
@@ -16,5 +16,12 @@ export async function submitSudokuSolve(request: SubmitSudokuSolve): Promise<voi
 	return apiPost({
 		url: `/sudoku/submit`,
 		data: request,
+	}, interceptors);
+}
+
+export async function getDailySolves(): Promise<MyDailySolvesResponse> {
+	return apiFetch<MyDailySolvesResponse>({
+		url: `/sudoku/me`,
+		requiresAuth: true,
 	}, interceptors);
 }

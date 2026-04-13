@@ -21,6 +21,7 @@ interface GameStore {
 	finishGame: (size: BoardSize) => void
 	setBrush: (size: BoardSize, value: number) => void
 	clearBrush: (size: BoardSize) => void
+	loadSolve: (size: BoardSize, payload: { startTime: number, endTime: number }) => void
 }
 
 export const useGameStore = create<GameStore>()(
@@ -128,6 +129,15 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 					}
 				}
 			})),
+			loadSolve: (size: BoardSize, payload: { startTime: number, endTime: number }) => set(s => ({
+				state: {
+					...s.state,
+					[size]: {
+						...s.state[size],
+						...payload
+					}
+				}
+			}))
 		}),
 		{ 
 			name: "sudoku-game-state",
