@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { buildUrl, applyInterceptors, makeRequest, apiFetch, apiPost } from "@/services/api/client";
+import { tryRefreshToken, authInterceptor } from "@/services/api/interceptors/auth";
 
 vi.mock("@/config/env", () => ({
 	env: { apiUrl: "http://localhost:3000" },
@@ -11,7 +12,9 @@ vi.mock("@/services/api/interceptors/session", () => ({
 
 vi.mock("@/services/api/interceptors/auth", () => ({
 	tryRefreshToken: vi.fn(),
-	authInterceptor: vi.fn(),
+	authInterceptor: vi.fn((config: Record<string, unknown>) => {
+		config.headers = { ...config.headers as Record<string, unknown>, Authorization: "Bearer token" };
+	}),
 }));
 
 describe("buildUrl", () => {
@@ -144,6 +147,105 @@ describe("makeRequest", () => {
 		await expect(
 			makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [])
 		).rejects.toThrow("Session expired");
+	});
+
+	it("throws ApiError when tryRefreshToken returns false", async () => {
+		vi.mocked(fetch).mockResolvedValue({
+			ok: false,
+			status: 401,
+			statusText: "Unauthorized",
+			headers: new Headers({ "authorization": "Bearer token" }),
+			text: async () => "",
+		} as Response);
+
+		vi.mocked(tryRefreshToken).mockResolvedValue(false);
+
+		await expect(
+			makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [authInterceptor])
+		).rejects.toThrow("Session expired and refresh token expired");
+	});
+
+	it("retries request when tryRefreshToken returns true", async () => {
+		vi.mocked(fetch)
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				statusText: "Unauthorized",
+				headers: new Headers({ "authorization": "Bearer token" }),
+				text: async () => "",
+			} as Response)
+			.mockResolvedValueOnce({
+				ok: true,
+				status: 200,
+				statusText: "OK",
+				headers: new Headers(),
+				text: async () => JSON.stringify({ data: "success" }),
+			} as Response);
+
+		vi.mocked(tryRefreshToken).mockResolvedValue(true);
+
+		const result = await makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [authInterceptor]);
+
+		expect(tryRefreshToken).toHaveBeenCalledTimes(1);
+		expect(result).toEqual({ data: "success" });
+	});
+
+	it("throws ApiError when tryRefreshToken throws error", async () => {
+		vi.mocked(fetch).mockResolvedValue({
+			ok: false,
+			status: 401,
+			statusText: "Unauthorized",
+			headers: new Headers({ "authorization": "Bearer token" }),
+			text: async () => "",
+		} as Response);
+
+		vi.mocked(tryRefreshToken).mockRejectedValue(new Error("Refresh token failed"));
+
+		await expect(
+			makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [authInterceptor])
+		).rejects.toThrow("Session expired and refresh token expired");
+	});
+
+	it("throws ApiError when retried request still returns 401", async () => {
+		vi.mocked(fetch)
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				statusText: "Unauthorized",
+				headers: new Headers({ "authorization": "Bearer token" }),
+				text: async () => "",
+			} as Response)
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				statusText: "Unauthorized",
+				headers: new Headers(),
+				text: async () => "",
+			} as Response);
+
+		vi.mocked(tryRefreshToken).mockResolvedValue(true);
+
+		await expect(
+			makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [authInterceptor])
+		).rejects.toThrow("Session expired");
+	});
+
+	it("throws error when retried request has network failure", async () => {
+		vi.mocked(fetch)
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				statusText: "Unauthorized",
+				headers: new Headers({ "authorization": "Bearer token" }),
+				text: async () => "",
+			} as Response)
+			.mockRejectedValueOnce(new Error("Network failure"));
+
+		vi.mocked(tryRefreshToken).mockResolvedValue(true);
+
+		await expect(
+			makeRequest({ url: "/api/protected", method: "GET", requiresAuth: true }, [authInterceptor])
+		).rejects.toThrow("Network failure");
 	});
 });
 

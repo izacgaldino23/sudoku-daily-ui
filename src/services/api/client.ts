@@ -55,15 +55,17 @@ export async function makeRequest<T>(
 
 	if (response.status === 401 && preparedConfig.requiresAuth) {
 		if (finalHeaders.has("Authorization") && !retry) {
+			let refreshed: boolean;
 			try {
-				const refreshed = await tryRefreshToken();
-				if (!refreshed) {
-					throw createApiError("Session expired and refresh token expired", 401);
-				}
-				return await makeRequest<T>(config, interceptors, true);
+				refreshed = await tryRefreshToken();
 			} catch {
 				throw createApiError("Session expired and refresh token expired", 401);
 			}
+
+			if (!refreshed) {
+				throw createApiError("Session expired and refresh token expired", 401);
+			}
+			return await makeRequest<T>(config, interceptors, true);
 		}
 		throw createApiError("Session expired", 401);
 	}
