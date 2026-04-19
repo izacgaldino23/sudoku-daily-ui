@@ -19,10 +19,10 @@ export async function loginUser(request: LoginRequest): Promise<LoginResponse> {
 	}, interceptors);
 }
 
-export async function refresh(refreshToken: string): Promise<RefreshResponse> {
+export async function refresh(refresh_token: string): Promise<RefreshResponse> {
 	return apiPost<RefreshResponse>({
 		url: `/auth/refresh`,
-		data: { refreshToken },
+		data: { refresh_token },
 	}, [sessionInterceptor]);
 }
 

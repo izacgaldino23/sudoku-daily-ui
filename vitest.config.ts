@@ -16,11 +16,26 @@ export default defineConfig({
 			{
 				resolve: { alias },
 				test: {
+					name: 'unit',
+					globals: true,
+					environment: 'node',
+					logHeapUsage: false,
+					setupFiles: './src/test/setup/setup.unit.ts',
+					include: ['src/test/unit/**/*.test.ts'],
+					env: {
+						VITE_API_URL: 'http://localhost:3000',
+					},
+				},
+			},
+			{
+				resolve: { alias },
+				test: {
 					name: 'cli',
 					globals: true,
 					environment: 'jsdom',
 					logHeapUsage: false,
-					setupFiles: './src/test/setup.cli.ts',
+					setupFiles: './src/test/setup/setup.cli.ts',
+					include: ['src/test/integration/**/*.test.tsx'],
 					env: {
 						VITE_API_URL: 'http://localhost:3000',
 					},
@@ -33,7 +48,8 @@ export default defineConfig({
 					globals: true,
 					environment: 'jsdom',
 					logHeapUsage: false,
-					setupFiles: './src/test/setup.browser.ts',
+					setupFiles: './src/test/setup/setup.browser.ts',
+					include: ['src/test/integration/**/*.test.tsx'],
 					env: {
 						VITE_API_URL: 'http://localhost:3000',
 					},

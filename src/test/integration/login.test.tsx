@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Login from "@/pages/login/Login";
-import { renderWithProviders, clearTestStores } from "./test-query-client";
+import { renderWithProviders, clearTestStores } from "../setup/test-query-client";
 
 const mockedUsedNavigate = vi.fn();
 

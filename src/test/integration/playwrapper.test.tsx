@@ -1,5 +1,5 @@
 import { describe, beforeEach, vi, it } from "vitest";
-import { clearTestStores } from "./test-query-client";
+import { clearTestStores } from "../setup/test-query-client";
 
 vi.mock('react-router-dom', async () => {
 	const actual = await vi.importActual('react-router-dom');
