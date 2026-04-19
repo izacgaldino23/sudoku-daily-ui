@@ -55,6 +55,7 @@ describe("Login Page", () => {
 
 	it("logs in successfully with valid credentials", async () => {
 		const user = userEvent.setup();
+		const { useAuthStore } = await import("@/store/useAuthStore");
 		renderWithProviders(<Login />);
 
 		await user.type(screen.getByLabelText(/email/i), "testhello@example.com");
@@ -65,7 +66,11 @@ describe("Login Page", () => {
 			expect(screen.queryByText(/successfully logged in/i)).toBeInTheDocument();
 		});
 
-		const { useAuthStore } = await import("@/store/useAuthStore");
+		await waitFor(() => {
+			const authState = useAuthStore.getState().state;
+			expect(authState?.accessToken).toBe("mock-access-token");
+		});
+
 		const authState = useAuthStore.getState().state;
 		expect(authState).toEqual({
 			accessToken: "mock-access-token",
