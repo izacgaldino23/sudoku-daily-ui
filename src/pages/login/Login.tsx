@@ -49,10 +49,10 @@ export default function Login() {
 	const login = useAuthStore(s => s.login);
 
 	useEffect(() => {
-		if (authState?.username) {
-		navigate("/", { replace: true });
+		if (authState?.username && authState.accessToken && authState.refreshToken) {
+			navigate("/", { replace: true });
 		}
-	}, [authState?.username, navigate]);
+	}, [authState, navigate]);
 
 	const [ username, setUsername ] = useState<string>("");
 	const [ email, setEmail ] = useState<string>("");

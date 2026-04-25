@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware"
 interface AuthStore {
 	state: AuthData | null
 	login: (data: AuthData) => void
-	updateToken: (tokens: Pick<AuthData, "accessToken" | "refreshToken">) => void;
+	updateAccessToken: (accessToken: string) => void;
 	logout: () => void
 }
 
@@ -15,10 +15,10 @@ export const useAuthStore = create<AuthStore>()(
 			state: null,
 
 			login: (data: AuthData) => set({ state: data }),
-			updateToken: (tokens) => 
+			updateAccessToken: (accessToken) => 
 				set((prev) => ({
 					state: prev.state 
-						? { ...prev.state, ...tokens }
+						? { ...prev.state, accessToken }
 						: null
 				})),
 			logout: () => set({ state: null }),

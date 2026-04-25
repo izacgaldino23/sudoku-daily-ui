@@ -28,7 +28,7 @@ export type LoginResponse = {
 }
 
 export type RefreshResponse = {
-	accessToken: string;
+	access_token: string;
 }
 
 export type ProfileResume = {

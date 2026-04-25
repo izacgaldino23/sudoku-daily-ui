@@ -30,10 +30,7 @@ export async function tryRefreshToken(): Promise<boolean> {
 	refreshPromise = (async () => {
 		try {
 			const response = await refresh(authState.refreshToken);
-			useAuthStore.getState().updateToken({
-				accessToken: response.accessToken,
-				refreshToken: authState.refreshToken,
-			});
+			useAuthStore.getState().updateAccessToken(response.access_token);
 		} catch {
 			useAlertStore.getState().pushAlert("Session expired. Please login again.", "warning");
 			useAuthStore.getState().logout();
