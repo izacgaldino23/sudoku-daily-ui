@@ -1,4 +1,6 @@
-import { type AuthData } from "@/types/api/auth"
+import { useGameStore } from "./useGameStore"
+import { useSessionStore } from "./useSessionStore"
+import { type AuthData, type BoardSize } from "@/types/api/auth"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
@@ -21,7 +23,14 @@ export const useAuthStore = create<AuthStore>()(
 						? { ...prev.state, accessToken }
 						: null
 				})),
-			logout: () => set({ state: null }),
+			logout: () => {
+				set({ state: null });
+				const sizes: BoardSize[] = [4, 6, 9];
+				sizes.forEach((size) => {
+					useGameStore.getState().removeGame(size)
+				})
+				useSessionStore.getState().setSessionID(null)
+			},
 		}),
 		{
 			name: "auth",

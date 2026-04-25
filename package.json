@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest --project=cli",
+    "test": "vitest --project=cli --project=unit",
+    "test:cli": "vitest --project=cli",
     "test:ui": "vitest --project=browser",
     "test:unit": "vitest --project=unit"
   },
