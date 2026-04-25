@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { profileResume } from "@/services/authApi";
 import type { ProfileResume } from "@/types/api/auth";
-import { useErrorHandler } from "../useErrorHandler";
+import { useAuthErrorHandler } from "../useAuthErrorHandler";
 
 async function safeProfileResume(handleError: (error: Error) => void): Promise<ProfileResume> {
 	try {
@@ -13,7 +13,7 @@ async function safeProfileResume(handleError: (error: Error) => void): Promise<P
 }
 
 export function useGetProfileResume() {
-	const handleError = useErrorHandler();
+	const handleError = useAuthErrorHandler();
 
 	return useQuery<ProfileResume>({
 		queryKey: ["get", "profile", "resume"],

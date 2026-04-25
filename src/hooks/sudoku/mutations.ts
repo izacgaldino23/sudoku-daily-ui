@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { fetchDailySudoku, getDailySolves, submitSudokuSolve } from "@/services/sudokuApi";
 import { useErrorHandler } from "../useErrorHandler";
+import { useAuthErrorHandler } from "../useAuthErrorHandler";
 
 export function useSubmitSudokuSolve() {
 	const handleError = useErrorHandler();
@@ -29,7 +30,7 @@ export function useDailySudoku() {
 }
 
 export function useGetDailySolves() {
-	const handleError = useErrorHandler();
+	const handleError = useAuthErrorHandler();
 
 	return useMutation({
 		mutationFn: getDailySolves,
