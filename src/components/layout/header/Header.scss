@@ -33,11 +33,53 @@
 		}
 	}
 
-	.profile-link {
+.profile-dropdown {
+		position: relative;
 		margin-left: auto;
+
+		.dropdown-menu {
+			position: absolute;
+			top: calc(100% + .5rem);
+			right: .5rem;
+			background-color: v.$background-color;
+			border: 1px solid rgba(black, .1);
+			border-radius: .5rem;
+			box-shadow: 0 2px 4px rgba(black, .1);
+			list-style: none;
+			padding: .5rem 0;
+			min-width: 8rem;
+			z-index: 100;
+
+			li {
+				a, button {
+					display: block;
+					width: 100%;
+					padding: .5rem 1rem;
+					text-decoration: none;
+					color: v.$primary-color;
+					font-size: .8rem;
+					background: none;
+					border: none;
+					text-align: left;
+					cursor: pointer;
+					transition: 0.3s ease;
+
+					&:hover {
+						background-color: rgba(black, .05);
+					}
+				}
+			}
+		}
+	}
+
+	.profile-link {
 		display: flex;
-    	align-items: center;
+     	align-items: center;
 		text-decoration: none;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
 
 		h3 {
 			color: v.$primary-color;
