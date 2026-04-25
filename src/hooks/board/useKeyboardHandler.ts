@@ -11,6 +11,7 @@ export function useKeyboardHandler({ size, currentState }: UseKeyboardHandlerPro
 	const setValue = useGameStore(state => state.setValue);
 	const clearValue = useGameStore(state => state.clearValue);
 	const clearBrush = useGameStore(state => state.clearBrush);
+	const selectCell = useGameStore(state => state.selectCell);
 
 	useEffect(() => {
 		if (!currentState || !currentState.selectedCell) return;
@@ -24,6 +25,18 @@ export function useKeyboardHandler({ size, currentState }: UseKeyboardHandlerPro
 				clearBrush(size);
 			} else if (value === "Backspace" || value === "Delete") {
 				clearValue(size, { row, col });
+			} else if (value === "ArrowUp" && row > 0) {
+				event.preventDefault();
+				selectCell(size, { row: row - 1, col });
+			} else if (value === "ArrowDown" && row < size - 1) {
+				event.preventDefault();
+				selectCell(size, { row: row + 1, col });
+			} else if (value === "ArrowLeft" && col > 0) {
+				event.preventDefault();
+				selectCell(size, { row, col: col - 1 });
+			} else if (value === "ArrowRight" && col < size - 1) {
+				event.preventDefault();
+				selectCell(size, { row, col: col + 1 });
 			}
 		};
 
@@ -32,5 +45,5 @@ export function useKeyboardHandler({ size, currentState }: UseKeyboardHandlerPro
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [currentState, setValue, size, clearValue, clearBrush]);
+	}, [currentState, setValue, size, clearValue, clearBrush, selectCell]);
 }

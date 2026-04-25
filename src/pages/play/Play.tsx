@@ -16,7 +16,6 @@ import { useAuthStore } from '@/store/useAuthStore';
 function calcSeconds(startTime?: number, endTime?: number) {
 	if (!startTime) return 0;
 	const endTimeCalculated = endTime || Date.now();
-	console.log(endTimeCalculated, startTime);
 	return (endTimeCalculated - startTime) / 1000
 }
 
