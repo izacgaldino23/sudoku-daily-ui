@@ -47,6 +47,7 @@ export default function Login() {
 
 	const authState = useAuthStore(s => s.state);
 	const login = useAuthStore(s => s.login);
+	const setJustLoggedIn = useAuthStore(s => s.setJustLoggedIn);
 
 	useEffect(() => {
 		if (authState?.username && authState.accessToken && authState.refreshToken) {
@@ -88,6 +89,7 @@ export default function Login() {
 							username: authUser.username,
 							email: authUser.email,
 						})
+						setJustLoggedIn(true);
 						pushAlert("Successfully logged in!", "success");
 						navigate("/", { state: { fromLogin: true}});
 					},

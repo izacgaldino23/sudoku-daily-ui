@@ -139,7 +139,8 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 					...s.state,
 					[size]: {
 						...s.state[size],
-						...payload
+						...payload,
+						status: Status.FINISHED,
 					}
 				}
 			})),

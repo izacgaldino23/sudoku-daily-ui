@@ -9,12 +9,15 @@ interface AuthStore {
 	login: (data: AuthData) => void
 	updateAccessToken: (accessToken: string) => void;
 	logout: () => void
+	justLoggedIn: boolean
+	setJustLoggedIn: (value: boolean) => void
 }
 
 export const useAuthStore = create<AuthStore>()(
 	persist(
 		(set) => ({
 			state: null,
+			justLoggedIn: false,
 
 			login: (data: AuthData) => set({ state: data }),
 			updateAccessToken: (accessToken) => 
@@ -23,8 +26,9 @@ export const useAuthStore = create<AuthStore>()(
 						? { ...prev.state, accessToken }
 						: null
 				})),
+			setJustLoggedIn: (value: boolean) => set({ justLoggedIn: value }),
 			logout: () => {
-				set({ state: null });
+				set({ state: null, justLoggedIn: false });
 				const sizes: BoardSize[] = [4, 6, 9];
 				sizes.forEach((size) => {
 					useGameStore.getState().removeGame(size)

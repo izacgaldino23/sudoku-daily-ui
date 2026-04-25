@@ -10,11 +10,14 @@ import { SecondsToClock } from '@/utils/gameLogic';
 import { BoardSizeToString } from '@/utils/board';
 import { mapSudokuFromResponse } from '@/utils/mappers';
 import { useDailySudoku, useGetDailySolves } from '@/hooks/sudoku/mutations';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuthStore';
 
-function calcSeconds(startTime?: number) {
+function calcSeconds(startTime?: number, endTime?: number) {
 	if (!startTime) return 0;
-	return (Date.now() - startTime) / 1000
+	const endTimeCalculated = endTime || Date.now();
+	console.log(endTimeCalculated, startTime);
+	return (endTimeCalculated - startTime) / 1000
 }
 
 function zeroPad(num: number) {
@@ -23,26 +26,27 @@ function zeroPad(num: number) {
 
 export default function Play({ size }: PlayAttributes) {
 	const state = useGameStore(s => s.state);
+	const setPuzzle = useGameStore(s => s.setPuzzle);
+	const loadingGame = useGameStore(s => s.loadingGame);
+	const removeGame = useGameStore(s => s.removeGame);
+	const loadSolve = useGameStore(s => s.loadSolve);
+
 	const dailySudokuMutation = useDailySudoku();
 	const getDailySolves = useGetDailySolves();
-
-	const setPuzzle = useGameStore(state => state.setPuzzle);
-	const loadingGame = useGameStore(state => state.loadingGame);
-	const removeGame = useGameStore(state => state.removeGame);
-	const loadSolve = useGameStore(state => state.loadSolve);
 
 	const currentState = state[size];
 
 	const isStarted = currentState && currentState.status == Status.PLAYING;
 	const isFinished = currentState && currentState.status == Status.FINISHED;
 	
-	const [ seconds, setSeconds ] = useState(calcSeconds(currentState?.startTime));
+	const [seconds, setSeconds] = useState(() => calcSeconds(currentState?.startTime, currentState?.endTime));
 
-	const cameFromLogin = useLocation().state?.fromLogin;
+	const justLoggedIn = useAuthStore(s => s.justLoggedIn);
+	const setJustLoggedIn = useAuthStore(s => s.setJustLoggedIn);
 
 	useEffect(() => {
-		setSeconds(calcSeconds(currentState?.startTime));
-	}, [currentState?.startTime]);
+		setSeconds(calcSeconds(currentState?.startTime, currentState?.endTime));
+	}, [currentState?.startTime, currentState?.endTime]);
 
 	useEffect(() => {
 		if (!isStarted) return;
@@ -55,14 +59,16 @@ export default function Play({ size }: PlayAttributes) {
 	}, [isStarted, currentState?.startTime]);
 
 	useEffect(() => {
-		if (cameFromLogin) {
+		if (justLoggedIn) {
+			setJustLoggedIn(false);
 			getDailySolves.mutate(undefined, {
 				onSuccess: (data) => {
-					for (const solve of data) {
+					for (const solve of data.solves) {
 						const startTime = new Date(solve.started_at).getTime();
+						const endTime = startTime + solve.duration * 1000;
 						loadSolve(size, {
 							startTime: startTime,
-							endTime: startTime + solve.duration,
+							endTime: endTime,
 						});
 					}
 				},
@@ -73,7 +79,7 @@ export default function Play({ size }: PlayAttributes) {
 				},
 			});
 		}
-	}, [cameFromLogin, getDailySolves, loadSolve, removeGame, size]);
+	}, [justLoggedIn, getDailySolves, loadSolve, removeGame, size, setJustLoggedIn]);
 
 	const handleSudokuStart = () => {
 		const validSizes = [4, 6, 9];
@@ -107,15 +113,15 @@ export default function Play({ size }: PlayAttributes) {
 		<section className="play">
 			<nav className='puzzle-size'>
 				<NavLink to="/">
-					{ (state && state[4] && state[4].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					{(state && state[4] && state[4].status === Status.FINISHED) && <Crown className='icon-crown' />}
 					4x4
 				</NavLink>
 				<NavLink to="/play/medium">
-					{ (state && state[6] && state[6].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					{(state && state[6] && state[6].status === Status.FINISHED) && <Crown className='icon-crown' />}
 					6x6
 				</NavLink>
 				<NavLink to="/play/hard">
-					{ (state && state[9] && state[9].status === Status.FINISHED) && <Crown className='icon-crown' />}
+					{(state && state[9] && state[9].status === Status.FINISHED) && <Crown className='icon-crown' />}
 					9x9
 				</NavLink>
 			</nav>
@@ -126,7 +132,7 @@ export default function Play({ size }: PlayAttributes) {
 				{isFinished && (
 					<div className="victory">
 						<div className="title">Great Job!</div>
-						<div className="subtitle">You finished in {hours != 0 && zeroPad(hours)+"h"} {zeroPad(minutes)}m {remainingSeconds}s</div>
+						<div className="subtitle">You finished in {hours != 0 && zeroPad(hours) + "h"} {zeroPad(minutes)}m {zeroPad(remainingSeconds)}s</div>
 					</div>
 				)}
 
@@ -162,7 +168,7 @@ export default function Play({ size }: PlayAttributes) {
 
 					<hr />
 
-					<Board size={size}/>
+					<Board size={size} />
 				</div>
 			)}
 		</section>

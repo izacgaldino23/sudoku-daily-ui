@@ -19,7 +19,9 @@ export type SubmitSudokuSolve = {
 	solution: number[][]
 }
 
-export type MyDailySolvesResponse = SolvesResponse[]
+export type MyDailySolvesResponse = {
+	solves: SolvesResponse[]
+}
 
 export type SolvesResponse = {
 	date: string;
