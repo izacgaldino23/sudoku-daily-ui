@@ -21,7 +21,8 @@ export default function Board({ size }: BoardAttributes) {
 
 	const isComplete = isBoardComplete(currentState);
 	const hasConflicts = conflicts.size > 0;
-	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
+	const hasInvalidAttempt = currentState?.hasInvalidAttempt ?? false;
+	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts && !hasInvalidAttempt;
 	const finished = currentState && currentState.status === Status.FINISHED;
 
 	useKeyboardHandler({ size, currentState });

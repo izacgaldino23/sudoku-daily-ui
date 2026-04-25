@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import { useGameStore } from "@/store/useGameStore"
 import { useSubmitSudokuSolve } from "@/hooks/sudoku/mutations"
 import { getConflicts, isBoardComplete } from "@/utils/gameLogic"
+import { isApiError } from "@/types/errors"
 import type { BoardSize } from "@/types/game"
 import type { GameData } from "@/types/game"
 
@@ -12,13 +13,15 @@ interface UseVictorySubmitProps {
 
 export function useVictorySubmit({ size, currentState }: UseVictorySubmitProps) {
 	const finishGame = useGameStore(state => state.finishGame);
+	const setInvalidAttempt = useGameStore(state => state.setInvalidAttempt);
 	const submitSolveMutation = useSubmitSudokuSolve();
 	const hasSubmittedRef = useRef(false);
 
 	const conflicts = currentState ? getConflicts(currentState.board) : new Set<string>();
 	const hasConflicts = conflicts.size > 0;
 	const isComplete = isBoardComplete(currentState);
-	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts;
+	const hasInvalidAttempt = currentState?.hasInvalidAttempt ?? false;
+	const isVictory = currentState && currentState.board.length > 0 && isComplete && !hasConflicts && !hasInvalidAttempt;
 	const finished = currentState && currentState.status === "finished";
 
 	useEffect(() => {
@@ -32,6 +35,12 @@ export function useVictorySubmit({ size, currentState }: UseVictorySubmitProps) 
 			onSuccess: () => {
 				finishGame(size);
 			},
+			onError: (error) => {
+				hasSubmittedRef.current = false;
+				if (isApiError(error) && error.code === "invalid_solution") {
+					setInvalidAttempt(size);
+				}
+			},
 		});
-	}, [submitSolveMutation, isVictory, finished, currentState, finishGame, size]);
+	}, [submitSolveMutation, isVictory, finished, currentState, finishGame, setInvalidAttempt, size]);
 }

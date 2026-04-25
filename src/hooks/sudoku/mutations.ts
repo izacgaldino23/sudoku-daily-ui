@@ -2,13 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchDailySudoku, getDailySolves, submitSudokuSolve } from "@/services/sudokuApi";
 import { useErrorHandler } from "../useErrorHandler";
 import { useAuthErrorHandler } from "../useAuthErrorHandler";
+import { isApiError } from "@/types/errors";
 
 export function useSubmitSudokuSolve() {
 	const handleError = useErrorHandler();
 
 	return useMutation({
 		mutationFn: submitSudokuSolve,
-		retry: 3,
+		retry: (failureCount, error) => {
+			if (isApiError(error) && error.code === "invalid_solution") {
+				return false;
+			}
+			return failureCount < 3;
+		},
 		retryDelay: 1000,
 		mutationKey: ["sudoku", "submit"],
 		onError: handleError,

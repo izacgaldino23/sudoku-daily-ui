@@ -19,5 +19,6 @@ export type GameData = {
 	startTime: number;
 	endTime: number;
 	status: GamesStatus;
-	session_token: string
+	session_token: string;
+	hasInvalidAttempt?: boolean;
 }

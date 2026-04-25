@@ -5,12 +5,12 @@ React 19 + TypeScript + Vite + Vitest + Sass
 ## Commands
 
 ```
-npm run dev      # Start dev server
-npm run build    # Build production
-npm run lint     # Lint code
-npm run test     # Run tests (cli)
-npm run test:ui  # Run tests (browser)
-npm run test:unit # Run unit tests
+bun run dev      # Start dev server
+bun run build    # Build production
+bun run lint     # Lint code
+bun run test     # Run tests (cli)
+bun run test:ui  # Run tests (browser)
+bun run test:unit # Run unit tests
 ```
 
 ## Tech Stack

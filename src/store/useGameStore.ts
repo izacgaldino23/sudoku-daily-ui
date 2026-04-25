@@ -22,6 +22,7 @@ interface GameStore {
 	setBrush: (size: BoardSize, value: number) => void
 	clearBrush: (size: BoardSize) => void
 	loadSolve: (size: BoardSize, payload: { startTime: number, endTime: number }) => void
+	setInvalidAttempt: (size: BoardSize) => void
 }
 
 export const useGameStore = create<GameStore>()(
@@ -77,7 +78,8 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 						...s.state,
 						[size]: {
 							...currentState,
-							board: newBoardState
+							board: newBoardState,
+							hasInvalidAttempt: false
 						}
 					}
 				})
@@ -96,7 +98,8 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 						...s.state,
 						[size]: {
 							...currentState,
-							board: newBoardState
+							board: newBoardState,
+							hasInvalidAttempt: false
 						}
 					}
 				})
@@ -116,7 +119,8 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 					...s.state,
 					[size]: {
 						...s.state[size],
-						brush: value
+						brush: value,
+						hasInvalidAttempt: false
 					}
 				}
 			})),
@@ -125,7 +129,8 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 					...s.state,
 					[size]: {
 						...s.state[size],
-						brush: null
+						brush: null,
+						hasInvalidAttempt: false
 					}
 				}
 			})),
@@ -135,6 +140,15 @@ setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], s
 					[size]: {
 						...s.state[size],
 						...payload
+					}
+				}
+			})),
+			setInvalidAttempt: (size: BoardSize) => set(s => ({
+				state: {
+					...s.state,
+					[size]: {
+						...s.state[size],
+						hasInvalidAttempt: true
 					}
 				}
 			}))
