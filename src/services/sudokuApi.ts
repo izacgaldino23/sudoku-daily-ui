@@ -16,7 +16,14 @@ export async function submitSudokuSolve(request: SubmitSudokuSolve): Promise<voi
 	return apiPost({
 		url: `/sudoku/submit`,
 		data: request,
-	}, interceptors);
+	}, [authInterceptor]);
+}
+
+export async function submitSudokuSolveGuest(request: SubmitSudokuSolve): Promise<void> {
+	return apiPost({
+		url: `/sudoku/submit/guest`,
+		data: request,
+	}, [sessionInterceptor]);
 }
 
 export async function getDailySolves(): Promise<MyDailySolvesResponse> {

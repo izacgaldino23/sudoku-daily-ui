@@ -1,14 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { fetchDailySudoku, getDailySolves, submitSudokuSolve } from "@/services/sudokuApi";
+import { fetchDailySudoku, getDailySolves, submitSudokuSolve, submitSudokuSolveGuest } from "@/services/sudokuApi";
 import { useErrorHandler } from "../useErrorHandler";
 import { useAuthErrorHandler } from "../useAuthErrorHandler";
+import { useAuthStore } from "@/store/useAuthStore";
 import { isApiError } from "@/types/errors";
 
 export function useSubmitSudokuSolve() {
 	const handleError = useErrorHandler();
+	const isLoggedIn = !!useAuthStore((state) => state.state?.accessToken);
+
+	const mutationFn = isLoggedIn ? submitSudokuSolve : submitSudokuSolveGuest;
 
 	return useMutation({
-		mutationFn: submitSudokuSolve,
+		mutationFn,
 		retry: (failureCount, error) => {
 			if (isApiError(error) && error.code === "invalid_solution") {
 				return false;
