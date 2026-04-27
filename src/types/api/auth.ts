@@ -4,7 +4,6 @@ export type { BoardSize };
 
 export type AuthData = {
 	accessToken: string;
-	refreshToken: string;
 	username: string;
 	email: string;
 }
@@ -22,7 +21,6 @@ export type LoginRequest = {
 
 export type LoginResponse = {
 	access_token: string;
-	refresh_token: string;
 	username: string;
 	email: string;
 }

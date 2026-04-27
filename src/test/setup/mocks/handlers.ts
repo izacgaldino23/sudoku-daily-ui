@@ -10,7 +10,6 @@ export const handlers = [
     if (body.email === "testhello@example.com" && body.password === "some-password-valid") {
       return HttpResponse.json({
         access_token: "mock-access-token",
-        refresh_token: "mock-refresh-token",
         username: "testuser",
         email: "testhello@example.com",
       });

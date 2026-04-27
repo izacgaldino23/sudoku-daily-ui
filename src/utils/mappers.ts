@@ -11,7 +11,6 @@ interface AuthUser {
 	username: string
 	email: string
 	accessToken: string
-	refreshToken: string
 }
 
 export function mapSudokuFromResponse(data: DailySudokuResponse): Board {
@@ -41,6 +40,5 @@ export function mapAuthLoginFromResponse(data: LoginResponse): AuthUser {
 		username: data.username,
 		email: data.email,
 		accessToken: data.access_token,
-		refreshToken: data.refresh_token
 	}
 }

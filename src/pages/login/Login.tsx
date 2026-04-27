@@ -50,7 +50,7 @@ export default function Login() {
 	const setJustLoggedIn = useAuthStore(s => s.setJustLoggedIn);
 
 	useEffect(() => {
-		if (authState?.username && authState.accessToken && authState.refreshToken) {
+		if (authState?.username && authState.accessToken) {
 			navigate("/", { replace: true });
 		}
 	}, [authState, navigate]);
@@ -85,7 +85,6 @@ export default function Login() {
 						const authUser = mapAuthLoginFromResponse(data);
 						login({
 							accessToken: authUser.accessToken,
-							refreshToken: authUser.refreshToken,
 							username: authUser.username,
 							email: authUser.email,
 						})

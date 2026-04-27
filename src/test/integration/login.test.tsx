@@ -74,7 +74,6 @@ describe("Login Page", () => {
 		const authState = useAuthStore.getState().state;
 		expect(authState).toEqual({
 			accessToken: "mock-access-token",
-			refreshToken: "mock-refresh-token",
 			username: "testuser",
 			email: "testhello@example.com",
 		});

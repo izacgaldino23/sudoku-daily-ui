@@ -19,7 +19,7 @@ export async function authInterceptor(config: RequestConfig): Promise<void> {
 
 export async function tryRefreshToken(): Promise<boolean> {
 	const authState = useAuthStore.getState().state;
-	if (!authState?.refreshToken) return false;
+	if (!authState?.accessToken) return false;
 
 	if (isRefreshing) {
 		await refreshPromise;
@@ -29,7 +29,7 @@ export async function tryRefreshToken(): Promise<boolean> {
 	isRefreshing = true;
 	refreshPromise = (async () => {
 		try {
-			const response = await refresh(authState.refreshToken);
+			const response = await refresh();
 			useAuthStore.getState().updateAccessToken(response.access_token);
 		} catch {
 			useAlertStore.getState().pushAlert("Session expired. Please login again.", "warning");
