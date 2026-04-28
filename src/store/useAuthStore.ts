@@ -11,6 +11,7 @@ interface AuthStore {
 	logout: () => void
 	justLoggedIn: boolean
 	setJustLoggedIn: (value: boolean) => void
+	lastRefreshedAt: number | null
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -18,17 +19,19 @@ export const useAuthStore = create<AuthStore>()(
 		(set) => ({
 			state: null,
 			justLoggedIn: false,
+			lastRefreshedAt: null,
 
-			login: (data: AuthData) => set({ state: data }),
+			login: (data: AuthData) => set({ state: data, lastRefreshedAt: Date.now() }),
 			updateAccessToken: (accessToken) => 
 				set((prev) => ({
 					state: prev.state 
 						? { ...prev.state, accessToken }
-						: null
+						: null,
+					lastRefreshedAt: Date.now()
 				})),
 			setJustLoggedIn: (value: boolean) => set({ justLoggedIn: value }),
 			logout: () => {
-				set({ state: null, justLoggedIn: false });
+				set({ state: null, justLoggedIn: false, lastRefreshedAt: null });
 				const sizes: BoardSize[] = [4, 6, 9];
 				sizes.forEach((size) => {
 					useGameStore.getState().removeGame(size)
@@ -39,7 +42,7 @@ export const useAuthStore = create<AuthStore>()(
 		{
 			name: "auth",
 			storage: createJSONStorage(() => localStorage),
-			partialize: (state) => ({ state: state.state }),
+			partialize: (state) => ({ state: state.state, lastRefreshedAt: state.lastRefreshedAt }),
 		}
 	)
 )

@@ -21,7 +21,7 @@ export default defineConfig({
 					environment: 'node',
 					logHeapUsage: false,
 					setupFiles: './src/test/setup/setup.unit.ts',
-					include: ['src/test/unit/**/*.test.ts'],
+					include: ['src/test/unit/**/*.test.{ts,tsx}'],
 					env: {
 						VITE_API_URL: 'http://localhost:3000',
 					},

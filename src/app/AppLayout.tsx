@@ -4,6 +4,7 @@ import "./AppLayout.scss"
 import AdSlot from "@/components/layout/ads/AdSlot";
 import { AlertStack } from "@/components/alert/AlertStack";
 import { useAlertStore } from "@/store/useAlertStore";
+import { AuthInitializer } from "@/components/AuthInitializer";
 
 export default function AppLayout() {
 	const alerts = useAlertStore((state) => state.alerts);
@@ -11,6 +12,7 @@ export default function AppLayout() {
 
 	return (
 		<div className="app-layout">
+			<AuthInitializer />
 			<Header />
 
 			<div className="main-layout">
