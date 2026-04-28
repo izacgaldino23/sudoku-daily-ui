@@ -4,12 +4,12 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      // Use o path.resolve para garantir o caminho absoluto
-      '@': path.resolve(__dirname, './src'),
-      '@assets': path.resolve(__dirname, './src/assets'),
-    },
-  },
+	plugins: [ react() ],
+	resolve: {
+		alias: {
+			// Use o path.resolve para garantir o caminho absoluto
+			'@': path.resolve(__dirname, './src'),
+			'@assets': path.resolve(__dirname, './src/assets'),
+		},
+	},
 })

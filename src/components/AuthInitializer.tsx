@@ -13,7 +13,7 @@ export function AuthInitializer() {
       logout();
       navigate("/login", { replace: true });
     }
-  }, [isError]);
+  }, [isError, logout, navigate]);
 
   return null;
 }
