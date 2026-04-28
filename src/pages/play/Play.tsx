@@ -1,6 +1,7 @@
 import { Crown, Timer } from 'lucide-react'
 import './Play.scss'
 import Board from '@/components/game/board/Board'
+import SkeletonBoard from '@/components/game/board/SkeletonBoard'
 import { useEffect, useMemo, useState } from 'react';
 import type { PlayAttributes } from '@/types/ui';
 import Button from '@/components/form/button/Button';
@@ -35,8 +36,9 @@ export default function Play({ size }: PlayAttributes) {
 
 	const currentState = state[size];
 
-	const isStarted = currentState && currentState.status == Status.PLAYING;
-	const isFinished = currentState && currentState.status == Status.FINISHED;
+	const isStarted = currentState && currentState.status === Status.PLAYING;
+	const isFinished = currentState && currentState.status === Status.FINISHED;
+	const isLoading = currentState && currentState.status === Status.LOADING;
 	
 	const [seconds, setSeconds] = useState(() => calcSeconds(currentState?.startTime, currentState?.endTime));
 
@@ -108,7 +110,7 @@ export default function Play({ size }: PlayAttributes) {
 
 	const { hours, minutes, remainingSeconds } = useMemo(() => SecondsToClock(seconds), [seconds]);
 
-	return (
+		return (
 		<section className="play">
 			<nav className='puzzle-size'>
 				<NavLink to="/">
@@ -125,7 +127,14 @@ export default function Play({ size }: PlayAttributes) {
 				</NavLink>
 			</nav>
 
-			{!isStarted && (<div className='welcome-message'>
+			{isLoading && (
+				<div className='game'>
+					<hr />
+					<SkeletonBoard size={size} />
+				</div>
+			)}
+
+			{!isStarted && !isLoading && (<div className='welcome-message'>
 				<hr />
 
 				{isFinished && (
@@ -137,7 +146,7 @@ export default function Play({ size }: PlayAttributes) {
 
 				{!isFinished && (
 					<div className='start'>
-						<Button text={currentState?.status === Status.LOADING ? "Loading..." : "Start"} onClick={handleSudokuStart} disabled={currentState?.status === Status.LOADING} />
+						<Button text="Start" onClick={handleSudokuStart} />
 					</div>	
 				)}
 			</div>)}

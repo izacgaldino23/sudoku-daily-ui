@@ -1,0 +1,71 @@
+@use "@/styles/_variables.scss" as v;
+
+@keyframes pulse {
+	0%, 100% {
+		box-shadow: 0 0 0 0 rgba(v.$quaternary-color, 0.4);
+	}
+	50% {
+		box-shadow: 0 0 0 8px rgba(v.$quaternary-color, 0);
+	}
+}
+
+.buttons {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin-top: 1rem;
+
+	.square {
+		width: 2.75rem;
+		height: 2.75rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: 2px solid rgba(v.$quaternary-color, 0.2);
+		border-radius: 0.375rem;
+		background-color: #f5f5f5;
+		font-family: var(--font-numbers);
+		font-size: 1.15rem;
+		font-weight: bold;
+		color: v.$quaternary-color;
+		transition: all 0.2s ease;
+		cursor: pointer;
+		user-select: none;
+
+		&:hover:not(:disabled) {
+			background-color: rgba(v.$quaternary-color, 0.08);
+		}
+
+		&:active:not(:disabled) {
+			transform: scale(0.95);
+		}
+
+		&.active {
+			border-color: v.$quaternary-color;
+			background-color: rgba(v.$quaternary-color, 0.1);
+			animation: pulse 1.5s ease-in-out infinite;
+		}
+
+		&.eraser {
+			background-color: rgba(v.$red2-color, 0.1);
+			color: v.$red2-color;
+			border-color: rgba(v.$red2-color, 0.2);
+
+			&.active {
+				border-color: v.$red2-color;
+				background-color: rgba(v.$red2-color, 0.15);
+				animation: pulse 1.5s ease-in-out infinite;
+			}
+
+			&:hover:not(:disabled) {
+				background-color: rgba(v.$red2-color, 0.2);
+			}
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}

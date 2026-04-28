@@ -1,17 +1,38 @@
 @use "@/styles/_variables.scss" as v;
+@use "@/styles/_mixins.scss" as mixins;
 
-$inner-border-color: rgba(v.$primary-color, .15);
+@keyframes popIn {
+	0% {
+		transform: scale(0.5);
+		opacity: 0.5;
+	}
+	70% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes shake {
+	0%, 100% { transform: translateX(0); }
+	10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+	20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
 
 .tile {
 	background-color: #f5f5f5;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border: 1px solid $inner-border-color;
+	border: 1px solid mixins.$inner-border-color;
 	font-size: 1.15rem;
 	color: v.$quaternary-color;
 	font-weight: bold;
 	font-family: var(--font-numbers);
+	transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+	user-select: none;
 
 	&.filled {
 		background-color: rgba(black, .0);
@@ -22,12 +43,20 @@ $inner-border-color: rgba(v.$primary-color, .15);
 	&.selected {
 		border-color: rgba(black, .2) !important;
 		border: 2px solid !important;
+		transform: scale(1.02);
+		background-color: rgba(v.$quaternary-color, 0.05);
 	}
 
 	&.conflict {
 		background-color: rgba(v.$red2-color, .15);
 		color: v.$red2-color;
 		border-color: v.$red2-color;
+		animation: shake 0.4s ease-in-out;
+	}
+
+	&.pop {
+		animation: popIn 0.3s ease-out;
+		will-change: transform, opacity;
 	}
 
 	&.corner {
@@ -43,5 +72,10 @@ $inner-border-color: rgba(v.$primary-color, .15);
 		&.bottom-right {
 			border-radius: 0 0 .5rem 0;
 		}
+	}
+
+	&:hover:not(.filled) {
+		background-color: rgba(v.$quaternary-color, 0.08);
+		cursor: pointer;
 	}
 }

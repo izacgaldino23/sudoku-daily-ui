@@ -1,33 +1,7 @@
 @use "@/styles/_variables.scss" as v;
+@use "@/styles/_mixins.scss" as mixins;
 
-$tile-size: 2.75rem;
-$inner-border-color: rgba(v.$primary-color, .15);
-$outer-border-color: rgba(v.$primary-color, .4);
-
-@mixin sudoku-board($size, $block-x, $block-y) {
-	grid-template-columns: repeat($size, $tile-size);
-	grid-template-rows: repeat($size, $tile-size);
-
-	.tile {
-		// section Vertical lines
-		@for $i from 1 through $size {
-			@if ($i % $block-x == 0) and ($i != $size) {
-				&[data-x="#{$i - 1}"] {
-					border-right: 1px solid $outer-border-color;
-				}
-			}
-		}
-
-		// section horizontal lines
-		@for $j from 1 through $size {
-			@if ($j % $block-y == 0) and ($j != $size) {
-				&[data-y="#{$j - 1}"] {
-					border-bottom: 1px solid $outer-border-color;
-				}
-			}
-		}
-	}
-}
+$highlight-color: rgba(200, 220, 240, 0.4);
 
 .board {
 	position: relative;
@@ -40,63 +14,25 @@ $outer-border-color: rgba(v.$primary-color, .4);
 		display: inline-grid;
 		overflow: hidden;
 		border-radius: .5rem;
-		border: 1px solid $inner-border-color;
+		border: 1px solid mixins.$inner-border-color;
 		cursor: default;
 
-		.tile {
-			background-color: #f5f5f5;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			border: 1px solid $inner-border-color;
-			font-size: 1.15rem;
-			color: v.$quaternary-color;
-			font-weight: bold;
-			font-family: var(--font-numbers);
+		@include mixins.sudoku-board-sizes();
 
-			&.filled {
-				background-color: rgba(black, .0);
-				color: inherit;
-				font-weight: normal;
-			}
-
-			&.selected {
-				border-color: rgba(black, .2) !important;
-				border: 2px solid !important;
-			}
-
-			&.conflict {
-				background-color: rgba(v.$red2-color, .15);
-				color: v.$red2-color;
-				border-color: v.$red2-color;
-			}
-
-			&.corner {
-				&.top-left {
-					border-radius: .5rem 0 0 0;
-				}
-				&.top-right {
-					border-radius: 0 .5rem 0 0;
-				}
-				&.bottom-left {
-					border-radius: 0 0 0 .5rem;
-				}
-				&.bottom-right {
-					border-radius: 0 0 .5rem 0;
-				}
-			}
+		// Row/Column highlighting
+		.tile.highlight-row {
+			background-color: $highlight-color;
 		}
 
-		&.four {
-			@include sudoku-board(4, 2, 2);
+		.tile.highlight-col {
+			background-color: $highlight-color;
 		}
 
-		&.six {
-			@include sudoku-board(6, 3, 2);
-		}
-
-		&.nine {
-			@include sudoku-board(9, 3, 3);
+		// Don't override selected or conflict states
+		.tile.selected, .tile.conflict {
+			&.highlight-row, &.highlight-col {
+				background-color: transparent;
+			}
 		}
 	}
 

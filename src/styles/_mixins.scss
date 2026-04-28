@@ -1,0 +1,44 @@
+@use "@/styles/_variables.scss" as v;
+
+$tile-size: 2.75rem;
+$inner-border-color: rgba(v.$primary-color, .15);
+$outer-border-color: rgba(v.$primary-color, .4);
+
+@mixin sudoku-board($size, $block-x, $block-y) {
+	grid-template-columns: repeat($size, $tile-size);
+	grid-template-rows: repeat($size, $tile-size);
+
+	& > .tile, & > .skeleton-tile {
+		// section Vertical lines
+		@for $i from 1 through $size {
+			@if ($i % $block-x == 0) and ($i != $size) {
+				&[data-x="#{$i - 1}"] {
+					border-right: 1px solid $outer-border-color;
+				}
+			}
+		}
+
+		// section horizontal lines
+		@for $j from 1 through $size {
+			@if ($j % $block-y == 0) and ($j != $size) {
+				&[data-y="#{$j - 1}"] {
+					border-bottom: 1px solid $outer-border-color;
+				}
+			}
+		}
+	}
+}
+
+@mixin sudoku-board-sizes() {
+	&.four {
+		@include sudoku-board(4, 2, 2);
+	}
+
+	&.six {
+		@include sudoku-board(6, 3, 2);
+	}
+
+	&.nine {
+		@include sudoku-board(9, 3, 3);
+	}
+}

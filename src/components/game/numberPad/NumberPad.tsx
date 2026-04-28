@@ -3,6 +3,7 @@ import Button from "../../form/button/Button"
 import { Eraser } from "lucide-react"
 import { useGameStore } from "@/store/useGameStore"
 import type { BoardSize } from "@/types/game"
+import "./NumberPad.scss"
 
 interface NumberPadProps {
 	size: BoardSize

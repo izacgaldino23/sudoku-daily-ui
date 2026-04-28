@@ -45,6 +45,9 @@ export default function Board({ size }: BoardAttributes) {
 
 	if (!currentState) return null;
 
+	const selectedRow = currentState.selectedCell?.row ?? -1;
+	const selectedCol = currentState.selectedCell?.col ?? -1;
+
 	return (
 		<div className="board">
 			<div className={"grid "+BoardSizeToString(size)}>
@@ -56,6 +59,8 @@ export default function Board({ size }: BoardAttributes) {
 							fixed={currentState.fixed[rowIndex][colIndex]} 
 							conflict={conflicts.has(`${colIndex}.${rowIndex}`)}
 							selected={currentState.selectedCell?.row === rowIndex && currentState.selectedCell?.col === colIndex}
+							highlightRow={selectedRow === rowIndex && selectedRow !== -1}
+							highlightCol={selectedCol === colIndex && selectedCol !== -1}
 							onClick={() => handleSelectCell(rowIndex, colIndex)}
 							x={colIndex}
 							y={rowIndex}

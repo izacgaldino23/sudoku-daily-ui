@@ -32,6 +32,8 @@ export interface TileAttributes {
 	selected?: boolean
 	conflict?: boolean
 	size: BoardSize
+	highlightRow?: boolean
+	highlightCol?: boolean
 }
 
 export interface ButtonAttributes {
