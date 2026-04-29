@@ -49,7 +49,7 @@ export default function Board({ size }: BoardAttributes) {
 	const selectedCol = currentState.selectedCell?.col ?? -1;
 
 	return (
-		<div className="board">
+		<div className="board" data-testid="game-board">
 			<div className={"grid "+BoardSizeToString(size)}>
 				{currentState.board.map((row, rowIndex) => 
 					row.map((value, colIndex) => (

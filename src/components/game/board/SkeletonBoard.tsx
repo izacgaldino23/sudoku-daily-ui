@@ -13,7 +13,7 @@ export default function SkeletonBoard({ size }: SkeletonBoardProps) {
 	});
 
 	return (
-		<div className={`skeleton-board ${size === 4 ? 'four' : size === 6 ? 'six' : 'nine'}`}>
+		<div className={`skeleton-board ${size === 4 ? 'four' : size === 6 ? 'six' : 'nine'}`} data-testid="skeleton-board">
 			{tiles.map(({ key, x, y }) => (
 				<div 
 					key={key} 

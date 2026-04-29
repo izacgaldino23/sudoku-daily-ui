@@ -155,7 +155,7 @@ export default function Play({ size }: PlayAttributes) {
 				<div className='game'>
 					<hr />
 
-					<div className='timer'>
+					<div className='timer' data-testid="timer">
 						<div className='clock'>
 							{hours != 0 && (<div className="part hour">
 								<span className="value">{zeroPad(hours)}</span>
