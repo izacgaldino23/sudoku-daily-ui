@@ -30,13 +30,13 @@ export type RefreshResponse = {
 }
 
 export type ProfileResume = {
-	TotalGames: Record<BoardSize, number>
-	TodayGames: Record<BoardSize, GameResult>
-	BestTimes: Record<BoardSize, GameResult>
+	total_games: Record<BoardSize, number>
+	today_games: GameResult[]
+	best_times: GameResult[]
 }
 
 export type GameResult = {
-	Size: BoardSize
-	Finished: boolean
-	Time: number
+	size: BoardSize
+	finished: boolean
+	time: number
 }

@@ -140,14 +140,14 @@ export const handlers = [
 	http.get(`${BASE_URL}/auth/resume`, async () => {
 		await delay(100);
 		return HttpResponse.json({
-			TotalGames: { 4: 10, 6: 5, 9: 3 },
-			TodayGames: {
-				4: { Size: 4, Finished: true, Time: 300 },
-				6: { Size: 6, Finished: false, Time: 0 },
-			},
-			BestTimes: {
-				4: { Size: 4, Finished: true, Time: 250 },
-			},
+			total_games: { 4: 10, 6: 5, 9: 3 },
+			today_games: [
+				{ size: 4, finished: true, time: 300 },
+				{ size: 6, finished: false, time: 0 },
+			],
+			best_times: [
+				{ size: 4, finished: true, time: 250 },
+			],
 		});
 	}),
 ];

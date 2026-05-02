@@ -10,15 +10,19 @@ function formatTime(seconds: number): string {
 	return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
+function findGameBySize(games: GameResult[], size: BoardSize): GameResult | undefined {
+	return games.find((g) => g.size === size);
+}
+
 export default function Profile() {
 	const { data, isLoading, error } = useGetProfileResume();
 	const { state } = useAuthStore();
 
 	const boardSizes: BoardSize[] = [4, 6, 9];
 
-	const todayGames = (data?.TodayGames ?? {}) as Record<BoardSize, GameResult>;
-	const bestTimes = (data?.BestTimes ?? {}) as Record<BoardSize, GameResult>;
-	const totalGames = (data?.TotalGames ?? {}) as Record<BoardSize, number>;
+	const todayGames = data?.today_games ?? [];
+	const bestTimes = data?.best_times ?? [];
+	const totalGames = (data?.total_games ?? {}) as Record<BoardSize, number>;
 
 	return (
 		<div className="profile">
@@ -32,12 +36,12 @@ export default function Profile() {
 			{data && (
 				<div className="profile_content">
 					{boardSizes.map((size) => {
-						const today = todayGames[size];
-						const best = bestTimes[size];
+						const today = findGameBySize(todayGames, size);
+						const best = findGameBySize(bestTimes, size);
 						const total = totalGames[size] || 0;
 
-						const hasToday = today?.Finished;
-						const hasBest = best?.Finished;
+						const hasToday = today?.finished;
+						const hasBest = best?.finished;
 
 						return (
 							<div
@@ -53,13 +57,13 @@ export default function Profile() {
 									<div className="stat_item">
 										<span className="stat_item_label">Today</span>
 										<span className="stat_item_value">
-											{today ? (today.Finished ? formatTime(today.Time) : "-") : "-"}
+											{today?.finished ? formatTime(today.time) : "-"}
 										</span>
 									</div>
 									<div className="stat_item">
 										<span className="stat_item_label">Best</span>
 										<span className="stat_item_value">
-											{best?.Finished ? formatTime(best.Time) : "-"}
+											{best?.finished ? formatTime(best.time) : "-"}
 										</span>
 									</div>
 								</div>

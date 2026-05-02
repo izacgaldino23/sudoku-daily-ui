@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
-import Profile from "@/pages/Profile";
+import Profile from "@/pages/profile/Profile";
 import { renderWithProviders, clearTestStores } from "../setup/test-query-client";
 import { useAuthStore } from "@/store/useAuthStore";
 

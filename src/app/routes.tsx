@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./AppLayout";
 import Leaderboard from "@/pages/leaderboard/Leaderboard";
 import Login from "@/pages/login/Login";
-import Profile from "@/pages/Profile";
+import Profile from "@/pages/profile/Profile";
 import About from "@/pages/About";
 import PlayWrapper from "@/pages/play/PlayWrapper";
 
