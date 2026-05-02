@@ -1,10 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PlayWrapper from "@/pages/play/PlayWrapper";
 import { renderWithProviders, clearTestStores } from "../setup/test-query-client";
 import { useGameStore } from "@/store/useGameStore";
-import { useAuthStore } from "@/store/useAuthStore";
 
 // Mock useParams to control the size
 vi.mock("react-router-dom", async () => {

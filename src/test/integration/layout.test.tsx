@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import Header from "@/components/layout/header/Header";
-import Sidebar from "@/components/layout/sidebar/Sidebar";
 import { AlertStack } from "@/components/alert/AlertStack";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { AlertItem } from "@/types/ui";
@@ -59,7 +58,7 @@ describe("Header", () => {
 
 	it("shows username and dropdown when logged in", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
+			state: { username: "testuser", token: "fake-token" } as any,
 		});
 
 		renderWithProviders(<Header />);
@@ -69,7 +68,7 @@ describe("Header", () => {
 
 	it("shows dropdown menu when profile button clicked", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
+			state: { username: "testuser", token: "fake-token" } as any,
 		});
 
 		renderWithProviders(<Header />);
@@ -83,7 +82,7 @@ describe("Header", () => {
 
 	it("navigates to profile when profile link clicked", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
+			state: { username: "testuser", token: "fake-token" } as any,
 		});
 
 		renderWithProviders(<Header />);
@@ -99,7 +98,7 @@ describe("Header", () => {
 		const logoutSpy = vi.spyOn(useAuthStore.getState(), "logout");
 
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
+			state: { username: "testuser", token: "fake-token" } as any,
 		});
 
 		renderWithProviders(<Header />);
@@ -115,7 +114,7 @@ describe("Header", () => {
 
 	it("hides dropdown when clicking outside", async () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
+			state: { username: "testuser", token: "fake-token" } as any,
 		});
 
 		renderWithProviders(<Header />);
@@ -137,44 +136,6 @@ describe("Header", () => {
 
 		const playLink = screen.getByText("Play");
 		expect(playLink).toBeInTheDocument();
-	});
-});
-
-describe("Sidebar", () => {
-	it("renders navigation links", () => {
-		renderWithProviders(<Sidebar />);
-
-		expect(screen.getByText("Play")).toBeInTheDocument();
-		expect(screen.getByText("Leaderboard")).toBeInTheDocument();
-		expect(screen.getByText("About")).toBeInTheDocument();
-	});
-
-	it("shows Login link when not logged in", () => {
-		renderWithProviders(<Sidebar />);
-
-		expect(screen.getByText("Login")).toBeInTheDocument();
-	});
-
-	it("shows Me link when logged in", () => {
-		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" },
-		});
-
-		renderWithProviders(<Sidebar />);
-
-		expect(screen.getByText("Me")).toBeInTheDocument();
-	});
-
-	it("links to correct routes", () => {
-		renderWithProviders(<Sidebar />);
-
-		const playLink = screen.getByText("Play").closest("a");
-		const leaderboardLink = screen.getByText("Leaderboard").closest("a");
-		const aboutLink = screen.getByText("About").closest("a");
-
-		expect(playLink).toHaveAttribute("href", "/");
-		expect(leaderboardLink).toHaveAttribute("href", "/leaderboard");
-		expect(aboutLink).toHaveAttribute("href", "/about");
 	});
 });
 

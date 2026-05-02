@@ -1,4 +1,5 @@
 @use "@/styles/_variables.scss" as v;
+@use "@/styles/_variables.scss" as vars;
 
 .profile {
     flex-grow: 1;
@@ -126,6 +127,47 @@
 
             .stat_item_value {
                 color: v.$quaternary-color;
+            }
+        }
+    }
+}
+
+@media (max-width: vars.$mobile-breakpoint) {
+    .profile {
+        padding: 1rem;
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        .profile_username {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat_row {
+            padding: 0.75rem 1rem;
+            flex-wrap: wrap;
+
+            .stat_size {
+                font-size: 0.9rem;
+                min-width: 40px;
+            }
+
+            .stat_details {
+                gap: 1rem;
+
+                .stat_item {
+                    min-width: 60px;
+
+                    .stat_item_label {
+                        font-size: 0.7rem;
+                    }
+
+                    .stat_item_value {
+                        font-size: 0.9rem;
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 @use "@/styles/_variables.scss" as v;
 @use "@/styles/_mixins.scss" as mixins;
+@use "@/styles/_variables.scss" as vars;
 
 $highlight-color: rgba(200, 220, 240, 0.4);
 
@@ -9,6 +10,9 @@ $highlight-color: rgba(200, 220, 240, 0.4);
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	width: 100%;
+	max-width: 100vw;
+	padding: 0 0.5rem;
 
 	.grid {
 		display: inline-grid;
@@ -16,6 +20,7 @@ $highlight-color: rgba(200, 220, 240, 0.4);
 		border-radius: .5rem;
 		border: 1px solid mixins.$inner-border-color;
 		cursor: default;
+		max-width: 100%;
 
 		@include mixins.sudoku-board-sizes();
 
@@ -44,5 +49,15 @@ $highlight-color: rgba(200, 220, 240, 0.4);
 			margin: 0 .2rem;
 			font-family: var(--font-numbers);
 		}
-	}	
+	}
+}
+
+@media (max-width: vars.$mobile-breakpoint) {
+	.board {
+		padding: 0 0.25rem;
+
+		.grid {
+			max-width: calc(100vw - 0.5rem);
+		}
+	}
 }

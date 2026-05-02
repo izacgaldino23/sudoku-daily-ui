@@ -6,6 +6,22 @@
 	align-items: center;
 	background-color: v.$background-color;
 	box-shadow: 0 1px 2px rgba(black, .1);
+	padding-right: 1rem;
+
+	.hamburger {
+		display: none;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: .5rem;
+		color: v.$primary-color;
+		margin-right: .5rem;
+
+		&:hover {
+			background-color: rgba(black, .05);
+			border-radius: .375rem;
+		}
+	}
 
 	nav {
 		display: flex;
@@ -25,7 +41,8 @@
 			z-index: 1;
 			transition: 0.3s ease;
 
-			&:hover, &.active {
+			&:hover,
+			&.active {
 				&:before {
 					height: calc(100% + 1rem);
 				}
@@ -33,7 +50,11 @@
 		}
 	}
 
-.profile-dropdown {
+	.mobile-nav-overlay {
+		display: none;
+	}
+
+	.profile-dropdown {
 		position: relative;
 		margin-left: auto;
 
@@ -74,7 +95,7 @@
 
 	.profile-link {
 		display: flex;
-     	align-items: center;
+      	align-items: center;
 		text-decoration: none;
 		background: none;
 		border: none;
@@ -86,7 +107,7 @@
 			color: v.$primary-color;
 			font-size: .8rem;
 		}
-		
+
 		.profile-icon {
 			margin: 1rem;
 			margin-left: .7rem;
@@ -102,4 +123,90 @@
 			padding: .4rem;
 		}
 	}
+}
+
+@media (max-width: v.$mobile-breakpoint) {
+	.header {
+		.hamburger {
+			display: block;
+		}
+
+		nav {
+			display: none;
+		}
+
+		.profile-link {
+			h3 {
+				display: none;
+			}
+		}
+
+		.mobile-nav-overlay {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(black, .5);
+			z-index: 1000;
+			animation: fadeIn 0.2s ease;
+
+			.mobile-nav-content {
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				width: 250px;
+				background-color: v.$background-color;
+				box-shadow: 2px 0 8px rgba(black, .1);
+				padding: 1rem;
+				animation: slideInLeft 0.3s ease;
+
+				.mobile-nav-close {
+					background: none;
+					border: none;
+					cursor: pointer;
+					padding: .5rem;
+					color: v.$primary-color;
+					margin-bottom: 1rem;
+
+					&:hover {
+						background-color: rgba(black, .05);
+						border-radius: .375rem;
+					}
+				}
+
+				.mobile-nav-links {
+					display: flex;
+					flex-direction: column;
+					gap: .5rem;
+
+					a {
+						font-size: 1.2rem;
+						text-decoration: none;
+						color: v.$primary-color;
+						padding: .75rem 1rem;
+						border-radius: .375rem;
+						transition: background-color 0.2s ease;
+
+						&:hover,
+						&.active {
+							background-color: rgba(black, .05);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+	from { transform: translateX(-100%); }
+	to { transform: translateX(0); }
 }

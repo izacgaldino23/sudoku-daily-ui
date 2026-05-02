@@ -1,4 +1,5 @@
 @use "@/styles/_variables.scss" as v;
+@use "@/styles/_variables.scss" as vars;
 
 
 .enter-container {
@@ -9,11 +10,11 @@
 	width: 100vw;
 	background-color: v.$lighter-color;
 	position: relative;
-	
+
 	.logo {
 		position: absolute;
-		top: 0;
-		left: 0;
+		top:0;
+		left:0;
 	}
 
 	.panel {
@@ -21,7 +22,9 @@
 		flex-direction: column;
 		background-color: white;
 
-		min-width: 380px;
+		min-width: unset;
+		max-width: 380px;
+		width: 90vw;
 
 		padding: 3rem 2.5rem;
 		border-radius: .5rem;
@@ -48,7 +51,7 @@
 
 	footer {
 		position: absolute;
-		bottom: 0;
+		bottom:0;
 		width: 100vw;
 		left: 0;
 		background: rgba(v.$primary-color, .2);
@@ -59,5 +62,13 @@
 		font-size: .8rem;
 
 		cursor: default;
+	}
+}
+
+@media (max-width: vars.$mobile-breakpoint) {
+	.enter-container {
+		.panel {
+			padding: 2rem 1.5rem;
+		}
 	}
 }

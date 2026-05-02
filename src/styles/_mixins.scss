@@ -1,10 +1,12 @@
 @use "@/styles/_variables.scss" as v;
 
-$tile-size: 2.75rem;
+$desktop-tile-size: 2.75rem;
 $inner-border-color: rgba(v.$primary-color, .15);
 $outer-border-color: rgba(v.$primary-color, .4);
 
 @mixin sudoku-board($size, $block-x, $block-y) {
+	// Responsive tile size: min 1.8rem, preferred calc based on viewport, max 2.75rem
+	$tile-size: clamp(1.8rem, calc((100vw - 2rem) / #{$size}), #{$desktop-tile-size});
 	grid-template-columns: repeat($size, $tile-size);
 	grid-template-rows: repeat($size, $tile-size);
 

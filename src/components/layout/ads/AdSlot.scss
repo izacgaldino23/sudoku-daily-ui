@@ -1,4 +1,5 @@
 @use "@/styles/_variables.scss" as v;
+@use "@/styles/_variables.scss" as vars;
 
 $width: 160px;
 $margin-right: 1rem;
@@ -19,4 +20,19 @@ $margin-left: calc(190px - $width - $margin-right);
 	font-size: .8rem;
     margin-left: $margin-left;
     justify-self: end;
+}
+
+@media (max-width: vars.$mobile-breakpoint) {
+	.adslot {
+		width: 320px;
+		height: 50px;
+		margin: 0 auto;
+		font-size: .7rem;
+
+		h3 {
+			br {
+				display: none;
+			}
+		}
+	}
 }

@@ -17,14 +17,18 @@ export default function AppLayout() {
 
 			<div className="main-layout">
 				<main className="content">
-					<div></div>
+					<div className="content-spacer"></div>
 					<Outlet />
 
 					<AdSlot />
 				</main>
 			</div>
 
-			<AlertStack 
+			<div className="mobile-footer-ad">
+				<AdSlot />
+			</div>
+
+			<AlertStack
 				alerts={alerts}
 				removeAlert={removeAlert}
 			/>
