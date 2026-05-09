@@ -1,3 +1,4 @@
+import type { BoardSize } from "@/types/game";
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -10,7 +11,7 @@ describe("useKeyboardHandler Hook", () => {
 		clearTestStores();
 	});
 
-	const setupBoard = (size: number, values: { row: number; col: number; value: number }[], makeFixed = false) => {
+	const setupBoard = (size: BoardSize, values: { row: number; col: number; value: number }[], makeFixed = false) => {
 		const board = Array(size).fill(null).map(() => Array(size).fill(0));
 		const fixed = Array(size).fill(null).map(() => Array(size).fill(false));
 
@@ -22,7 +23,6 @@ describe("useKeyboardHandler Hook", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(size, {
 			session_token: "test-token",
-			size,
 			board,
 			fixed,
 		});

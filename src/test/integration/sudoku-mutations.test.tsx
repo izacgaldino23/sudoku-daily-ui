@@ -35,9 +35,8 @@ describe("Sudoku Mutations", () => {
 
 			// Submit as guest (no access token)
 			result.current.mutate({
-				size: "four",
-				session_token: "test-token",
-				board: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
+				play_token: "test-play-token",
+				solution: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
 			});
 
 			await waitFor(() => {
@@ -61,9 +60,8 @@ describe("Sudoku Mutations", () => {
 
 			// Submit as logged in user
 			result.current.mutate({
-				size: "four",
-				session_token: "test-token",
-				board: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
+				play_token: "test-play-token",
+				solution: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
 			});
 
 			await waitFor(() => {
