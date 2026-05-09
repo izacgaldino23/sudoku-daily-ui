@@ -58,7 +58,7 @@ describe("Header", () => {
 
 	it("shows username and dropdown when logged in", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" } as any,
+			state: { username: "testuser", accessToken: "fake-token", email: "" },
 		});
 
 		renderWithProviders(<Header />);
@@ -68,7 +68,7 @@ describe("Header", () => {
 
 	it("shows dropdown menu when profile button clicked", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" } as any,
+			state: { username: "testuser", accessToken: "fake-token", email: "" },
 		});
 
 		renderWithProviders(<Header />);
@@ -82,7 +82,7 @@ describe("Header", () => {
 
 	it("navigates to profile when profile link clicked", () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" } as any,
+			state: { username: "testuser", accessToken: "fake-token", email: "" },
 		});
 
 		renderWithProviders(<Header />);
@@ -98,7 +98,7 @@ describe("Header", () => {
 		const logoutSpy = vi.spyOn(useAuthStore.getState(), "logout");
 
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" } as any,
+			state: { username: "testuser", accessToken: "fake-token", email: "" },
 		});
 
 		renderWithProviders(<Header />);
@@ -114,7 +114,7 @@ describe("Header", () => {
 
 	it("hides dropdown when clicking outside", async () => {
 		useAuthStore.setState({
-			state: { username: "testuser", token: "fake-token" } as any,
+			state: { username: "testuser", accessToken: "fake-token", email: "" },
 		});
 
 		renderWithProviders(<Header />);

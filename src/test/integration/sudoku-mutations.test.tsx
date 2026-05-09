@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
-import { testQueryClient, renderWithProviders } from "../setup/test-query-client";
+import { testQueryClient } from "../setup/test-query-client";
 import { useSubmitSudokuSolve, useDailySudoku, useGetDailySolves } from "@/hooks/sudoku/mutations";
 
 // Mock useNavigate to avoid router context issues
