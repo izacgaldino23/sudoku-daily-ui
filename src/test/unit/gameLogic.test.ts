@@ -88,6 +88,7 @@ describe("isBoardComplete", () => {
 			selectedCell: null,
 			brush: null,
 			startTime: 0,
+			endTime: 0,
 			status: "playing",
 			hasInvalidAttempt: false,
 		};
@@ -102,6 +103,7 @@ describe("isBoardComplete", () => {
 			selectedCell: null,
 			brush: null,
 			startTime: 0,
+			endTime: 0,
 			status: "playing",
 			hasInvalidAttempt: false,
 		};

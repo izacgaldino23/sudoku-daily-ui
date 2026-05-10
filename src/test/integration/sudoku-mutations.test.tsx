@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
-import { testQueryClient, renderWithProviders } from "../setup/test-query-client";
+import { testQueryClient } from "../setup/test-query-client";
 import { useSubmitSudokuSolve, useDailySudoku, useGetDailySolves } from "@/hooks/sudoku/mutations";
 
 // Mock useNavigate to avoid router context issues
@@ -35,9 +35,8 @@ describe("Sudoku Mutations", () => {
 
 			// Submit as guest (no access token)
 			result.current.mutate({
-				size: "four",
-				session_token: "test-token",
-				board: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
+				play_token: "test-play-token",
+				solution: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
 			});
 
 			await waitFor(() => {
@@ -61,9 +60,8 @@ describe("Sudoku Mutations", () => {
 
 			// Submit as logged in user
 			result.current.mutate({
-				size: "four",
-				session_token: "test-token",
-				board: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
+				play_token: "test-play-token",
+				solution: [[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]],
 			});
 
 			await waitFor(() => {

@@ -30,7 +30,6 @@ describe("Board Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(4, {
 			session_token: "test-token",
-			size: 4,
 			board,
 			fixed,
 		});
@@ -49,7 +48,6 @@ describe("Board Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(9, {
 			session_token: "test-token",
-			size: 9,
 			board,
 			fixed,
 		});
@@ -73,7 +71,6 @@ describe("Board Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(4, {
 			session_token: "test-token",
-			size: 4,
 			board,
 			fixed,
 		});
@@ -100,7 +97,6 @@ describe("Board Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(4, {
 			session_token: "test-token",
-			size: 4,
 			board,
 			fixed,
 		});
@@ -123,7 +119,6 @@ describe("Board Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(4, {
 			session_token: "test-token",
-			size: 4,
 			board,
 			fixed,
 		});

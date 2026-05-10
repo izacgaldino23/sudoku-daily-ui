@@ -1,3 +1,4 @@
+import type { BoardSize } from "@/types/game";
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -10,14 +11,13 @@ describe("NumberPad Component Integration", () => {
 		clearTestStores();
 	});
 
-	const setupBoard = (size: number) => {
+	const setupBoard = (size: BoardSize) => {
 		const board = Array(size).fill(null).map(() => Array(size).fill(0));
 		const fixed = Array(size).fill(null).map(() => Array(size).fill(false));
 
 		const store = useGameStore.getState();
 		store.setPuzzle(size, {
 			session_token: "test-token",
-			size,
 			board,
 			fixed,
 		});

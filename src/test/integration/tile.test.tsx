@@ -1,3 +1,4 @@
+import type { BoardSize } from "@/types/game";
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import { renderWithProviders, clearTestStores } from "../setup/test-query-client";
@@ -9,7 +10,7 @@ describe("Tile Component Integration", () => {
 		clearTestStores();
 	});
 
-	const setupBoard = (size: number, values: { row: number; col: number; value: number }[]) => {
+	const setupBoard = (size: BoardSize, values: { row: number; col: number; value: number }[]) => {
 		const board = Array(size).fill(null).map(() => Array(size).fill(0));
 		const fixed = Array(size).fill(null).map(() => Array(size).fill(false));
 
@@ -21,7 +22,6 @@ describe("Tile Component Integration", () => {
 		const store = useGameStore.getState();
 		store.setPuzzle(size, {
 			session_token: "test-token",
-			size,
 			board,
 			fixed,
 		});
@@ -88,7 +88,6 @@ describe("Tile Component Integration", () => {
 
 		store.setPuzzle(4, {
 			session_token: "test-token",
-			size: 4,
 			board,
 			fixed,
 		});
