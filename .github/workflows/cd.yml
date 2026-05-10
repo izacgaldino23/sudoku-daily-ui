@@ -34,9 +34,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Trigger infra deploy
-        run: |
-          curl -s -X POST https://api.github.com/repos/${{ github.repository_owner }}/sudoku-daily-infra/dispatches \
-            -H "Authorization: Bearer ${{ secrets.INFRA_PAT }}" \
-            -H "Content-Type: application/json" \
-            -d '{"event_type":"deploy","client_payload":{"service":"ui","tag":"${{ steps.sha.outputs.sha }}"}}'
+      # - name: Trigger infra deploy
+      #   run: |
+      #     curl -s -X POST https://api.github.com/repos/${{ github.repository_owner }}/sudoku-daily-infra/dispatches \
+      #       -H "Authorization: Bearer ${{ secrets.INFRA_PAT }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"event_type":"deploy","client_payload":{"service":"ui","tag":"${{ steps.sha.outputs.sha }}"}}'
