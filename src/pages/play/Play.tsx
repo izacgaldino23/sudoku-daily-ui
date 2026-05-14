@@ -89,15 +89,15 @@ export default function Play({ size }: PlayAttributes) {
 
 			dailySudokuMutation.mutate(BoardSizeToString(size), {
 				onSuccess: (data) => {
+					if (!data) return;
+
 					const mapped = mapSudokuFromResponse(data);
 
-					if (data) {
-						setPuzzle(size, {
-							board: mapped.values,
-							fixed: mapped.fixed,
-							session_token: mapped.session_token
-						});
-					}
+					setPuzzle(size, {
+						board: mapped.values,
+						fixed: mapped.fixed,
+						session_token: mapped.session_token
+					});
 				},
 				onSettled: (_, error) => {
 					if (error) {
