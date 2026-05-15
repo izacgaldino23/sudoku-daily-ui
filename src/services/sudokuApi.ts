@@ -16,6 +16,7 @@ export async function submitSudokuSolve(request: SubmitSudokuSolve): Promise<voi
 	return apiPost({
 		url: `/sudoku/submit`,
 		data: request,
+		requiresAuth: true,
 	}, [authInterceptor]);
 }
 
