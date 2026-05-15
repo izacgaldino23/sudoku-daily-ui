@@ -26,3 +26,9 @@ dist-ssr
 doc/*.md
 
 .env.development
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
