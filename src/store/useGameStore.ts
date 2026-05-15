@@ -14,6 +14,7 @@ interface GameStore {
 	// actions
 	loadingGame: (size: BoardSize) => void
 	removeGame: (size: BoardSize) => void
+	removeAllGames: () => void
 	setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => void
 	selectCell: (size: BoardSize, payload: SelectedCell) => void
 	setValue: (size: BoardSize, payload: { row: number, col: number, value: number }) => void
@@ -41,6 +42,7 @@ export const useGameStore = create<GameStore>()(
 					[size]: null
 				}
 			})),
+			removeAllGames: () => set({ state: {} }),
 setPuzzle: (size: BoardSize, payload: { board: number[][], fixed: boolean[][], session_token: string }) => set(s => ({
 			state: {
 				...s.state,

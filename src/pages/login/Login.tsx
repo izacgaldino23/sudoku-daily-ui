@@ -7,6 +7,7 @@ import { useLoginUser, useRegisterUser } from "@/hooks/auth/mutations";
 import { useAlertStore } from "@/store/useAlertStore";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGameStore } from "@/store/useGameStore";
 import { mapAuthLoginFromResponse } from "@/utils/mappers";
 
 interface formValidation {
@@ -88,6 +89,8 @@ export default function Login() {
 							username: authUser.username,
 							email: authUser.email,
 						})
+						// Clear guest games when user logs in
+						useGameStore.getState().removeAllGames();
 						setJustLoggedIn(true);
 						pushAlert("Successfully logged in!", "success");
 						navigate("/", { state: { fromLogin: true}});
