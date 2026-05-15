@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { profileResume } from "@/services/authApi";
 import type { ProfileResume } from "@/types/api/auth";
 import { useAuthErrorHandler } from "../useAuthErrorHandler";
+import { retryOnceOnServerOrNetworkError } from "../queryRetry";
 
 async function safeProfileResume(handleError: (error: Error) => void): Promise<ProfileResume> {
 	try {
@@ -20,7 +21,8 @@ export function useGetProfileResume() {
 		queryFn: () => safeProfileResume(handleError),
 		staleTime: 1000 * 60 * 5,
 		refetchOnWindowFocus: false,
-		retry: false,
+		retry: retryOnceOnServerOrNetworkError,
+		retryDelay: 1000,
 		throwOnError: true,
 	});
 }

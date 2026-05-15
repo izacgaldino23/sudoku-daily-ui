@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLeaderboard } from "@/services/leaderboardApi";
 import type { LeaderboardRequest, LeaderboardResponse } from "@/types/api/leaderboard";
 import { useErrorHandler } from "../useErrorHandler";
+import { retryOnceOnServerOrNetworkError } from "../queryRetry";
 
 async function safeFetchLeaderboard(params: LeaderboardRequest, handleError: (error: Error) => void): Promise<LeaderboardResponse> {
 	try {
@@ -20,7 +21,8 @@ export function useGetLeaderboard(params: LeaderboardRequest) {
 		queryFn: () => safeFetchLeaderboard(params, handleError),
 		staleTime: 1000 * 60 * 5,
 		refetchOnWindowFocus: false,
-		retry: false,
+		retry: retryOnceOnServerOrNetworkError,
+		retryDelay: 1000,
 		throwOnError: true,
 	});
 }

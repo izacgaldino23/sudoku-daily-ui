@@ -4,6 +4,7 @@ import { useErrorHandler } from "../useErrorHandler";
 import { useAuthErrorHandler } from "../useAuthErrorHandler";
 import { useAuthStore } from "@/store/useAuthStore";
 import { isApiError } from "@/types/errors";
+import { retryOnceOnServerOrNetworkError } from "../queryRetry";
 
 export function useSubmitSudokuSolve() {
 	const handleError = useErrorHandler();
@@ -17,7 +18,7 @@ export function useSubmitSudokuSolve() {
 			if (isApiError(error) && error.code === "invalid_solution") {
 				return false;
 			}
-			return failureCount < 3;
+			return retryOnceOnServerOrNetworkError(failureCount, error);
 		},
 		retryDelay: 1000,
 		mutationKey: ["sudoku", "submit"],
@@ -31,7 +32,7 @@ export function useDailySudoku() {
 	const mutation = useMutation({
 		mutationKey: ["sudoku", "daily"],
 		mutationFn: fetchDailySudoku,
-		retry: 3,
+		retry: retryOnceOnServerOrNetworkError,
 		retryDelay: 1000,
 		onError: handleError,
 	});
@@ -44,7 +45,7 @@ export function useGetDailySolves() {
 
 	return useMutation({
 		mutationFn: getDailySolves,
-		retry: 3,
+		retry: retryOnceOnServerOrNetworkError,
 		retryDelay: 1000,
 		mutationKey: ["sudoku", "me"],
 		onError: handleError,

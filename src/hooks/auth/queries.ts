@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { refresh } from "@/services/authApi";
 import { useAuthStore } from "@/store/useAuthStore";
+import { retryOnceOnServerOrNetworkError } from "../queryRetry";
 
 const REFRESH_THRESHOLD_MS = 1.8e6; // 30 minutes
 
@@ -22,7 +23,8 @@ export function useProactiveRefresh () {
 			return { skipped: false, access_token: res.access_token };
 		},
 		enabled: !!accessToken,
-		retry: false,
+		retry: retryOnceOnServerOrNetworkError,
+		retryDelay: 1000,
 		staleTime: Infinity,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,

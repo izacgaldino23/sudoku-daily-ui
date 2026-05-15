@@ -11,9 +11,6 @@ export const testQueryClient = new QueryClient({
 		queries: {
 			retry: false,
 		},
-		mutations: {
-			retry: false,
-		},
 	},
 });
 
