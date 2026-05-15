@@ -29,22 +29,19 @@
 	border: 1px solid mixins.$inner-border-color;
 	font-size: 1.15rem;
 	color: v.$quaternary-color;
-	font-weight: bold;
 	font-family: var(--font-numbers);
 	transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 	user-select: none;
 
 	&.filled {
-		background-color: rgba(black, .0);
 		color: inherit;
 		font-weight: normal;
 	}
 
 	&.selected {
-		border-color: rgba(black, .2) !important;
-		border: 2px solid !important;
-		transform: scale(1.02);
-		background-color: rgba(v.$quaternary-color, 0.05);
+		color: darken(v.$quaternary-color, 10%);
+		background-color: v.$tertiary-color;
+		z-index: 2;
 	}
 
 	&.conflict {
@@ -74,7 +71,7 @@
 		}
 	}
 
-	&:hover:not(.filled) {
+	&:hover:not(.filled, .selected) {
 		background-color: rgba(v.$quaternary-color, 0.08);
 		cursor: pointer;
 	}
