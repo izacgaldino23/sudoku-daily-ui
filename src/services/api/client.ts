@@ -77,7 +77,7 @@ export async function makeRequest<T>(
 		throw createApiError(
 			parsed?.message || `API Error: ${response.statusText}`,
 			response.status,
-			undefined,
+			parsed?.code,
 			parsed?.validation_errors
 		);
 	}
