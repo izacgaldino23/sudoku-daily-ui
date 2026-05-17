@@ -22,6 +22,7 @@ export async function loginUser(request: LoginRequest): Promise<LoginResponse> {
 export async function refresh(): Promise<RefreshResponse> {
 	return apiPost<RefreshResponse>({
 		url: `/auth/refresh`,
+		credentials: "include",
 	}, [sessionInterceptor]);
 }
 

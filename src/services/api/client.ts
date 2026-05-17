@@ -49,6 +49,7 @@ export async function makeRequest<T>(
 		method: preparedConfig.method,
 		headers: finalHeaders,
 		body: preparedConfig.body,
+		credentials: preparedConfig.credentials,
 	});
 
 	handleSessionResponse(response);

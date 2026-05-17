@@ -8,6 +8,7 @@ export interface RequestConfig {
 	params?: Record<string, string | number | boolean>;
 	requiresAuth?: boolean;
 	data?: Record<string, unknown>;
+	credentials?: RequestCredentials;
 }
 
 export type ApiRequest = Omit<RequestConfig, "method">;
