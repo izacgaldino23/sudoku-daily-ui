@@ -36,7 +36,9 @@ describe("Leaderboard Page Integration", () => {
 		});
 
 		expect(screen.getByText("player2")).toBeInTheDocument();
+		expect(screen.getByText("5m 0s")).toBeInTheDocument();
 		expect(screen.getByText("player3")).toBeInTheDocument();
+		expect(screen.getByText("5m 50s")).toBeInTheDocument();
 	});
 
 	it("switches between types", async () => {

@@ -1,5 +1,5 @@
 import { useGetLeaderboard } from "@/hooks/leaderboard/queries";
-import { Types, type entries, type LeaderboardTypes } from "@/types/api/leaderboard";
+import { Types, UnitTypes, type entries, type LeaderboardTypes, type LeaderboardUnitTypes } from "@/types/api/leaderboard";
 import type { BoardSize } from "@/types/game";
 import { BoardSizeToString } from "@/utils/board";
 import "./Leaderboard.scss";
@@ -23,6 +23,16 @@ const SIZES = [
 const needsSize = (type: LeaderboardTypes): boolean => {
 	return type === Types.DAILY || type === Types.ALLTIME;
 };
+
+const getUnit = (type: LeaderboardTypes): LeaderboardUnitTypes => {
+	switch (type) {
+		case Types.STREAK:
+		case Types.TOTAL:
+			return UnitTypes.COUNT;
+		default:
+			return UnitTypes.TIME;
+	}
+}
 
 const getPodium = (solves: entries[]): entries[] => {
 	if (solves.length < 3) {
@@ -89,6 +99,7 @@ export default function Leaderboard() {
 				remaining={remaining}
 				page={page}
 				hasNext={data?.has_next}
+				unit={getUnit(type)}
 			/>
 		</div>
 	);
