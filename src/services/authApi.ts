@@ -16,6 +16,7 @@ export async function loginUser(request: LoginRequest): Promise<LoginResponse> {
 	return apiPost<LoginResponse>({
 		url: `/auth/login`,
 		data: request,
+		credentials: "include",
 	}, interceptors);
 }
 
